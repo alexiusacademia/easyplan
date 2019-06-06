@@ -21,14 +21,14 @@ class Project:
     _initialized = False
 
     # List of task objects that will be implemented in the project.
-    _tasks = []
+    tasks = []
 
     # Set the time basis default to day. Meaning a whole day is just one count regardless of the length
     # of hours used in work.
     _time_basis = TimeBasis.DAY
 
     def __init__(self):
-        pass
+        self._initialized = True
 
     def add_task(self, task):
         """
@@ -38,7 +38,7 @@ class Project:
         :return:
         """
         if isinstance(task, tsk):
-            self._tasks.append(task)
+            self.tasks.append(task)
             return True
         else:
             return False
@@ -51,7 +51,7 @@ class Project:
         """
         try:
             if isinstance(task, tsk):
-                self._tasks.remove(task)
+                self.tasks.remove(task)
                 return True
             else:
                 return False
