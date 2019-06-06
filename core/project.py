@@ -1,4 +1,8 @@
+# Import built-in modules
 from enum import Enum
+
+# Import project modules
+from . import task as tsk
 
 
 class TimeBasis(Enum):
@@ -33,7 +37,11 @@ class Project:
         :param task: A task object containing all the necessary information.
         :return:
         """
-        self._tasks.append(task)
+        if isinstance(task, tsk):
+            self._tasks.append(task)
+            return True
+        else:
+            return False
 
     def remove_task(self, task):
         """
@@ -42,7 +50,10 @@ class Project:
         :return: Returns true if the task is successfully deleted.
         """
         try:
-            self._tasks.remove(task)
-            return True
+            if isinstance(task, tsk):
+                self._tasks.remove(task)
+                return True
+            else:
+                return False
         except ValueError:
             return False
