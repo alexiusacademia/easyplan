@@ -37,7 +37,7 @@ class Project:
         :param task: A task object containing all the necessary information.
         :return:
         """
-        if isinstance(task, tsk):
+        if isinstance(task, tsk.Task):
             self.tasks.append(task)
             return True
         else:
@@ -50,7 +50,7 @@ class Project:
         :return: Returns true if the task is successfully deleted.
         """
         try:
-            if isinstance(task, tsk):
+            if isinstance(task, tsk.Task):
                 self.tasks.remove(task)
                 return True
             else:
