@@ -12,7 +12,6 @@ def id_generator():
 class Task:
     task_name = ''
     task_id = 0
-    duration = 0
     task_segments = []
     start_day = 0
     upstream = None
@@ -26,8 +25,24 @@ class Task:
     def rename(self, new_name):
         self.task_name = new_name
 
+    def get_duration(self):
+        total_duration = 0
+        for ts in self.task_segments:
+            if isinstance(ts, TaskSegment):
+                total_duration += ts.duration
+        return total_duration
+
     def set_duration(self, d):
-        self.duration = d
+        # self.duration = d
+        # Get the total duration fo the task
+        total_duration = 0
+        for ts in self.task_segments:
+            if isinstance(ts, TaskSegment):
+                total_duration += ts.duration
+
+        # Get the last task segment from the list
+        last_task_segment = TaskSegment(self.task_segments[len(self.task_segments) - 1])
+        last_task_segment.duration
 
     def set_start_day(self, s):
         self.start_day = s
