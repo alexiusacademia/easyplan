@@ -36,6 +36,22 @@ class Task:
                 total_duration += ts.duration
         return total_duration
 
+    def get_virtual_duration(self):
+        """
+        Virtual duration is the total duration of a task.
+        This will not be equal to the actual task duration if there is a splitting done in the task.
+        :return:
+        """
+        virtual = 0
+
+        # Get the first and last segment
+        segment_1 = self.task_segments[0]
+        segment_n = self.task_segments[len(self.task_segments) - 1]
+
+        if isinstance(segment_1, TaskSegment) and isinstance(segment_n, TaskSegment):
+            virtual = segment_n.start + segment_n.duration - segment_1.start
+        return virtual
+
     def set_duration(self, d):
         # self.duration = d
         # Get the total duration fo the task
