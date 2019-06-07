@@ -26,6 +26,10 @@ class Task:
         self.task_name = new_name
 
     def get_duration(self):
+        """
+        Get the duration by getting all the duration of each task segment in a task.
+        :return:
+        """
         total_duration = 0
         for ts in self.task_segments:
             if isinstance(ts, TaskSegment):
