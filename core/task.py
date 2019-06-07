@@ -26,8 +26,14 @@ class Task:
         self.start_day = s
 
     def set_upstream(self, task):
-        if isinstance(task, self):
+        """
+        Set the upstream task. The one it depends on to finish.
+        :param task:
+        :return:
+        """
+        if isinstance(task, Task):
             self.upstream = task
             return True, 'Upstream set.'
         else:
             return False, 'Task must be an instance of task.'
+
