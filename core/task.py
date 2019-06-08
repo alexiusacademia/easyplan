@@ -53,16 +53,32 @@ class Task:
         return virtual
 
     def set_duration(self, d):
-        # self.duration = d
+        """
+        Set the total duration for the task.
+        This is different from virtual duration.
+        :param d: The total duration for the task.
+        :return:
+        """
         # Get the total duration fo the task
-        total_duration = 0
-        for ts in self.task_segments:
-            if isinstance(ts, TaskSegment):
-                total_duration += ts.duration
+        total_duration = self.get_duration()
 
         # Get the last task segment from the list
-        last_task_segment = TaskSegment(self.task_segments[len(self.task_segments) - 1])
-        last_task_segment.duration
+        segment_n = self.task_segments[len(self.task_segments) - 1]
+
+        # Difference between new duration and the existing
+        diff = total_duration - d
+
+        if diff <= 0:
+            # Add the difference to the last segment
+            self.task_segments[len(self.task_segments) - 1].duration += abs(diff)
+            return True
+        else:
+            if abs(diff) < segment_n.duration:
+                segment_n.duration = abs(diff)
+                return True
+            else:
+                return False, 'Task segments length shall be corrected before applying the ' \
+                              'change in the total duration.'
 
     def set_start_day(self, s):
         self.start_day = s
