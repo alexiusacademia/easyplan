@@ -91,7 +91,7 @@ class Task:
         """
         if isinstance(task, Task):
             self.upstream = task
-            return True, 'Upstream set.'
+            return True
         else:
             return False, 'Task must be an instance of task.'
 
@@ -121,3 +121,4 @@ class Task:
         # Replace the old task segment on the list
         location = self.task_segments.index(task_segment)
         self.task_segments[location:location+1] = ts1, ts2
+        return True
