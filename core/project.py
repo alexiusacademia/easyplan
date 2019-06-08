@@ -27,6 +27,10 @@ class Project:
     # of hours used in work.
     _time_basis = TimeBasis.DAY
 
+    project_name = ''
+    project_location = ''
+    project_amount = ''
+
     def __init__(self):
         self._initialized = True
 
