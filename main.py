@@ -1,17 +1,11 @@
-import core.task as task
-from core.task_segment import TaskSegment
-from core.project import Project
+# Import built-in modules
+import wx
 
-t = task.Task()
-t.task_name = 'Clearing'
-for ts in t.task_segments:
-    if isinstance(ts, TaskSegment):
-        print(ts.start, ts.duration)
+# Import project modules
+from gui.main_frame import MainFrame
 
-print('Duration of Clearing is: ' + str(t.get_duration()))
 
-p = Project()
-p.add_task(t)
-
-for task in p.tasks:
-    print(task.task_id, task.task_name)
+if __name__ == '__main__':
+    app = wx.App()
+    frame = MainFrame()
+    app.MainLoop()
