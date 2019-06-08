@@ -11,6 +11,7 @@ class MainFrame(wx.Frame):
         super().__init__(parent=None, title='EasyPlan')
         self.init_ui()
         self.Show()
+        self.Maximize(True)
 
     def init_ui(self):
         sizer = wx.GridBagSizer(vgap=5, hgap=5)
