@@ -19,12 +19,12 @@ class MainFrame(wx.Frame):
         ribbon = Ribbon(self)
         sizer.Add(ribbon, pos=(0, 0), flag=wx.EXPAND|wx.TOP|wx.LEFT|wx.RIGHT)
 
-        splitter = wx.SplitterWindow(self)
+        splitter = wx.SplitterWindow(self, style=wx.SP_THIN_SASH | wx.NO_BORDER)
 
         left_pane = TaskListPane(splitter)
         right_pane = TaskListPane(splitter)
 
-        splitter.SplitVertically(left_pane, right_pane)
+        splitter.SplitVertically(left_pane, right_pane, 400)
 
         sizer.Add(splitter, pos=(1, 0),
                   flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP|wx.BOTTOM)
