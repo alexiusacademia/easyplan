@@ -6,7 +6,7 @@ from core.project import Project
 
 
 class TaskListPane(wx.Panel):
-    def __init__(self, parent):
+    def __init__(self, parent, project):
         wx.Panel.__init__(self, parent=parent)
 
         sizer = wx.GridBagSizer(vgap=5, hgap=5)
@@ -21,9 +21,6 @@ class TaskListPane(wx.Panel):
         self.task_list_ctrl.InsertColumn(0, 'Task', width=200)
         self.task_list_ctrl.InsertColumn(1, 'Start', width=60, format=wx.LIST_FORMAT_CENTRE)
         self.task_list_ctrl.InsertColumn(2, 'Duration', width=60, format=wx.LIST_FORMAT_CENTRE)
-
-        # Initialize project
-        # TODO: Incorporate the core and the gui
 
         self.task_list_ctrl.InsertItem(0, 'Untitled Task')
         self.task_list_ctrl.SetItem(0, 1, str(0))

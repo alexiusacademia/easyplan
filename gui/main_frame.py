@@ -29,8 +29,8 @@ class MainFrame(wx.Frame):
 
         splitter = wx.SplitterWindow(self, style=wx.SP_THIN_SASH | wx.NO_BORDER)
 
-        left_pane = TaskListPane(splitter)
-        right_pane = TaskListPane(splitter)
+        left_pane = TaskListPane(splitter, self.project)
+        right_pane = TaskListPane(splitter, self.project)
 
         splitter.SplitVertically(left_pane, right_pane, 400)
 
