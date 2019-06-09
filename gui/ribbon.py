@@ -4,11 +4,14 @@ import wx.ribbon
 
 class Ribbon(wx.ribbon.RibbonBar):
     ribbon_buttons = []
+    project = None
 
-    def __init__(self, parent):
+    def __init__(self, parent, project):
         super().__init__(parent=parent)
         self.create_pages()
         self.set_button_cursors()
+
+        self.project =project
 
     def create_pages(self):
         self.page_gantt_chart()
@@ -22,6 +25,7 @@ class Ribbon(wx.ribbon.RibbonBar):
         # ---------------- GANTT CHART PAGE ---------------- #
         gantt_page = wx.ribbon.RibbonPage(self, label='Gantt Chart')
         self.panel_gantt_basic(gantt_page)
+        self.panel_gantt_edit(gantt_page)
 
     def page_scurve(self):
         # ---------------- GANTT CHART PAGE ---------------- #
@@ -41,7 +45,7 @@ class Ribbon(wx.ribbon.RibbonBar):
     # --------------
     def panel_gantt_basic(self, page):
         # -- Task Panel -- #
-        gantt_task_panel = wx.ribbon.RibbonPanel(parent=page, label='',
+        gantt_task_panel = wx.ribbon.RibbonPanel(parent=page, label='BASIC',
                                                  style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
 
         gantt_page_sizer = wx.GridBagSizer(vgap=0, hgap=0)
@@ -84,6 +88,25 @@ class Ribbon(wx.ribbon.RibbonBar):
 
         gantt_task_panel.SetSizer(gantt_page_sizer)
         # -- End Task Panel -- #
+
+    def panel_gantt_edit(self, page):
+        panel = wx.ribbon.RibbonPanel(parent=page, label='EDIT',
+                                                 style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
+
+        sizer = wx.GridBagSizer(vgap=0, hgap=0)
+
+        icon_cut = wx.ArtProvider.GetBitmap(wx.ART_CUT)
+        btn_cut_task = wx.BitmapButton(parent=panel, bitmap=icon_cut)
+        btn_cut_task.SetToolTip(wx.ToolTip('Cut the task at given position.'))
+        sizer.Add(btn_cut_task, pos=(0, 0))
+
+        icon_rename = wx.ArtProvider.GetBitmap(wx.ART_INFORMATION)
+        btn_rename = wx.BitmapButton(parent=panel, bitmap=icon_rename)
+        btn_rename.SetToolTip(wx.ToolTip('Rename task.'))
+        sizer.Add(btn_rename, pos=(0, 1))
+
+        panel.SetSizer(sizer)
+        self.Realize()
 
     def get_stock_bitmap(self, art_id):
         return wx.ArtProvider.GetBitmap(art_id)
