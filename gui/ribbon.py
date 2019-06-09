@@ -1,5 +1,9 @@
+# Import built-in modules
 import wx
 import wx.ribbon
+
+# Import project modules
+from .dialogs.dlg_add_task import AddTaskDialog
 
 
 class Ribbon(wx.ribbon.RibbonBar):
@@ -116,7 +120,9 @@ class Ribbon(wx.ribbon.RibbonBar):
             button.SetCursor(wx.Cursor(wx.CURSOR_HAND))
 
     def on_add_task(self, event):
-        print('Add Task')
+        dlg = AddTaskDialog()
+        dlg.ShowModal()
+        dlg.Destroy()
 
     def on_outdent_task(self, event):
         print('Outdent Task')
