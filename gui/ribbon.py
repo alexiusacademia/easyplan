@@ -11,12 +11,20 @@ class Ribbon(wx.ribbon.RibbonBar):
         self.set_button_cursors()
 
     def create_pages(self):
+        self.page_gantt_chart()
+        self.page_scurve()
+        self.Realize()
+
+    # --------------
+    # Pages
+    # --------------
+    def page_gantt_chart(self):
         # ---------------- GANTT CHART PAGE ---------------- #
         gantt_page = wx.ribbon.RibbonPage(self, label='Gantt Chart')
 
         # -- Task Panel -- #
         gantt_task_panel = wx.ribbon.RibbonPanel(parent=gantt_page, label='',
-                                            style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
+                                                 style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
 
         gantt_page_sizer = wx.GridBagSizer(vgap=0, hgap=0)
 
@@ -57,6 +65,7 @@ class Ribbon(wx.ribbon.RibbonBar):
         gantt_task_panel.SetSizer(gantt_page_sizer)
         # -- End Task Panel -- #
 
+    def page_scurve(self):
         # ---------------- GANTT CHART PAGE ---------------- #
 
         scurve_page = wx.ribbon.RibbonPage(self, label='S-Curve')
@@ -68,8 +77,6 @@ class Ribbon(wx.ribbon.RibbonBar):
         scurve_page_sizer.Add(btn1, pos=(0, 0))
 
         scurve_panel.SetSizer(scurve_page_sizer)
-
-        self.Realize()
 
     def get_stock_bitmap(self, art_id):
         return wx.ArtProvider.GetBitmap(art_id)
