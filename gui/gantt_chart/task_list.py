@@ -22,9 +22,9 @@ class TaskListPane(wx.Panel):
         self.task_list_ctrl.InsertColumn(1, 'Start', width=60, format=wx.LIST_FORMAT_CENTRE)
         self.task_list_ctrl.InsertColumn(2, 'Duration', width=60, format=wx.LIST_FORMAT_CENTRE)
 
-        self.task_list_ctrl.InsertItem(0, 'Untitled Task')
-        self.task_list_ctrl.SetItem(0, 1, str(0))
-        self.task_list_ctrl.SetItem(0, 2, str(1))
+        # self.task_list_ctrl.InsertItem(0, 'Untitled Task')
+        # self.task_list_ctrl.SetItem(0, 1, str(0))
+        # self.task_list_ctrl.SetItem(0, 2, str(1))
 
         sizer.Add(self.task_list_ctrl, pos=(0, 0),
                   flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP|wx.BOTTOM)
