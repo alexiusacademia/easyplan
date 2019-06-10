@@ -79,12 +79,14 @@ class Ribbon(wx.ribbon.RibbonBar):
 
         # Outdent task button
         icon_outdent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_BACK, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.OUTDENT_TASK, 'Outdent Task', icon_outdent_task, 'Remove the task from the immediate parent.', wx.ITEM_NORMAL)
+        tb.AddTool(self.IDS.OUTDENT_TASK, 'Outdent Task', icon_outdent_task,
+                   'Remove the task from the immediate parent.', wx.ITEM_NORMAL)
         self.Bind(wx.EVT_TOOL, self.on_outdent_task, id=self.IDS.OUTDENT_TASK)
 
         # Indent task button
         icon_indent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_FORWARD, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.INDENT_TASK, 'Indent Task', icon_indent_task, 'Set the above task as parent.', wx.ITEM_NORMAL)
+        tb.AddTool(self.IDS.INDENT_TASK, 'Indent Task', icon_indent_task, 'Set the above task as parent.',
+                   wx.ITEM_NORMAL)
         self.Bind(wx.EVT_TOOL, self.on_indent_task, id=self.IDS.INDENT_TASK)
 
         tb.Realize()
@@ -94,7 +96,7 @@ class Ribbon(wx.ribbon.RibbonBar):
 
     def panel_gantt_edit(self, page):
         panel = wx.ribbon.RibbonPanel(parent=page, label='EDIT',
-                                                 style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
+                                      style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
 
         sizer = wx.GridBagSizer(vgap=0, hgap=0)
 
