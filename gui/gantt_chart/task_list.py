@@ -36,7 +36,8 @@ class TaskListPane(wx.Panel):
         self.SetSizer(sizer)
 
     def on_item_selected(self, evt):
-        print(evt.GetText())
+        selected_index = self.task_list_ctrl.GetFocusedItem()
+        self.project.selected_task_index = selected_index
 
     def add_task(self, task_object, *args):
         """
@@ -65,3 +66,8 @@ class TaskListPane(wx.Panel):
             li.SetItem(index, 2, str(task.get_duration()))
 
             index += 1
+
+# TODO Create dialog for renaming task
+# TODO Create dialog for splitting
+# TODO Add confirmation on task deletion.
+# TODO Add dialog for adding task.
