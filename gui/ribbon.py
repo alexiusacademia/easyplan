@@ -1,6 +1,7 @@
 # Import built-in modules
 import wx
 import wx.ribbon
+import os
 
 # Import project modules
 from .dialogs.dlg_add_task import AddTaskDialog
@@ -11,10 +12,14 @@ class Ribbon(wx.ribbon.RibbonBar):
     project = None
 
     class IDS:
+        # -----------
         ADD_TASK = 10
         DELETE_TASK = 20
         INDENT_TASK = 30
         OUTDENT_TASK = 40
+        # -----------
+        SPLIT_TASK = 50
+        RENAME_TASK = 60
 
     RIBBON_BUTTON_SIZE = (22, 22)
 
@@ -61,7 +66,10 @@ class Ribbon(wx.ribbon.RibbonBar):
                                                  style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
 
         gantt_page_sizer = wx.BoxSizer(wx.VERTICAL)
+
         tb = wx.ToolBar(gantt_task_panel, style=wx.TB_HORIZONTAL | wx.TB_FLAT | wx.NO_BORDER | wx.TB_DOCKABLE)
+        tb.SetCursor(wx.Cursor(wx.CURSOR_HAND))
+
         gantt_page_sizer.Add(tb, 0, wx.EXPAND)
 
         # Add task button
@@ -98,20 +106,24 @@ class Ribbon(wx.ribbon.RibbonBar):
         panel = wx.ribbon.RibbonPanel(parent=page, label='EDIT',
                                       style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
 
-        sizer = wx.GridBagSizer(vgap=0, hgap=0)
+        tb = wx.ToolBar(panel, style=wx.TB_HORIZONTAL | wx.TB_FLAT | wx.NO_BORDER | wx.TB_DOCKABLE)
+        tb.SetCursor(wx.Cursor(wx.CURSOR_HAND))
+
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(tb, 0, wx.EXPAND)
 
         icon_cut = wx.ArtProvider.GetBitmap(wx.ART_CUT, size=self.RIBBON_BUTTON_SIZE)
-        btn_cut_task = wx.BitmapButton(parent=panel, bitmap=icon_cut)
-        btn_cut_task.SetToolTip(wx.ToolTip('Cut the task at given position.'))
-        sizer.Add(btn_cut_task, pos=(0, 0))
+        tb.AddTool(self.IDS.SPLIT_TASK, 'Split Task', icon_cut, 'Split a task segment.', wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_split_task, id=self.IDS.SPLIT_TASK)
 
-        icon_rename = wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, size=self.RIBBON_BUTTON_SIZE)
-        btn_rename = wx.BitmapButton(parent=panel, bitmap=icon_rename)
-        btn_rename.SetToolTip(wx.ToolTip('Rename task.'))
-        sizer.Add(btn_rename, pos=(0, 1))
+        icon_rename = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
+                                             'ribbon', 'gantt', 'rename.png'))
+        tb.AddTool(self.IDS.RENAME_TASK, 'Rename Task', icon_rename,
+                   'Rename task.', wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_rename, id=self.IDS.RENAME_TASK)
 
         panel.SetSizer(sizer)
-        self.Realize()
+        tb.Realize()
 
     def get_stock_bitmap(self, art_id, size):
         return wx.ArtProvider.GetBitmap(art_id, size=size)
@@ -133,3 +145,9 @@ class Ribbon(wx.ribbon.RibbonBar):
 
     def on_delete_task(self, event):
         print('Delete task.')
+
+    def on_split_task(self, event):
+        print('Split')
+
+    def on_rename(self, event):
+        print('Rename')
