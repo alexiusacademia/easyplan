@@ -7,7 +7,7 @@ from core.project import Project
 
 class TaskListPane(wx.Panel):
     def __init__(self, parent, project):
-        wx.Panel.__init__(self, parent=parent)
+        wx.Panel.__init__(self, parent=parent, style=wx.HSCROLL | wx.VSCROLL)
 
         sizer = wx.GridBagSizer(vgap=5, hgap=5)
 
