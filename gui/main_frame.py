@@ -1,5 +1,6 @@
 # Import built-in modules
 import wx
+from wx.lib.splitter import MultiSplitterWindow
 
 # Import project modules
 from .gantt_chart.task_list import TaskListPane
@@ -28,7 +29,8 @@ class MainFrame(wx.Frame):
         sizer.Add(ribbon, pos=(0, 0), flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT)
 
         splitter = wx.SplitterWindow(self,
-                                     style=wx.SP_THIN_SASH | wx.NO_BORDER | wx.SP_3D)
+                                     style=wx.SP_THIN_SASH | wx.NO_BORDER | wx.SP_3D | wx.SP_LIVE_UPDATE)
+        self.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.on_sash_changing, splitter)
 
         left_pane = TaskListPane(splitter, self.project)
         right_pane = TaskListPane(splitter, self.project)
@@ -42,4 +44,8 @@ class MainFrame(wx.Frame):
         sizer.AddGrowableCol(0)
 
         self.SetSizer(sizer)
+
+    def on_sash_changing(self, event):
+        pos = event.GetSashPosition()
+        event.SetSashPosition(pos)
 
