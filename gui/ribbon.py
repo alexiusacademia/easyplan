@@ -10,6 +10,8 @@ class Ribbon(wx.ribbon.RibbonBar):
     ribbon_buttons = []
     project = None
 
+    RIBBON_BUTTON_SIZE = (24, 24)
+
     def __init__(self, parent, project):
         super().__init__(parent=parent)
         self.create_pages()
@@ -56,7 +58,7 @@ class Ribbon(wx.ribbon.RibbonBar):
 
         # Add task button
         pos = 0
-        icon_add_task = wx.ArtProvider.GetBitmap(wx.ART_PLUS)
+        icon_add_task = wx.ArtProvider.GetBitmap(wx.ART_PLUS, size=self.RIBBON_BUTTON_SIZE)
         btn_add_task = wx.BitmapButton(parent=gantt_task_panel, bitmap=icon_add_task)
         btn_add_task.SetToolTip(wx.ToolTip('Add new task.'))
         self.Bind(wx.EVT_BUTTON, self.on_add_task, btn_add_task)
@@ -65,7 +67,7 @@ class Ribbon(wx.ribbon.RibbonBar):
 
         # Outdent task button
         pos += 1
-        icon_outdent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_BACK)
+        icon_outdent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_BACK, size=self.RIBBON_BUTTON_SIZE)
         btn_outdent_task = wx.BitmapButton(parent=gantt_task_panel, bitmap=icon_outdent_task)
         btn_outdent_task.SetToolTip(wx.ToolTip('Remove single indent.'))
         self.ribbon_buttons.append(btn_outdent_task)
@@ -74,7 +76,7 @@ class Ribbon(wx.ribbon.RibbonBar):
 
         # Indent task button
         pos += 1
-        icon_indent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_FORWARD)
+        icon_indent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_FORWARD, size=self.RIBBON_BUTTON_SIZE)
         btn_indent_task = wx.BitmapButton(parent=gantt_task_panel, bitmap=icon_indent_task)
         btn_indent_task.SetToolTip(wx.ToolTip('Indent task for a single depth.'))
         self.Bind(wx.EVT_BUTTON, self.on_indent_task, btn_indent_task)
@@ -83,7 +85,7 @@ class Ribbon(wx.ribbon.RibbonBar):
 
         # Delete task button
         pos += 1
-        icon_delete_task = self.get_stock_bitmap(wx.ART_MINUS)
+        icon_delete_task = self.get_stock_bitmap(wx.ART_MINUS, size=self.RIBBON_BUTTON_SIZE)
         btn_delete_task = wx.BitmapButton(parent=gantt_task_panel, bitmap=icon_delete_task)
         btn_delete_task.SetToolTip(wx.ToolTip('Delete task.'))
         self.ribbon_buttons.append(btn_delete_task)
@@ -99,12 +101,12 @@ class Ribbon(wx.ribbon.RibbonBar):
 
         sizer = wx.GridBagSizer(vgap=0, hgap=0)
 
-        icon_cut = wx.ArtProvider.GetBitmap(wx.ART_CUT)
+        icon_cut = wx.ArtProvider.GetBitmap(wx.ART_CUT, size=self.RIBBON_BUTTON_SIZE)
         btn_cut_task = wx.BitmapButton(parent=panel, bitmap=icon_cut)
         btn_cut_task.SetToolTip(wx.ToolTip('Cut the task at given position.'))
         sizer.Add(btn_cut_task, pos=(0, 0))
 
-        icon_rename = wx.ArtProvider.GetBitmap(wx.ART_INFORMATION)
+        icon_rename = wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, size=self.RIBBON_BUTTON_SIZE)
         btn_rename = wx.BitmapButton(parent=panel, bitmap=icon_rename)
         btn_rename.SetToolTip(wx.ToolTip('Rename task.'))
         sizer.Add(btn_rename, pos=(0, 1))
@@ -112,8 +114,8 @@ class Ribbon(wx.ribbon.RibbonBar):
         panel.SetSizer(sizer)
         self.Realize()
 
-    def get_stock_bitmap(self, art_id):
-        return wx.ArtProvider.GetBitmap(art_id)
+    def get_stock_bitmap(self, art_id, size):
+        return wx.ArtProvider.GetBitmap(art_id, size=size)
 
     def set_button_cursors(self):
         for button in self.ribbon_buttons:
