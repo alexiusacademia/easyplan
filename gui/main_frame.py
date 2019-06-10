@@ -20,7 +20,7 @@ class MainFrame(wx.Frame):
 
     def initialize_project(self):
         self.project = Project()
-        self.project.project_name = 'Untitle project.'
+        self.project.project_name = 'Untitled project.'
 
     def init_ui(self):
         sizer = wx.GridBagSizer(vgap=5, hgap=5)
@@ -30,7 +30,6 @@ class MainFrame(wx.Frame):
 
         splitter = wx.SplitterWindow(self,
                                      style=wx.SP_THIN_SASH | wx.NO_BORDER | wx.SP_3D | wx.SP_LIVE_UPDATE)
-        self.Bind(wx.EVT_SPLITTER_SASH_POS_CHANGING, self.on_sash_changing, splitter)
 
         left_pane = TaskListPane(splitter, self.project)
         right_pane = TaskListPane(splitter, self.project)
@@ -44,8 +43,3 @@ class MainFrame(wx.Frame):
         sizer.AddGrowableCol(0)
 
         self.SetSizer(sizer)
-
-    def on_sash_changing(self, event):
-        pos = event.GetSashPosition()
-        event.SetSashPosition(pos)
-
