@@ -5,6 +5,7 @@ import os
 
 # Import project modules
 from .dialogs.dlg_add_task import AddTaskDialog
+from core.task import Task
 
 
 class Ribbon(wx.ribbon.RibbonBar):
@@ -139,6 +140,8 @@ class Ribbon(wx.ribbon.RibbonBar):
         # dlg = AddTaskDialog()
         # dlg.ShowModal()
         # dlg.Destroy()
+        task = Task()
+        self.project.add_task(task)
         self.parent.refresh()
 
     def on_outdent_task(self, event):

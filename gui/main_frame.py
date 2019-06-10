@@ -45,4 +45,4 @@ class MainFrame(wx.Frame):
         self.SetSizer(sizer)
 
     def refresh(self):
-        print('Refresh')
+        print(len(self.project.tasks))
