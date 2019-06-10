@@ -11,6 +11,7 @@ from core.task import Task
 class Ribbon(wx.ribbon.RibbonBar):
     ribbon_buttons = []
     project = None
+    task_index = None
 
     class IDS:
         # -----------
@@ -137,11 +138,7 @@ class Ribbon(wx.ribbon.RibbonBar):
             button.SetCursor(wx.Cursor(wx.CURSOR_HAND))
 
     def on_add_task(self, event):
-        # dlg = AddTaskDialog()
-        # dlg.ShowModal()
-        # dlg.Destroy()
-        task = Task()
-        self.project.add_task(task)
+        self.project.add_task(Task())
         self.parent.refresh()
 
     def on_outdent_task(self, event):
@@ -157,4 +154,4 @@ class Ribbon(wx.ribbon.RibbonBar):
         print('Split')
 
     def on_rename(self, event):
-        print('Rename')
+        print(self.project.selected_task_index)
