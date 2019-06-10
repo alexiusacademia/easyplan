@@ -51,17 +51,17 @@ class TaskListPane(wx.Panel):
 
     def redraw_project(self):
         # First clear content
-        list = self.task_list_ctrl
-        list.ClearAll()
+        li = self.task_list_ctrl
+        li.ClearAll()
 
-        list.InsertColumn(0, 'Task', width=200)
-        list.InsertColumn(1, 'Start', width=60, format=wx.LIST_FORMAT_CENTRE)
-        list.InsertColumn(2, 'Duration', width=60, format=wx.LIST_FORMAT_CENTRE)
+        li.InsertColumn(0, 'Task', width=200)
+        li.InsertColumn(1, 'Start', width=60, format=wx.LIST_FORMAT_CENTRE)
+        li.InsertColumn(2, 'Duration', width=60, format=wx.LIST_FORMAT_CENTRE)
 
         index = 0
         for task in self.project.tasks:
-            list.InsertItem(index, task.task_name)
-            list.SetItem(index, 1, str(task.start_day))
-            list.SetItem(index, 2, str(task.get_duration()))
+            li.InsertItem(index, task.task_name)
+            li.SetItem(index, 1, str(task.start_day))
+            li.SetItem(index, 2, str(task.get_duration()))
 
             index += 1
