@@ -10,14 +10,20 @@ class Ribbon(wx.ribbon.RibbonBar):
     ribbon_buttons = []
     project = None
 
-    RIBBON_BUTTON_SIZE = (24, 24)
+    class IDS:
+        ADD_TASK = 10
+        DELETE_TASK = 20
+        INDENT_TASK = 30
+        OUTDENT_TASK = 40
+
+    RIBBON_BUTTON_SIZE = (22, 22)
 
     def __init__(self, parent, project):
         super().__init__(parent=parent)
         self.create_pages()
         self.set_button_cursors()
 
-        self.project =project
+        self.project = project
 
     def create_pages(self):
         self.page_gantt_chart()
@@ -54,43 +60,34 @@ class Ribbon(wx.ribbon.RibbonBar):
         gantt_task_panel = wx.ribbon.RibbonPanel(parent=page, label='BASIC',
                                                  style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
 
-        gantt_page_sizer = wx.GridBagSizer(vgap=0, hgap=0)
+        gantt_page_sizer = wx.BoxSizer(wx.VERTICAL)
+        tb = wx.ToolBar(gantt_task_panel, style=wx.TB_HORIZONTAL | wx.TB_FLAT | wx.NO_BORDER | wx.TB_DOCKABLE)
+        gantt_page_sizer.Add(tb, 0, wx.EXPAND)
 
         # Add task button
-        pos = 0
         icon_add_task = wx.ArtProvider.GetBitmap(wx.ART_PLUS, size=self.RIBBON_BUTTON_SIZE)
-        btn_add_task = wx.BitmapButton(parent=gantt_task_panel, bitmap=icon_add_task)
-        btn_add_task.SetToolTip(wx.ToolTip('Add new task.'))
-        self.Bind(wx.EVT_BUTTON, self.on_add_task, btn_add_task)
-        self.ribbon_buttons.append(btn_add_task)
-        gantt_page_sizer.Add(btn_add_task, pos=(0, pos))
-
-        # Outdent task button
-        pos += 1
-        icon_outdent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_BACK, size=self.RIBBON_BUTTON_SIZE)
-        btn_outdent_task = wx.BitmapButton(parent=gantt_task_panel, bitmap=icon_outdent_task)
-        btn_outdent_task.SetToolTip(wx.ToolTip('Remove single indent.'))
-        self.ribbon_buttons.append(btn_outdent_task)
-        self.Bind(wx.EVT_BUTTON, self.on_outdent_task, btn_outdent_task)
-        gantt_page_sizer.Add(btn_outdent_task, pos=(0, pos))
-
-        # Indent task button
-        pos += 1
-        icon_indent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_FORWARD, size=self.RIBBON_BUTTON_SIZE)
-        btn_indent_task = wx.BitmapButton(parent=gantt_task_panel, bitmap=icon_indent_task)
-        btn_indent_task.SetToolTip(wx.ToolTip('Indent task for a single depth.'))
-        self.Bind(wx.EVT_BUTTON, self.on_indent_task, btn_indent_task)
-        self.ribbon_buttons.append(btn_indent_task)
-        gantt_page_sizer.Add(btn_indent_task, pos=(0, pos))
+        tb.AddTool(self.IDS.ADD_TASK, 'Add New Task', icon_add_task, 'Add new task to the project.', wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_add_task, id=self.IDS.ADD_TASK)
 
         # Delete task button
-        pos += 1
         icon_delete_task = self.get_stock_bitmap(wx.ART_MINUS, size=self.RIBBON_BUTTON_SIZE)
-        btn_delete_task = wx.BitmapButton(parent=gantt_task_panel, bitmap=icon_delete_task)
-        btn_delete_task.SetToolTip(wx.ToolTip('Delete task.'))
-        self.ribbon_buttons.append(btn_delete_task)
-        self.Bind(wx.EVT_BUTTON, self.on_delete_task, btn_delete_task)
-        gantt_page_sizer.Add(btn_delete_task, pos=(0, pos))
+        tb.AddTool(self.IDS.DELETE_TASK, 'Delete Task', icon_delete_task, 'Remove the selected task from project.',
+                   wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_delete_task, id=self.IDS.DELETE_TASK)
+
+        tb.AddSeparator()
+
+        # Outdent task button
+        icon_outdent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_BACK, size=self.RIBBON_BUTTON_SIZE)
+        tb.AddTool(self.IDS.OUTDENT_TASK, 'Outdent Task', icon_outdent_task, 'Remove the task from the immediate parent.', wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_outdent_task, id=self.IDS.OUTDENT_TASK)
+
+        # Indent task button
+        icon_indent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_FORWARD, size=self.RIBBON_BUTTON_SIZE)
+        tb.AddTool(self.IDS.INDENT_TASK, 'Indent Task', icon_indent_task, 'Set the above task as parent.', wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_indent_task, id=self.IDS.INDENT_TASK)
+
+        tb.Realize()
 
         gantt_task_panel.SetSizer(gantt_page_sizer)
         # -- End Task Panel -- #
