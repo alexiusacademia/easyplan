@@ -31,10 +31,10 @@ class MainFrame(wx.Frame):
         splitter = wx.SplitterWindow(self,
                                      style=wx.SP_THIN_SASH | wx.NO_BORDER | wx.SP_3D | wx.SP_LIVE_UPDATE)
 
-        left_pane = TaskListPane(splitter, self.project)
+        self.left_pane = TaskListPane(splitter, self.project)
         right_pane = TaskListPane(splitter, self.project)
 
-        splitter.SplitVertically(left_pane, right_pane, 400)
+        splitter.SplitVertically(self.left_pane, right_pane, 400)
 
         sizer.Add(splitter, pos=(1, 0),
                   flag=wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP | wx.BOTTOM)
@@ -45,4 +45,4 @@ class MainFrame(wx.Frame):
         self.SetSizer(sizer)
 
     def refresh(self):
-        print(len(self.project.tasks))
+        self.left_pane.redraw_project()

@@ -9,6 +9,7 @@ class TaskListPane(wx.Panel):
     def __init__(self, parent, project):
         wx.Panel.__init__(self, parent=parent, style=wx.HSCROLL | wx.VSCROLL)
 
+        self.project = project
         sizer = wx.GridBagSizer(vgap=5, hgap=5)
 
         self.task_list_ctrl = wx.ListCtrl(
@@ -48,3 +49,19 @@ class TaskListPane(wx.Panel):
             # The index is given so we insert the task on that index
             index = args[0]
 
+    def redraw_project(self):
+        # First clear content
+        list = self.task_list_ctrl
+        list.ClearAll()
+
+        list.InsertColumn(0, 'Task', width=200)
+        list.InsertColumn(1, 'Start', width=60, format=wx.LIST_FORMAT_CENTRE)
+        list.InsertColumn(2, 'Duration', width=60, format=wx.LIST_FORMAT_CENTRE)
+
+        index = 0
+        for task in self.project.tasks:
+            list.InsertItem(index, task.task_name)
+            list.SetItem(index, 1, str(task.start_day))
+            list.SetItem(index, 2, str(task.get_duration()))
+
+            index += 1
