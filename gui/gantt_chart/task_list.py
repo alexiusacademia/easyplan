@@ -1,8 +1,16 @@
+# Import built-in modules
 import wx
+import wx.lib.mixins.listctrl as listmix
 
 # Import project modules
 from core.task import Task
 from core.project import Project
+
+
+class WorkBreakdownStructure(wx.ListCtrl, listmix.TextEditMixin):
+    def __init__(self, parent, ID=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0):
+        wx.ListCtrl.__init__(self, parent, ID, pos, size, style)
+        listmix.TextEditMixin.__init__(self)
 
 
 class TaskListPane(wx.Panel):
@@ -12,7 +20,7 @@ class TaskListPane(wx.Panel):
         self.project = project
         sizer = wx.GridBagSizer(vgap=5, hgap=5)
 
-        self.task_list_ctrl = wx.ListCtrl(
+        self.task_list_ctrl = WorkBreakdownStructure(
             self,
             style=wx.LC_REPORT | wx.BORDER_SUNKEN | wx.LC_SINGLE_SEL | wx.LC_EDIT_LABELS | wx.LC_HRULES | wx.LC_VRULES
         )
