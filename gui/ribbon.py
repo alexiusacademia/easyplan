@@ -28,6 +28,8 @@ class Ribbon(wx.ribbon.RibbonBar):
         self.create_pages()
         self.set_button_cursors()
 
+        self.parent = parent
+
         self.project = project
 
     def create_pages(self):
@@ -112,8 +114,9 @@ class Ribbon(wx.ribbon.RibbonBar):
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(tb, 0, wx.EXPAND)
 
-        icon_cut = wx.ArtProvider.GetBitmap(wx.ART_CUT, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.SPLIT_TASK, 'Split Task', icon_cut, 'Split a task segment.', wx.ITEM_NORMAL)
+        icon_split = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
+                                             'ribbon', 'gantt', 'split.png'))
+        tb.AddTool(self.IDS.SPLIT_TASK, 'Split Task', icon_split, 'Split a task segment.', wx.ITEM_NORMAL)
         self.Bind(wx.EVT_TOOL, self.on_split_task, id=self.IDS.SPLIT_TASK)
 
         icon_rename = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
@@ -133,9 +136,10 @@ class Ribbon(wx.ribbon.RibbonBar):
             button.SetCursor(wx.Cursor(wx.CURSOR_HAND))
 
     def on_add_task(self, event):
-        dlg = AddTaskDialog()
-        dlg.ShowModal()
-        dlg.Destroy()
+        # dlg = AddTaskDialog()
+        # dlg.ShowModal()
+        # dlg.Destroy()
+        self.parent.refresh()
 
     def on_outdent_task(self, event):
         print('Outdent Task')

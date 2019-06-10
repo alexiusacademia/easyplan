@@ -43,3 +43,6 @@ class MainFrame(wx.Frame):
         sizer.AddGrowableCol(0)
 
         self.SetSizer(sizer)
+
+    def refresh(self):
+        print('Refresh')
