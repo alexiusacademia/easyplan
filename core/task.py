@@ -20,7 +20,7 @@ class Task:
         self.task_name = 'Unnamed Task'
         self.task_id = id_generator()
         ts1 = TaskSegment(0, 1)
-        self.task_segments.append(ts1)
+        self.task_segments = [ts1]
 
     def rename(self, new_name):
         self.task_name = new_name
