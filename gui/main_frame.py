@@ -2,7 +2,6 @@
 import wx
 
 # Import project modules
-from .gantt_chart.task_list import TaskListPane
 from .gantt_chart.wbs import WBS
 from .ribbon import Ribbon
 from core.project import Project
