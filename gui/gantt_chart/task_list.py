@@ -110,4 +110,4 @@ class TaskListPane(wx.Panel):
 # TODO Create dialog for splitting
 # TODO Add confirmation on task deletion.
 # TODO Add dialog for adding task.
-# TODO Update the project object after cell editing.
+# TODO Work out the scroll bars for WBS.

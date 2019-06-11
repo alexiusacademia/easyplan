@@ -146,14 +146,23 @@ class Ribbon(wx.ribbon.RibbonBar):
         self.parent.refresh()
         self.project.selected_task_index = None
 
+    def on_delete_task(self, event):
+        if self.project.selected_task_index is None:
+            wx.MessageBox('A task shall be selected from the WBS before deleting.', 'Delete Task',
+                          style=wx.OK_DEFAULT)
+        else:
+            index = self.project.selected_task_index
+            dlg = wx.MessageBox('Delete the selected task?', 'Delete Task', style=wx.YES_NO | wx.CANCEL)
+            if dlg == wx.YES:
+                self.project.remove_task(self.project.tasks[index])
+                self.parent.refresh()
+                self.project.selected_task_index = None
+
     def on_outdent_task(self, event):
         print('Outdent Task')
 
     def on_indent_task(self, event):
         print('Indent task')
-
-    def on_delete_task(self, event):
-        print('Delete task.')
 
     def on_split_task(self, event):
         print('Split')
