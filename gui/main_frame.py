@@ -1,15 +1,16 @@
 # Import built-in modules
 import wx
-from wx.lib.splitter import MultiSplitterWindow
 
 # Import project modules
 from .gantt_chart.task_list import TaskListPane
+from .gantt_chart.wbs import WBS
 from .ribbon import Ribbon
 from core.project import Project
 
 
 class MainFrame(wx.Frame):
     project = None
+    left_pane = None
 
     def __init__(self):
         super().__init__(parent=None, title='EasyPlan')
@@ -26,11 +27,12 @@ class MainFrame(wx.Frame):
         sizer = wx.GridBagSizer(vgap=5, hgap=5)
 
         splitter = wx.SplitterWindow(self,
-                                     style=wx.SP_THIN_SASH | wx.NO_BORDER | wx.SP_3D | wx.SP_LIVE_UPDATE)
+                                     style=wx.SP_3DBORDER | wx.SP_LIVE_UPDATE | wx.SP_3DSASH)
         splitter.SetMinimumPaneSize(400)
 
-        self.left_pane = TaskListPane(splitter, self.project)
-        right_pane = TaskListPane(splitter, self.project)
+        # self.left_pane = TaskListPane(splitter, self.project)
+        self.left_pane = WBS(splitter, self.project)
+        right_pane = wx.Panel(splitter)
 
         splitter.SplitVertically(self.left_pane, right_pane, 400)
 
@@ -38,7 +40,7 @@ class MainFrame(wx.Frame):
         sizer.Add(ribbon, pos=(0, 0), flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT)
 
         sizer.Add(splitter, pos=(1, 0),
-                  flag=wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP | wx.BOTTOM)
+                  flag=wx.EXPAND | wx.TOP | wx.BOTTOM)
 
         self.Bind(wx.EVT_SPLITTER_DCLICK, self.on_sash_dbl_clicked)
 
@@ -48,7 +50,8 @@ class MainFrame(wx.Frame):
         self.SetSizer(sizer)
 
     def refresh(self):
-        self.left_pane.redraw_project()
+        # self.left_pane.redraw_project()
+        self.left_pane.populate()
 
     def on_sash_dbl_clicked(self, event):
         print(event)

@@ -146,11 +146,20 @@ class Ribbon(wx.ribbon.RibbonBar):
         self.parent.refresh()
         self.project.selected_task_index = None
 
+        print(len(self.project.tasks))
+
     def on_delete_task(self, event):
+        """
+        Delete a given task from the selected row.
+        :param event: A toolbar click event.
+        :return:
+        """
         if self.project.selected_task_index is None:
             wx.MessageBox('A task shall be selected from the WBS before deleting.', 'Delete Task',
                           style=wx.OK_DEFAULT)
         else:
+            # Ask user for confirmation
+            # TODO Do some necessary checking before deleting. This can also be implemented on the core API.
             index = self.project.selected_task_index
             dlg = wx.MessageBox('Delete the selected task?', 'Delete Task', style=wx.YES_NO | wx.CANCEL)
             if dlg == wx.YES:
