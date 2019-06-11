@@ -47,10 +47,23 @@ class TaskListPane(wx.Panel):
         self.project.selected_task_index = selected_index
 
     def on_end_editing(self, event):
+        """
+        Update the task object after editing some properties.
+        :param event: Event fired after ENTER is pressed or cell has lost its focus.
+        :return:
+        """
         index = event.GetIndex()
         col = event.GetColumn()
         value = event.GetLabel()
-        print(index, col, value)
+        task = self.project.tasks[index]
+        if col == 1:
+            task.task_name = value
+        elif col == 2:
+            task.start_day = int(value)
+        elif col == 3:
+            task.set_duration(int(value))
+        elif col == 4:
+            task.predecessor = int(value)
 
     def add_task(self, task_object, *args):
         """
@@ -89,4 +102,4 @@ class TaskListPane(wx.Panel):
 # TODO Create dialog for splitting
 # TODO Add confirmation on task deletion.
 # TODO Add dialog for adding task.
-# TODO Add event when editing cell.
+# TODO Update the project object after cell editing.
