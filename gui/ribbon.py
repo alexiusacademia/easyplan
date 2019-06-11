@@ -146,8 +146,6 @@ class Ribbon(wx.ribbon.RibbonBar):
         self.parent.refresh()
         self.project.selected_task_index = None
 
-        print(len(self.project.tasks))
-
     def on_delete_task(self, event):
         """
         Delete a given task from the selected row.
