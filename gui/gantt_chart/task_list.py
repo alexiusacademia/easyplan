@@ -8,8 +8,8 @@ from core.project import Project
 
 
 class WorkBreakdownStructure(wx.ListCtrl, listmix.TextEditMixin):
-    def __init__(self, parent, ID=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0):
-        wx.ListCtrl.__init__(self, parent, ID, pos, size, style)
+    def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0):
+        wx.ListCtrl.__init__(self, parent, id, pos, size, style)
         listmix.TextEditMixin.__init__(self)
 
 
@@ -25,6 +25,7 @@ class TaskListPane(wx.Panel):
             style=wx.LC_REPORT | wx.BORDER_SUNKEN | wx.LC_SINGLE_SEL | wx.LC_EDIT_LABELS | wx.LC_HRULES | wx.LC_VRULES
         )
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.on_item_selected, self.task_list_ctrl)
+        self.Bind(wx.EVT_LIST_END_LABEL_EDIT, self.on_end_editing, self.task_list_ctrl)
 
         # Create the default columns
         self.task_list_ctrl.InsertColumn(0, 'Id')
@@ -32,10 +33,6 @@ class TaskListPane(wx.Panel):
         self.task_list_ctrl.InsertColumn(2, 'Start', width=60, format=wx.LIST_FORMAT_CENTRE)
         self.task_list_ctrl.InsertColumn(3, 'Duration', width=60, format=wx.LIST_FORMAT_CENTRE)
         self.task_list_ctrl.InsertColumn(4, 'Predecessor', width=80, format=wx.LIST_FORMAT_CENTER)
-
-        # self.task_list_ctrl.InsertItem(0, 'Untitled Task')
-        # self.task_list_ctrl.SetItem(0, 1, str(0))
-        # self.task_list_ctrl.SetItem(0, 2, str(1))
 
         sizer.Add(self.task_list_ctrl, pos=(0, 0),
                   flag=wx.EXPAND|wx.LEFT|wx.RIGHT|wx.TOP|wx.BOTTOM)
@@ -48,6 +45,12 @@ class TaskListPane(wx.Panel):
     def on_item_selected(self, evt):
         selected_index = self.task_list_ctrl.GetFocusedItem()
         self.project.selected_task_index = selected_index
+
+    def on_end_editing(self, event):
+        index = event.GetIndex()
+        col = event.GetColumn()
+        value = event.GetLabel()
+        print(index, col, value)
 
     def add_task(self, task_object, *args):
         """
@@ -86,3 +89,4 @@ class TaskListPane(wx.Panel):
 # TODO Create dialog for splitting
 # TODO Add confirmation on task deletion.
 # TODO Add dialog for adding task.
+# TODO Add event when editing cell.
