@@ -18,6 +18,7 @@ class TaskListPane(wx.Panel):
         wx.Panel.__init__(self, parent=parent, style=wx.HSCROLL | wx.VSCROLL)
 
         self.project = project
+        self.parent = parent
         sizer = wx.GridBagSizer(vgap=5, hgap=5)
 
         self.task_list_ctrl = WorkBreakdownStructure(
@@ -65,16 +66,16 @@ class TaskListPane(wx.Panel):
         elif col == 4:
             task.predecessor = int(value)
 
-    def add_task(self, task_object, *args):
+    def add_task(self):
         """
         Add a task to the specific row.
         :param task_object:
-        :param row_index:
         :return:
         """
-        if len(args) > 0:
-            # The index is given so we insert the task on that index
-            index = args[0]
+        index = self.project.selected_task_index
+        task = Task()
+        self.project.tasks.insert(index, task)
+        self.parent.refresh()
 
     def redraw_project(self):
         # First clear content

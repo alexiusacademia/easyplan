@@ -138,8 +138,13 @@ class Ribbon(wx.ribbon.RibbonBar):
             button.SetCursor(wx.Cursor(wx.CURSOR_HAND))
 
     def on_add_task(self, event):
-        self.project.add_task(Task())
+        if self.project.selected_task_index is not None:
+            index = self.project.selected_task_index
+            self.project.tasks.insert(index, Task())
+        else:
+            self.project.add_task(Task())
         self.parent.refresh()
+        self.project.selected_task_index = None
 
     def on_outdent_task(self, event):
         print('Outdent Task')

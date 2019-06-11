@@ -30,7 +30,7 @@ class Project:
     project_name = ''
     project_location = ''
     project_amount = ''
-    selected_task_index = 0
+    selected_task_index = None
 
     def __init__(self):
         self._initialized = True

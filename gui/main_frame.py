@@ -25,9 +25,6 @@ class MainFrame(wx.Frame):
     def init_ui(self):
         sizer = wx.GridBagSizer(vgap=5, hgap=5)
 
-        ribbon = Ribbon(self, self.project)
-        sizer.Add(ribbon, pos=(0, 0), flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT)
-
         splitter = wx.SplitterWindow(self,
                                      style=wx.SP_THIN_SASH | wx.NO_BORDER | wx.SP_3D | wx.SP_LIVE_UPDATE)
 
@@ -35,6 +32,9 @@ class MainFrame(wx.Frame):
         right_pane = TaskListPane(splitter, self.project)
 
         splitter.SplitVertically(self.left_pane, right_pane, 400)
+
+        ribbon = Ribbon(self, self.project)
+        sizer.Add(ribbon, pos=(0, 0), flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT)
 
         sizer.Add(splitter, pos=(1, 0),
                   flag=wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP | wx.BOTTOM)
