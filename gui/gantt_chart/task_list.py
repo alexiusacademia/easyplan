@@ -66,17 +66,6 @@ class TaskListPane(wx.Panel):
         elif col == 4:
             task.predecessor = int(value)
 
-    def add_task(self):
-        """
-        Add a task to the specific row.
-        :param task_object:
-        :return:
-        """
-        index = self.project.selected_task_index
-        task = Task()
-        self.project.tasks.insert(index, task)
-        self.parent.refresh()
-
     def redraw_project(self):
         # First clear content
         li = self.task_list_ctrl
