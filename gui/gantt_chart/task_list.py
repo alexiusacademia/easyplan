@@ -101,13 +101,11 @@ class TaskListPane(wx.Panel):
     def set_column_sizes(self):
         self.task_list_ctrl.SetColumnWidth(0, 30)
         self.task_list_ctrl.SetColumnWidth(1, 200)
-        self.task_list_ctrl.SetColumnWidth(2, 50)
-        self.task_list_ctrl.SetColumnWidth(3, 50)
-        self.task_list_ctrl.SetColumnWidth(4, 50)
-        self.task_list_ctrl.SetColumnWidth(5, 50)
+        self.task_list_ctrl.SetColumnWidth(2, 100)
+        self.task_list_ctrl.SetColumnWidth(3, 100)
+        self.task_list_ctrl.SetColumnWidth(4, 100)
+        self.task_list_ctrl.SetColumnWidth(5, 100)
 
 # TODO Create dialog for renaming task
 # TODO Create dialog for splitting
-# TODO Add confirmation on task deletion.
 # TODO Add dialog for adding task.
-# TODO Work out the scroll bars for WBS.
