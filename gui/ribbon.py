@@ -159,11 +159,13 @@ class Ribbon(wx.ribbon.RibbonBar):
             # Ask user for confirmation
             # TODO Do some necessary checking before deleting. This can also be implemented on the core API.
             index = self.project.selected_task_index
-            dlg = wx.MessageBox('Delete the selected task?', 'Delete Task', style=wx.YES_NO | wx.CANCEL)
-            if dlg == wx.YES:
-                self.project.remove_task(self.project.tasks[index])
-                self.parent.refresh()
-                self.project.selected_task_index = None
+
+            if index <= len(self.project.tasks) - 1:
+                dlg = wx.MessageBox('Delete the selected task?', 'Delete Task', style=wx.YES_NO | wx.CANCEL)
+                if dlg == wx.YES:
+                    self.project.remove_task(self.project.tasks[index])
+                    self.parent.refresh()
+                    self.project.selected_task_index = None
 
     def on_outdent_task(self, event):
         print('Outdent Task')
