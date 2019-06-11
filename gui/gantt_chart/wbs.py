@@ -41,6 +41,7 @@ class WBS(gridlib.Grid):
         self.Bind(gridlib.EVT_GRID_CELL_CHANGED, self.on_cell_edit_complete)
 
     def populate(self):
+        self.ClearGrid()
         num_rows = self.GetNumberRows()
         index = 0
         for task in self.project.tasks:
@@ -108,4 +109,4 @@ def show_error(message, caption):
     wx.MessageBox(message, caption)
 
 
-# TODO on_edit_completed
+# TODO
