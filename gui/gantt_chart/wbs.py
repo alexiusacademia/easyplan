@@ -41,7 +41,11 @@ class WBS(gridlib.Grid):
         self.Bind(gridlib.EVT_GRID_CELL_CHANGED, self.on_cell_edit_complete)
 
     def populate(self):
-        self.ClearGrid()
+        """
+        Populate the grid with the data from the project object.
+        :return:
+        """
+        self.delete_all_rows()
         num_rows = self.GetNumberRows()
         index = 0
         for task in self.project.tasks:
@@ -53,6 +57,14 @@ class WBS(gridlib.Grid):
             self.SetCellValue(index, 3, str(task.predecessor))
 
             index += 1
+
+    def delete_all_rows(self):
+        """
+        Just delete all the rows.
+        :return:
+        """
+        if self.GetNumberRows() > 0:
+            self.DeleteRows(0, self.GetNumberRows())
 
     def on_row_selected(self, event):
         """
@@ -66,6 +78,11 @@ class WBS(gridlib.Grid):
             self.project.selected_task_index = index
 
     def on_cell_edit_complete(self, event):
+        """
+        Called when cell editing is complete.
+        :param event:
+        :return:
+        """
         if isinstance(event, gridlib.GridEvent):
             cell = event.GetRow(), event.GetCol()
             self.update_project(cell[0], cell[1], event.GetString())
@@ -109,4 +126,5 @@ def show_error(message, caption):
     wx.MessageBox(message, caption)
 
 
-# TODO
+# TODO Indent
+# TODO Outdent
