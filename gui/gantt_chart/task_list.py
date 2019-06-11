@@ -11,7 +11,7 @@ class WorkBreakdownStructure(wx.ListCtrl, listmix.TextEditMixin, listmix.ListCtr
     def __init__(self, parent, id=wx.ID_ANY, pos=wx.DefaultPosition, size=wx.DefaultSize, style=0):
         wx.ListCtrl.__init__(self, parent, id, pos, size, style)
         listmix.TextEditMixin.__init__(self)
-        listmix.ListCtrlAutoWidthMixin.__init__(self)
+        # listmix.ListCtrlAutoWidthMixin.__init__(self)
 
 
 class TaskListPane(wx.Panel):

@@ -27,6 +27,7 @@ class MainFrame(wx.Frame):
 
         splitter = wx.SplitterWindow(self,
                                      style=wx.SP_THIN_SASH | wx.NO_BORDER | wx.SP_3D | wx.SP_LIVE_UPDATE)
+        splitter.SetMinimumPaneSize(400)
 
         self.left_pane = TaskListPane(splitter, self.project)
         right_pane = TaskListPane(splitter, self.project)
@@ -39,6 +40,8 @@ class MainFrame(wx.Frame):
         sizer.Add(splitter, pos=(1, 0),
                   flag=wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP | wx.BOTTOM)
 
+        self.Bind(wx.EVT_SPLITTER_DCLICK, self.on_sash_dbl_clicked)
+
         sizer.AddGrowableRow(1)
         sizer.AddGrowableCol(0)
 
@@ -46,3 +49,6 @@ class MainFrame(wx.Frame):
 
     def refresh(self):
         self.left_pane.redraw_project()
+
+    def on_sash_dbl_clicked(self, event):
+        print(event)
