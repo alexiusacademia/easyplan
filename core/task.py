@@ -14,7 +14,7 @@ class Task:
     task_id = 0
     task_segments = []
     start_day = 0
-    upstream = None
+    predecessor = None
 
     def __init__(self):
         self.task_name = 'Unnamed Task'
@@ -90,7 +90,7 @@ class Task:
         :return:
         """
         if isinstance(task, Task):
-            self.upstream = task
+            self.predecessor = task
             return True
         else:
             return False, 'Task must be an instance of task.'

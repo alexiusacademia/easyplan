@@ -27,9 +27,11 @@ class TaskListPane(wx.Panel):
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.on_item_selected, self.task_list_ctrl)
 
         # Create the default columns
-        self.task_list_ctrl.InsertColumn(0, 'Task', width=200)
-        self.task_list_ctrl.InsertColumn(1, 'Start', width=60, format=wx.LIST_FORMAT_CENTRE)
-        self.task_list_ctrl.InsertColumn(2, 'Duration', width=60, format=wx.LIST_FORMAT_CENTRE)
+        self.task_list_ctrl.InsertColumn(0, 'Id')
+        self.task_list_ctrl.InsertColumn(1, 'Task Name', width=200)
+        self.task_list_ctrl.InsertColumn(2, 'Start', width=60, format=wx.LIST_FORMAT_CENTRE)
+        self.task_list_ctrl.InsertColumn(3, 'Duration', width=60, format=wx.LIST_FORMAT_CENTRE)
+        self.task_list_ctrl.InsertColumn(4, 'Predecessor', width=80, format=wx.LIST_FORMAT_CENTER)
 
         # self.task_list_ctrl.InsertItem(0, 'Untitled Task')
         # self.task_list_ctrl.SetItem(0, 1, str(0))
@@ -63,15 +65,20 @@ class TaskListPane(wx.Panel):
         li = self.task_list_ctrl
         li.ClearAll()
 
-        li.InsertColumn(0, 'Task', width=200)
-        li.InsertColumn(1, 'Start', width=60, format=wx.LIST_FORMAT_CENTRE)
-        li.InsertColumn(2, 'Duration', width=60, format=wx.LIST_FORMAT_CENTRE)
+        li.InsertColumn(0, 'Task Id')
+        li.InsertColumn(1, 'Task Name', width=200)
+        li.InsertColumn(2, 'Start', width=60, format=wx.LIST_FORMAT_CENTRE)
+        li.InsertColumn(3, 'Duration', width=60, format=wx.LIST_FORMAT_CENTRE)
+        self.task_list_ctrl.InsertColumn(4, 'Predecessor', width=80, format=wx.LIST_FORMAT_CENTER)
 
         index = 0
         for task in self.project.tasks:
-            li.InsertItem(index, task.task_name)
-            li.SetItem(index, 1, str(task.start_day))
-            li.SetItem(index, 2, str(task.get_duration()))
+            li.InsertItem(index, str(index))
+            li.SetItem(index, 1, task.task_name)
+            li.SetItem(index, 2, str(task.start_day))
+            li.SetItem(index, 3, str(task.get_duration()))
+            if task.predecessor is not None:
+                li.SetItem(index, 4, str(task.predecessor))
 
             index += 1
 
