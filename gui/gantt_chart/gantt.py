@@ -15,7 +15,14 @@ class GanttChart(wx.Window):
         self.Bind(wx.EVT_PAINT, self.redraw)
 
     def redraw(self, event):
-        print(self.wbs.GetNumberRows())
+        header_height = self.wbs.GetGridColLabelWindow().Size[1]
+        num_rows = self.wbs.GetNumberRows()
+        if num_rows > 0:
+            row_height = self.wbs.GetRowSize(0)
+        else:
+            row_height = 0
+        print(row_height)
 
     def trigger_draw(self):
         self.Refresh()
+
