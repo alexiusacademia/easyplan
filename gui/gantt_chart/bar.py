@@ -14,12 +14,11 @@ class Bar(wx.Window):
         self.y = y
         self.hor_scale = hor_scale
 
-        self.on_paint()
+        self.SetPosition((int(task.start_day) - 1, y))
+        self.Size = wx.Size(task.get_virtual_duration() * hor_scale, self.BAR_THICKNESS)
+        self.SetBackgroundColour(wx.BLUE)
 
-    def on_paint(self,):
-        dc = wx.PaintDC(self.parent)
-        dc.SetBrush(wx.Brush(wx.BLUE))
-        dc.DrawRectangle((int(self.task.start_day) - 1) * self.hor_scale,
-                         self.y,
-                         self.task.get_virtual_duration() * self.hor_scale,
-                         self.BAR_THICKNESS)
+        self.Bind(wx.EVT_MOUSE_EVENTS, self.on_mouse_hover)
+
+    def on_mouse_hover(self, event):
+        print(event)

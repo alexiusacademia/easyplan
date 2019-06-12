@@ -10,6 +10,8 @@ class GanttChart(wx.Window):
 
     BAR_SCALE = 10
 
+    bars = []
+
     def __init__(self, parent, project, wbs):
         wx.Window.__init__(self, parent)
 
@@ -30,7 +32,7 @@ class GanttChart(wx.Window):
         if num_rows > 0:
             row_height = self.wbs.GetRowSize(0)
             self.draw_hor_grids(self.GetSize()[0], num_rows, row_height)
-            self.draw_hor_bars()
+            self.draw_task_bars()
         else:
             row_height = 0
 
@@ -39,9 +41,8 @@ class GanttChart(wx.Window):
         Refresh the window content.
         :return:
         """
-        print('Trigger')
         self.Refresh()
-        self.draw_hor_bars()
+        self.draw_task_bars()
 
     def draw_hor_grids(self, length, num, vert_distance):
         """
@@ -58,7 +59,12 @@ class GanttChart(wx.Window):
             y = i * vert_distance + self.header_height
             dc.DrawLine(0, y, length, y)
 
-    def draw_hor_bars(self):
+    def draw_task_bars(self):
+        for b in self.bars:
+            if isinstance(b, Bar):
+                b.Destroy()
+        self.bars.clear()
+
         tasks = self.project.tasks
         if len(tasks) > 0:
             index = 0
@@ -67,4 +73,5 @@ class GanttChart(wx.Window):
                           task,
                           index * self.wbs.GetRowSize(0) + self.header_height,
                           self.BAR_SCALE)
+                self.bars.append(bar)
                 index += 1
