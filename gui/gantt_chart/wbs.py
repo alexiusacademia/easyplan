@@ -20,6 +20,7 @@ class WBS(gridlib.Grid):
         self.CreateGrid(0, 4)
         # self.SetTable(table, True)
         self.SetRowLabelSize(30)
+        self.SetColLabelSize(40)
         # self.SetMargins(0, 0)
 
         for i in range(100):
@@ -55,6 +56,8 @@ class WBS(gridlib.Grid):
             self.SetCellValue(index, 1, str(task.start_day))
             self.SetCellValue(index, 2, str(task.get_duration()))
             self.SetCellValue(index, 3, str(task.predecessor))
+
+            self.SetRowSize(index, 30)
 
             index += 1
 
