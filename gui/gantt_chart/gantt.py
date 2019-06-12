@@ -1,6 +1,6 @@
 import wx
 
-from .bar import Bar
+from .bar import Bar, BarSegment
 
 
 class GanttChart(wx.Window):
@@ -9,6 +9,7 @@ class GanttChart(wx.Window):
     header_height = 0
 
     BAR_SCALE = 10
+    BAR_THICKNESS = 20
 
     bars = []
 
@@ -62,7 +63,7 @@ class GanttChart(wx.Window):
 
     def delete_bars(self):
         for b in self.bars:
-            if isinstance(b, Bar):
+            if isinstance(b, BarSegment):
                 b.Destroy()
         self.bars.clear()
 
@@ -73,9 +74,17 @@ class GanttChart(wx.Window):
         if len(tasks) > 0:
             index = 0
             for task in tasks:
+                '''
                 bar = Bar(self,
                           task,
                           index * row_size + self.header_height,
                           self.BAR_SCALE)
-                self.bars.append(bar)
+                          '''
+                for ts in task.task_segments:
+                    bar = BarSegment(self,
+                                     (ts.start - 1) * self.BAR_SCALE,
+                                     index * row_size + self.header_height,
+                                      ts.duration * self.BAR_SCALE,
+                                     self.BAR_THICKNESS)
+                    self.bars.append(bar)
                 index += 1

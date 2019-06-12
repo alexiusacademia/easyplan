@@ -114,7 +114,7 @@ class WBS(gridlib.Grid):
                 if index == 0 and int(value) != 1:
                     self.SetCellValue(cell, old)
                 else:
-                    task.start_day = value
+                    task.set_start_day(value)
         elif col == 2:
             if value.isdigit():
                 task.set_duration(int(value))
