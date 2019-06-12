@@ -143,7 +143,7 @@ class Ribbon(wx.ribbon.RibbonBar):
             self.project.tasks.insert(index, Task())
         else:
             self.project.add_task(Task())
-        self.parent.refresh()
+        self.parent.refresh(populate=True)
         self.project.selected_task_index = None
 
     def on_delete_task(self, event):

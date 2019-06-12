@@ -42,6 +42,9 @@ class WBS(gridlib.Grid):
         self.Bind(gridlib.EVT_GRID_LABEL_LEFT_CLICK, self.on_row_selected)
         self.Bind(gridlib.EVT_GRID_CELL_CHANGED, self.on_cell_edit_complete)
 
+    def on_hide(self, event):
+        print('Hide')
+
     def populate(self):
         """
         Populate the grid with the data from the project object.
@@ -105,25 +108,15 @@ class WBS(gridlib.Grid):
         if col == 0:
             task.task_name = value
         elif col == 1:
-            if not value.isdigit():
-                show_error('Invalid input. Start day must be integer.',
-                                'Invalid Input')
-                self.SetCellValue(index, col, old)
-            else:
+            if value.isdigit():
                 # Now check if this is the first task,
-                # if it is, make sure that it starts at first day (e.g. day 0)
+                # if it is, make sure that it starts at first day (e.g. day 1)
                 if index == 0 and int(value) != 1:
-                    show_error('First Task must always start at day one.',
-                               'Incorrect Start')
                     self.SetCellValue(cell, old)
                 else:
                     task.start_day = value
         elif col == 2:
-            if not value.isdigit():
-                show_error('Invalid input. Duration must be an integer.',
-                                'Invalid Input')
-                self.SetCellValue(index, col, old)
-            else:
+            if value.isdigit():
                 task.set_duration(int(value))
 
 

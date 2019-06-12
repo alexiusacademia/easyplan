@@ -50,9 +50,14 @@ class MainFrame(wx.Frame):
 
         self.SetSizer(sizer)
 
-    def refresh(self):
-        # self.left_pane.redraw_project()
-        self.left_pane.populate()
+    def refresh(self, **kwargs):
+        """
+
+        :param kwargs:
+        :return:
+        """
+        if 'populate' in kwargs:
+            self.left_pane.populate()
         self.right_pane.trigger_draw()
 
     def on_sash_dbl_clicked(self, event):

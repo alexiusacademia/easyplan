@@ -23,7 +23,7 @@ class GanttChart(wx.Window):
 
     def redraw(self, event):
         """
-        Handles the drawing functionalizties of the gantt chart canvas.
+        Handles the drawing functionalities of the gantt chart canvas.
         :param event:
         :return:
         """
@@ -42,6 +42,7 @@ class GanttChart(wx.Window):
         :return:
         """
         self.Refresh()
+        self.delete_bars()
         self.draw_task_bars()
 
     def draw_hor_grids(self, length, num, vert_distance):
@@ -59,11 +60,14 @@ class GanttChart(wx.Window):
             y = i * vert_distance + self.header_height
             dc.DrawLine(0, y, length, y)
 
-    def draw_task_bars(self):
+    def delete_bars(self):
         for b in self.bars:
             if isinstance(b, Bar):
                 b.Destroy()
         self.bars.clear()
+
+    def draw_task_bars(self):
+        row_size = self.wbs.GetRowSize(0)
 
         tasks = self.project.tasks
         if len(tasks) > 0:
@@ -71,7 +75,7 @@ class GanttChart(wx.Window):
             for task in tasks:
                 bar = Bar(self,
                           task,
-                          index * self.wbs.GetRowSize(0) + self.header_height,
+                          index * row_size + self.header_height,
                           self.BAR_SCALE)
                 self.bars.append(bar)
                 index += 1
