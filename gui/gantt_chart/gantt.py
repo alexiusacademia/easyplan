@@ -16,6 +16,11 @@ class GanttChart(wx.Window):
         self.Bind(wx.EVT_PAINT, self.redraw)
 
     def redraw(self, event):
+        """
+        Handles the drawing functionalizties of the gantt chart canvas.
+        :param event:
+        :return:
+        """
         self.header_height = self.wbs.GetGridColLabelWindow().Size[1]
         num_rows = self.wbs.GetNumberRows()
         if num_rows > 0:
@@ -25,9 +30,20 @@ class GanttChart(wx.Window):
             row_height = 0
 
     def trigger_draw(self):
+        """
+        Refresh the window content.
+        :return:
+        """
         self.Refresh()
 
     def draw_hor_grids(self, length, num, vert_distance):
+        """
+        Draw the horizontal grid lines based on the number of rows
+        of tasks.
+        :param length: The width of thee gantt chart canvas.
+        :param num: Number of tasks
+        :param vert_distance: The distance between grid line (Matched to the height of table row.)
+        """
         dc = wx.PaintDC(self)
         dc.SetPen(wx.Pen(wx.LIGHT_GREY, 1))
 
