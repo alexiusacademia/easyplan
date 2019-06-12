@@ -81,10 +81,18 @@ class Task:
                               'change in the total duration.'
 
     def set_start_day(self, s):
-        self.start_day = int(s)
+        """
+        Change the default start day of the task and recursively update
+        each task segment's start day.
+        :param s: Start day (int)
+        :return:
+        """
+        s = int(s)
+        self.start_day = s
+
         # Adjust all start of task segments
         old_start = self.task_segments[0].start
-        diff = int(s) - old_start
+        diff = s - old_start
 
         for ts in self.task_segments:
             ts.start += diff
