@@ -12,10 +12,11 @@ class Cols(enumerate):
 class WBS(gridlib.Grid):
     project = None
 
-    def __init__(self, parent, project):
+    def __init__(self, parent, project, controller):
         gridlib.Grid.__init__(self, parent, -1)
 
         self.project = project
+        self.controller = controller
 
         self.CreateGrid(0, 4)
         # self.SetTable(table, True)
@@ -89,6 +90,7 @@ class WBS(gridlib.Grid):
         if isinstance(event, gridlib.GridEvent):
             cell = event.GetRow(), event.GetCol()
             self.update_project(cell[0], cell[1], event.GetString())
+            self.controller.refresh()
 
     def update_project(self, index, col, old):
         """
@@ -131,3 +133,4 @@ def show_error(message, caption):
 
 # TODO Indent
 # TODO Outdent
+# TODO ValueError

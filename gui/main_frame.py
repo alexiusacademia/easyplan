@@ -32,7 +32,7 @@ class MainFrame(wx.Frame):
         splitter.SetMinimumPaneSize(400)
 
         # self.left_pane = TaskListPane(splitter, self.project)
-        self.left_pane = WBS(splitter, self.project)
+        self.left_pane = WBS(splitter, self.project, self)
         self.right_pane = GanttChart(splitter, self.project, self.left_pane)
 
         splitter.SplitVertically(self.left_pane, self.right_pane, 400)
@@ -56,4 +56,4 @@ class MainFrame(wx.Frame):
         self.right_pane.trigger_draw()
 
     def on_sash_dbl_clicked(self, event):
-        print(event)
+        print('Splitter has been double clicked.')
