@@ -56,8 +56,7 @@ class MainFrame(wx.Frame):
         :param kwargs:
         :return:
         """
-        if 'populate' in kwargs:
-            self.left_pane.populate()
+        self.left_pane.populate()
         self.right_pane.trigger_draw()
 
     def on_sash_dbl_clicked(self, event):
