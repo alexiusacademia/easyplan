@@ -3,6 +3,7 @@ import wx
 
 # Import project modules
 from .gantt_chart.wbs import WBS
+from .gantt_chart.gantt import GanttChart
 from .ribbon import Ribbon
 from core.project import Project
 
@@ -10,6 +11,7 @@ from core.project import Project
 class MainFrame(wx.Frame):
     project = None
     left_pane = None
+    right_pane = None
 
     def __init__(self):
         super().__init__(parent=None, title='EasyPlan')
@@ -31,9 +33,9 @@ class MainFrame(wx.Frame):
 
         # self.left_pane = TaskListPane(splitter, self.project)
         self.left_pane = WBS(splitter, self.project)
-        right_pane = wx.Panel(splitter)
+        self.right_pane = GanttChart(splitter, self.project, self.left_pane)
 
-        splitter.SplitVertically(self.left_pane, right_pane, 400)
+        splitter.SplitVertically(self.left_pane, self.right_pane, 400)
 
         ribbon = Ribbon(self, self.project)
         sizer.Add(ribbon, pos=(0, 0), flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT)
@@ -51,6 +53,7 @@ class MainFrame(wx.Frame):
     def refresh(self):
         # self.left_pane.redraw_project()
         self.left_pane.populate()
+        self.right_pane.trigger_draw()
 
     def on_sash_dbl_clicked(self, event):
         print(event)
