@@ -20,7 +20,6 @@ class GanttChart(wx.Window):
         self.project = project
 
         self.SetBackgroundColour((255, 255, 255))
-        # self.redraw()
 
     # def redraw(self, event):
     def redraw(self):
@@ -71,6 +70,22 @@ class GanttChart(wx.Window):
                                  (ts.start - 1) * self.BAR_SCALE,
                                  index * WBS_ROW_HEIGHT + WBS_HEADER_HEIGHT,
                                  ts.duration * self.BAR_SCALE,
-                                 self.BAR_THICKNESS)
+                                 self.BAR_THICKNESS,
+                                 task,
+                                 ts)
+                bar.Bind(wx.EVT_LEFT_DCLICK, lambda event, t=task, ts=ts: self.on_double_clicked(event, t, ts))
 
                 self.bars.append(bar)
+                print(ts.start, ' - ', ts.duration, end=', ')
+            print('\n= = = = =')
+
+    def on_double_clicked(self, event, task, task_segment):
+        if isinstance(event, wx.MouseEvent):
+            loc = event.GetPosition()
+            x = loc[0]
+            day = int(x / BAR_SCALE) + 1
+            task.split_task(task_segment, day-1)
+            self.call_redraw()
+
+    def call_redraw(self):
+        self.redraw()

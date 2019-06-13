@@ -130,7 +130,7 @@ class Task:
 
         # Create two task segments
         ts1 = TaskSegment(start, left)
-        ts2 = TaskSegment(left, total_duration - left)
+        ts2 = TaskSegment(left + 2, total_duration - left)
 
         # Replace the old task segment on the list
         location = self.task_segments.index(task_segment)
