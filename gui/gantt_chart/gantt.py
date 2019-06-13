@@ -1,6 +1,6 @@
 import wx
 
-from .bar import Bar, BarSegment
+from .bar import BarSegment
 from .constants import *
 
 
@@ -74,4 +74,3 @@ class GanttChart(wx.Window):
                                  self.BAR_THICKNESS)
 
                 self.bars.append(bar)
-        print(self.bars)
