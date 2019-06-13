@@ -47,12 +47,20 @@ class GanttChart(wx.Window):
             dc.DrawLine(0, y, length, y)
 
     def delete_bars(self):
+        """
+        Delete all bar segments created.
+        :return:
+        """
         for b in self.bars:
             if isinstance(b, BarSegment):
                 b.Destroy()
         self.bars.clear()
 
     def draw_task_bars(self):
+        """
+        Draw each bar segment for each task.
+        :return:
+        """
         self.delete_bars()
 
         tasks = self.project.tasks
