@@ -25,7 +25,7 @@ class Ribbon(wx.ribbon.RibbonBar):
 
     RIBBON_BUTTON_SIZE = (22, 22)
 
-    def __init__(self, parent, project):
+    def __init__(self, parent, project, wbs):
         super().__init__(parent=parent)
         self.create_pages()
         self.set_button_cursors()
@@ -33,6 +33,8 @@ class Ribbon(wx.ribbon.RibbonBar):
         self.parent = parent
 
         self.project = project
+
+        self.wbs = wbs
 
     def create_pages(self):
         self.page_gantt_chart()
@@ -143,8 +145,9 @@ class Ribbon(wx.ribbon.RibbonBar):
             self.project.tasks.insert(index, Task())
         else:
             self.project.add_task(Task())
-        self.parent.refresh(populate=True)
+        # self.parent.refresh(populate=True)
         self.project.selected_task_index = None
+        self.wbs.populate()
 
     def on_delete_task(self, event):
         """

@@ -20,9 +20,11 @@ class GanttChart(wx.Window):
         self.project = project
 
         self.SetBackgroundColour((255, 255, 255))
-        self.Bind(wx.EVT_PAINT, self.redraw)
+        self.redraw()
 
-    def redraw(self, event):
+    # def redraw(self, event):
+    def redraw(self):
+        print('Redraw')
         """
         Handles the drawing functionalities of the gantt chart canvas.
         :param event:

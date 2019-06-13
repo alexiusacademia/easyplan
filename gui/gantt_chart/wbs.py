@@ -12,7 +12,7 @@ class Cols(enumerate):
 class WBS(gridlib.Grid):
     project = None
 
-    def __init__(self, parent, project, controller):
+    def __init__(self, parent, project, controller, gantt):
         gridlib.Grid.__init__(self, parent, -1)
 
         self.project = project

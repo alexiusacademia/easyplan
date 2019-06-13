@@ -37,7 +37,7 @@ class MainFrame(wx.Frame):
 
         splitter.SplitVertically(self.left_pane, self.right_pane, 400)
 
-        ribbon = Ribbon(self, self.project)
+        ribbon = Ribbon(self, self.project, self.left_pane)
         sizer.Add(ribbon, pos=(0, 0), flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT)
 
         sizer.Add(splitter, pos=(1, 0),
@@ -56,8 +56,9 @@ class MainFrame(wx.Frame):
         :param kwargs:
         :return:
         """
-        self.left_pane.populate()
-        self.right_pane.trigger_draw()
+        # self.left_pane.populate()
+        # self.right_pane.trigger_draw()
+        print('Called')
 
     def on_sash_dbl_clicked(self, event):
         print('Splitter has been double clicked.')
