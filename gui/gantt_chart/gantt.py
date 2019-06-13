@@ -1,6 +1,7 @@
 import wx
 
 from .bar import Bar, BarSegment
+from .constants import *
 
 
 class GanttChart(wx.Window):
@@ -24,17 +25,16 @@ class GanttChart(wx.Window):
 
     # def redraw(self, event):
     def redraw(self):
-        print('Redraw')
         """
         Handles the drawing functionalities of the gantt chart canvas.
         :param event:
         :return:
         """
-        self.header_height = self.wbs.GetGridColLabelWindow().Size[1]
-        num_rows = self.wbs.GetNumberRows()
+        self.header_height = WBS_HEADER_HEIGHT
+        num_rows = len(self.project.tasks)
         if num_rows > 0:
-            row_height = self.wbs.GetRowSize(0)
-            self.draw_hor_grids(self.GetSize()[0], num_rows, row_height)
+            row_height = WBS_ROW_HEIGHT
+            # self.draw_hor_grids(self.GetSize()[0], num_rows, row_height)
             self.draw_task_bars()
         else:
             row_height = 0
@@ -70,6 +70,7 @@ class GanttChart(wx.Window):
         self.bars.clear()
 
     def draw_task_bars(self):
+        self.delete_bars()
         row_size = self.wbs.GetRowSize(0)
 
         tasks = self.project.tasks

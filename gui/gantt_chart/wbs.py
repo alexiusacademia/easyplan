@@ -12,7 +12,7 @@ class Cols(enumerate):
 class WBS(gridlib.Grid):
     project = None
 
-    def __init__(self, parent, project, controller, gantt):
+    def __init__(self, parent, project, controller):
         gridlib.Grid.__init__(self, parent, -1)
 
         self.project = project
@@ -93,7 +93,8 @@ class WBS(gridlib.Grid):
         if isinstance(event, gridlib.GridEvent):
             cell = event.GetRow(), event.GetCol()
             self.update_project(cell[0], cell[1], event.GetString())
-            self.controller.refresh()
+            # self.controller.refresh()
+            self.controller.right_pane.redraw()
 
     def update_project(self, index, col, old):
         """
