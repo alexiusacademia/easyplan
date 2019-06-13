@@ -84,8 +84,12 @@ class GanttChart(wx.Window):
             loc = event.GetPosition()
             x = loc[0]
             day = int(x / BAR_SCALE) + 1
-            task.split_task(task_segment, day-1)
-            self.call_redraw()
+            task.split_task(task_segment, day)
 
-    def call_redraw(self):
-        self.redraw()
+            false_bar = BarSegment(self,
+                                   (day + 1) * BAR_SCALE,
+                                   event.GetEventObject().GetPosition()[1],
+                                   (task_segment.duration - day) * BAR_SCALE,
+                                   BAR_HEIGHT, task, task_segment)
+            bs = event.GetEventObject()
+            bs.SetSize(day*BAR_SCALE, BAR_HEIGHT)

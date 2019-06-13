@@ -1,4 +1,5 @@
 import wx
+import copy
 
 
 from .constants import *
@@ -29,11 +30,3 @@ class BarSegment(wx.Panel):
     def on_hover(self, event):
         # print('Hovered')
         pass
-
-    def on_double_clicked(self, event):
-        if isinstance(event, wx.MouseEvent):
-            loc = event.GetPosition()
-            x = loc[0]
-            day = int(x / BAR_SCALE) + 1
-            self.task.split_task(self.task_segment, day-1)
-
