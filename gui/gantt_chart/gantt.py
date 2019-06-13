@@ -7,7 +7,6 @@ from .constants import *
 class GanttChart(wx.Window):
     wbs = None
     project = None
-    header_height = 0
 
     BAR_SCALE = 10
     BAR_THICKNESS = 20
@@ -21,7 +20,7 @@ class GanttChart(wx.Window):
         self.project = project
 
         self.SetBackgroundColour((255, 255, 255))
-        self.redraw()
+        # self.redraw()
 
     # def redraw(self, event):
     def redraw(self):
@@ -30,22 +29,6 @@ class GanttChart(wx.Window):
         :param event:
         :return:
         """
-        self.header_height = WBS_HEADER_HEIGHT
-        num_rows = len(self.project.tasks)
-        if num_rows > 0:
-            row_height = WBS_ROW_HEIGHT
-            # self.draw_hor_grids(self.GetSize()[0], num_rows, row_height)
-            self.draw_task_bars()
-        else:
-            row_height = 0
-
-    def trigger_draw(self):
-        """
-        Refresh the window content.
-        :return:
-        """
-        self.Refresh()
-        self.delete_bars()
         self.draw_task_bars()
 
     def draw_hor_grids(self, length, num, vert_distance):
@@ -60,7 +43,7 @@ class GanttChart(wx.Window):
         dc.SetPen(wx.Pen(wx.LIGHT_GREY, 1))
 
         for i in range(num + 1):
-            y = i * vert_distance + self.header_height
+            y = i * vert_distance + WBS_HEADER_HEIGHT
             dc.DrawLine(0, y, length, y)
 
     def delete_bars(self):
@@ -71,23 +54,16 @@ class GanttChart(wx.Window):
 
     def draw_task_bars(self):
         self.delete_bars()
-        row_size = self.wbs.GetRowSize(0)
 
         tasks = self.project.tasks
-        if len(tasks) > 0:
-            index = 0
-            for task in tasks:
-                '''
-                bar = Bar(self,
-                          task,
-                          index * row_size + self.header_height,
-                          self.BAR_SCALE)
-                          '''
-                for ts in task.task_segments:
-                    bar = BarSegment(self,
-                                     (ts.start - 1) * self.BAR_SCALE,
-                                     index * row_size + self.header_height,
-                                      ts.duration * self.BAR_SCALE,
-                                     self.BAR_THICKNESS)
-                    self.bars.append(bar)
-                index += 1
+
+        for index, task in enumerate(tasks):
+            for ts in task.task_segments:
+                bar = BarSegment(self,
+                                 (ts.start - 1) * self.BAR_SCALE,
+                                 index * WBS_ROW_HEIGHT + WBS_HEADER_HEIGHT,
+                                 ts.duration * self.BAR_SCALE,
+                                 self.BAR_THICKNESS)
+
+                self.bars.append(bar)
+        print(self.bars)
