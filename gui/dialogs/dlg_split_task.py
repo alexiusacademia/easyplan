@@ -5,6 +5,9 @@ from ..gantt_chart.constants import *
 
 class SplitTaskDialog(wx.Dialog):
     project = None
+    selected_task = None
+    selected_task_segment = None
+    parent = None
 
     def __init__(self, parent):
         wx.Dialog.__init__(self, parent)
@@ -12,9 +15,11 @@ class SplitTaskDialog(wx.Dialog):
         self.SetTitle('Split Task')
 
         self.project = parent.project
+        self.selected_task = self.project.selected_task
+        self.selected_task_segment = self.project.selected_task_segment
+        self.parent = parent
 
         self.init_ui()
-        # self.ShowModal()
 
     def init_ui(self):
         main_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -72,14 +77,20 @@ class SplitTaskDialog(wx.Dialog):
     def on_split_clicked(self, event):
         if self.IsModal():
             # Handle the splitting
-            task_segment = self.project.selected_task_segment
-            task = self.project.selected_task
-            # task.split_task(task_segment, )
             input_left = self.FindWindowByName('left_duration')
-            if isinstance(input_left, wx.TextCtrl):
-                left = input_left.GetLineText(0)
 
-            # Stop the modal state
-            self.EndModal(event.GetEventObject().GetId())
+            if isinstance(input_left, wx.TextCtrl):
+                left_duration = input_left.GetLineText(0)
+                if left_duration.isdigit():
+                    left_duration = int(left_duration)
+                    self.selected_task.split_task(self.selected_task_segment, left_duration)
+
+                    self.parent.right_pane.redraw()
+
+                    # Stop the modal state
+                    self.EndModal(event.GetEventObject().GetId())
+                else:
+                    print('Nope')
+
         else:
             self.Close()
