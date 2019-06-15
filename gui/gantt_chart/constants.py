@@ -11,3 +11,5 @@ BAR_HEIGHT = 20
 BAR_SCALE = 10
 
 # -------------------------
+# IDS
+ID_OK = 1
