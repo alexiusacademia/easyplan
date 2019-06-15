@@ -8,6 +8,7 @@ from ..dialogs.dlg_split_task import SplitTaskDialog
 BG_RECEIVED_FOCUS = wx.Colour(0, 0, 0)
 BG_DEFAULT = wx.Colour(0, 0, 255)
 
+
 class BarSegment(wx.Panel):
 
     task_segment = None
@@ -46,12 +47,22 @@ class BarSegment(wx.Panel):
         self.SetFocus()
 
     def on_received_focus(self, event):
+        """
+        Triggered when the bar is clicked.
+        :param event: wx.EVT_LEFT_UP
+        """
         res = self.SetBackgroundColour(BG_RECEIVED_FOCUS)
         self.project.selected_task_segment = self.task_segment
         self.project.selected_task = self.task
         self.Refresh()
 
     def on_lost_focus(self, event):
+        """
+        Triggered when the mouse is clicked somewhere else or the frame lost
+        its focus.
+        :param event:
+        :return:
+        """
         res = self.SetBackgroundColour(BG_DEFAULT)
         self.project.selected_task_segment = None
         self.project.selected_task = None
