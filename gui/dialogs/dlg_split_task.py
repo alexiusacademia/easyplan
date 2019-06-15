@@ -71,6 +71,15 @@ class SplitTaskDialog(wx.Dialog):
 
     def on_split_clicked(self, event):
         if self.IsModal():
+            # Handle the splitting
+            task_segment = self.project.selected_task_segment
+            task = self.project.selected_task
+            # task.split_task(task_segment, )
+            input_left = self.FindWindowByName('left_duration')
+            if isinstance(input_left, wx.TextCtrl):
+                left = input_left.GetLineText(0)
+
+            # Stop the modal state
             self.EndModal(event.GetEventObject().GetId())
         else:
             self.Close()
