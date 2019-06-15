@@ -76,20 +76,30 @@ class GanttChart(wx.Window):
                 bar.Bind(wx.EVT_LEFT_DCLICK, lambda event, t=task, ts=ts: self.on_double_clicked(event, t, ts))
 
                 self.bars.append(bar)
-                print(ts.start, ' - ', ts.duration, end=', ')
-            print('\n= = = = =')
+                # print(ts.start, ' - ', ts.duration, end=', ')
+            # print('\n= = = = =')
 
     def on_double_clicked(self, event, task, task_segment):
         if isinstance(event, wx.MouseEvent):
             loc = event.GetPosition()
             x = loc[0]
             day = int(x / BAR_SCALE) + 1
-            task.split_task(task_segment, day)
-
-            false_bar = BarSegment(self,
-                                   (day + 1) * BAR_SCALE,
-                                   event.GetEventObject().GetPosition()[1],
-                                   (task_segment.duration - day) * BAR_SCALE,
-                                   BAR_HEIGHT, task, task_segment)
+            result = task.split_task(task_segment, day)
+            ts1, ts2 = result[1]
+            print('ts1:', ts1.start, ts1.duration)
+            print('ts2', ts2.start, ts2.duration)
             bs = event.GetEventObject()
-            bs.SetSize(day*BAR_SCALE, BAR_HEIGHT)
+
+            x, y = bs.GetPosition()
+
+            # Delete and hide the source bar segment
+            # self.bars.remove(bs)
+            bs.Hide()
+
+            for ts in result[1]:
+                bs1 = BarSegment(self,
+                                 ts.start * BAR_SCALE,
+                                 y,
+                                 ts.duration * BAR_SCALE,
+                                 BAR_HEIGHT, task, ts)
+                self.bars.append(bs1)
