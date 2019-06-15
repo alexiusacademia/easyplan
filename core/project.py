@@ -31,6 +31,7 @@ class Project:
     project_location = ''
     project_amount = ''
     selected_task_index = None
+    selected_task = None
     selected_task_segment = None
 
     def __init__(self):
