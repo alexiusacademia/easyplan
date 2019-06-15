@@ -5,8 +5,8 @@ import copy
 from .constants import *
 from ..dialogs.dlg_split_task import SplitTaskDialog
 
-BG_RECEIVED_FOCUS = wx.BLACK
-BG_DEFAULT = wx.BLUE
+BG_RECEIVED_FOCUS = wx.Colour(0, 0, 0)
+BG_DEFAULT = wx.Colour(0, 0, 255)
 
 class BarSegment(wx.Panel):
 
@@ -28,6 +28,9 @@ class BarSegment(wx.Panel):
         self.SetBackgroundColour(BG_DEFAULT)
 
         self.SetCursor(wx.Cursor(wx.CURSOR_IBEAM))
+
+        # TRefresh s needed to work on Windows
+        self.Refresh()
 
         self.Bind(wx.EVT_ENTER_WINDOW, self.on_hover)
         self.Bind(wx.EVT_LEFT_UP, self.on_left_clicked)
