@@ -5,7 +5,9 @@ import os
 
 # Import project modules
 from .dialogs.dlg_add_task import AddTaskDialog
+from .dialogs.dlg_split_task import SplitTaskDialog
 from core.task import Task
+from .gantt_chart.constants import *
 
 
 class Ribbon(wx.ribbon.RibbonBar):
@@ -179,7 +181,14 @@ class Ribbon(wx.ribbon.RibbonBar):
         print('Indent task')
 
     def on_split_task(self, event):
-        print('Split')
+        dlg = SplitTaskDialog(self.parent)
+        if self.project.selected_task_segment is not None:
+
+            res = dlg.ShowModal()
+            if res == ID_OK:
+                dlg.Destroy()
+        else:
+            wx.MessageBox('A task segment must be selected before splitting.')
 
     def on_rename(self, event):
         print(self.project.selected_task_index)
