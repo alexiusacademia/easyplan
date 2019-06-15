@@ -13,11 +13,14 @@ class GanttChart(wx.Window):
 
     bars = []
 
+    parent = None
+
     def __init__(self, parent, project, wbs):
         wx.Window.__init__(self, parent)
 
         self.wbs = wbs
         self.project = project
+        self.parent = parent.GetParent()
 
         self.SetBackgroundColour((255, 255, 255))
 
@@ -73,7 +76,7 @@ class GanttChart(wx.Window):
                                  self.BAR_THICKNESS,
                                  task,
                                  ts)
-                bar.Bind(wx.EVT_LEFT_DCLICK, lambda event, t=task, ts=ts: self.on_double_clicked(event, t, ts))
+                # bar.Bind(wx.EVT_LEFT_DCLICK, lambda event, t=task, ts=ts: self.on_double_clicked(event, t, ts))
 
                 self.bars.append(bar)
                 # print(ts.start, ' - ', ts.duration, end=', ')
