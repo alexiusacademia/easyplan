@@ -24,6 +24,7 @@ class Ribbon(wx.ribbon.RibbonBar):
         # -----------
         SPLIT_TASK = 50
         RENAME_TASK = 60
+        MOVE_SEGMENT = 70
 
     RIBBON_BUTTON_SIZE = (22, 22)
 
@@ -131,6 +132,12 @@ class Ribbon(wx.ribbon.RibbonBar):
                    'Rename task.', wx.ITEM_NORMAL)
         self.Bind(wx.EVT_TOOL, self.on_rename, id=self.IDS.RENAME_TASK)
 
+        icon_edit_start = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
+                                                 'ribbon', 'gantt', 'edit_start.png'))
+        tb.AddTool(self.IDS.MOVE_SEGMENT, 'Move Task Segment', icon_edit_start,
+                   'Move the task segment start.', wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_move_segment, id=self.IDS.MOVE_SEGMENT)
+
         panel.SetSizer(sizer)
         tb.Realize()
 
@@ -192,3 +199,6 @@ class Ribbon(wx.ribbon.RibbonBar):
 
     def on_rename(self, event):
         print(self.project.selected_task_index)
+
+    def on_move_segment(self, event):
+        pass
