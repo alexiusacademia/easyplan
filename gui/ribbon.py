@@ -189,9 +189,8 @@ class Ribbon(wx.ribbon.RibbonBar):
         print('Indent task')
 
     def on_split_task(self, event):
-        dlg = SplitTaskDialog(self.parent)
         if self.project.selected_task_segment is not None:
-
+            dlg = SplitTaskDialog(self.parent)
             res = dlg.ShowModal()
             if res == ID_OK:
                 dlg.Destroy()
