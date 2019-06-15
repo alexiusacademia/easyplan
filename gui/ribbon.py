@@ -6,6 +6,7 @@ import os
 # Import project modules
 from .dialogs.dlg_add_task import AddTaskDialog
 from .dialogs.dlg_split_task import SplitTaskDialog
+from .dialogs.dlg_move_task_segment import MoveTaskSegmentDialog
 from core.task import Task
 from .gantt_chart.constants import *
 
@@ -201,4 +202,13 @@ class Ribbon(wx.ribbon.RibbonBar):
         print(self.project.selected_task_index)
 
     def on_move_segment(self, event):
-        pass
+        if self.project.selected_task_segment is not None:
+            # Open dialog
+            dlg = MoveTaskSegmentDialog(self.parent)
+            res = dlg.ShowModal()
+            if res == ID_OK:
+                dlg.Destroy()
+        else:
+            wx.MessageBox('A task segment must be selected first.',
+                          'Error',
+                          wx.OK | wx.ICON_ERROR)
