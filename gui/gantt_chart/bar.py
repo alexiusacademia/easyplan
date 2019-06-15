@@ -36,7 +36,7 @@ class BarSegment(wx.Panel):
         self.Bind(wx.EVT_LEFT_UP, self.on_left_clicked)
         self.Bind(wx.EVT_SET_FOCUS, self.on_received_focus)
         self.Bind(wx.EVT_KILL_FOCUS, self.on_lost_focus)
-        self.Bind(wx.EVT_LEFT_DCLICK, self.on_double_clicked)
+        # self.Bind(wx.EVT_LEFT_DCLICK, self.on_double_clicked)
 
     def on_hover(self, event):
         # print('Hovered')
