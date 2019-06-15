@@ -120,6 +120,8 @@ class Task:
         total_duration = task_segment.duration
         start = task_segment.start
 
+        start2 = start + left + 1
+
         # Check instance
         if not isinstance(task_segment, TaskSegment):
             return False, 'task_segment given is not an instance of TaskSegment class.'
@@ -130,7 +132,7 @@ class Task:
 
         # Create two task segments
         ts1 = TaskSegment(start, left)
-        ts2 = TaskSegment(left + 2, total_duration - left)
+        ts2 = TaskSegment(start2, total_duration - left)
 
         # Replace the old task segment on the list
         location = self.task_segments.index(task_segment)
