@@ -34,6 +34,7 @@ class SplitTaskDialog(wx.Dialog):
 
         split_button = wx.Button(self, ID_OK, label='Split Task')
         split_button.Bind(wx.EVT_BUTTON, self.on_split_clicked)
+        split_button.SetDefault()
 
         btn_sizer = wx.BoxSizer(wx.HORIZONTAL)
         btn_sizer.AddSpacer(10)
@@ -59,7 +60,7 @@ class SplitTaskDialog(wx.Dialog):
 
     def add_title(self, main_sizer):
         title = 'Specify the duration of the resulting task segment on the left.\n' \
-                'The right segment will have the difference of the left segment and the original task segment.'
+                'The right segment will have the difference \nof the left segment and the original task segment.'
 
         label = wx.StaticText(self, label=title, style=wx.ALIGN_CENTER_HORIZONTAL)
         font = wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.ITALIC, wx.NORMAL)
