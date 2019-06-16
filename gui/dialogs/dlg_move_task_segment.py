@@ -83,7 +83,7 @@ class MoveTaskSegmentDialog(wx.Dialog):
                 new_start = new_start_text.GetLineText(0)
                 if new_start.isdigit():
                     new_start = int(new_start)
-
+                    self.selected_task_segment.move(new_start)
                     self.parent.right_pane.redraw()
 
                     # Stop the modal state
