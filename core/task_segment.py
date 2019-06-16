@@ -5,3 +5,6 @@ class TaskSegment:
     def __init__(self, st, dur):
         self.start = st
         self.duration = dur
+
+    def move(self, start):
+        self.start = start
