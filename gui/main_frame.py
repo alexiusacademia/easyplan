@@ -50,15 +50,5 @@ class MainFrame(wx.Frame):
 
         self.SetSizer(sizer)
 
-    def refresh(self, **kwargs):
-        """
-
-        :param kwargs:
-        :return:
-        """
-        # self.left_pane.populate()
-        # self.right_pane.trigger_draw()
-        print('Called')
-
     def on_sash_dbl_clicked(self, event):
         print('Splitter has been double clicked.')
