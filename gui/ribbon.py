@@ -41,6 +41,7 @@ class Ribbon(wx.ribbon.RibbonBar):
         self.wbs = wbs
 
     def create_pages(self):
+        self.page_project()
         self.page_gantt_chart()
         self.page_scurve()
         self.Realize()
@@ -48,6 +49,9 @@ class Ribbon(wx.ribbon.RibbonBar):
     # --------------
     # Pages
     # --------------
+    def page_project(self):
+        project_page = wx.ribbon.RibbonPage(self, label='Project')
+
     def page_gantt_chart(self):
         # ---------------- GANTT CHART PAGE ---------------- #
         gantt_page = wx.ribbon.RibbonPage(self, label='Gantt Chart')
@@ -70,6 +74,15 @@ class Ribbon(wx.ribbon.RibbonBar):
     # --------------
     # Ribbon Panels
     # --------------
+    def panel_project_general(self, page):
+        # -- General Panel -- #
+        project_general_panel = wx.ribbon.RibbonPanel(parent=page, label='GENERAL',
+                                                      style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
+        project_general_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        tb = wx.ToolBar(project_general_panel, style=wx.TB_HORIZONTAL | wx.TB_FLAT | wx.NO_BORDER | wx.TB_DOCKABLE)
+        tb.SetCursor(wx.Cursor(wx.CURSOR_HAND))
+
     def panel_gantt_basic(self, page):
         # -- Task Panel -- #
         gantt_task_panel = wx.ribbon.RibbonPanel(parent=page, label='BASIC',
