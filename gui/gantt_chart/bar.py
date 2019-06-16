@@ -24,7 +24,9 @@ class BarSegment(wx.Panel):
         self.parent = parent
         self.project = self.parent.project
 
-        self.SetPosition((x, y))
+        y_adjustment = (WBS_ROW_HEIGHT - BAR_HEIGHT) / 2
+
+        self.SetPosition((x, y + y_adjustment))
         self.SetSize(l, h)
         self.SetBackgroundColour(BG_DEFAULT)
 
