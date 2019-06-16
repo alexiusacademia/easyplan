@@ -129,9 +129,9 @@ class Ribbon(wx.ribbon.RibbonBar):
 
         icon_rename = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
                                              'ribbon', 'gantt', 'rename.png'))
-        tb.AddTool(self.IDS.RENAME_TASK, 'Rename Task', icon_rename,
-                   'Rename task.', wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_rename, id=self.IDS.RENAME_TASK)
+        # tb.AddTool(self.IDS.RENAME_TASK, 'Rename Task', icon_rename,
+        #            'Rename task.', wx.ITEM_NORMAL)
+        # self.Bind(wx.EVT_TOOL, self.on_rename, id=self.IDS.RENAME_TASK)
 
         icon_edit_start = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
                                                  'ribbon', 'gantt', 'edit_start.png'))
