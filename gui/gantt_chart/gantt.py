@@ -15,8 +15,6 @@ class GanttChart(wx.Window):
 
     parent = None
 
-    dc = None
-
     def __init__(self, parent, project, wbs):
         wx.Window.__init__(self, parent)
 
@@ -49,7 +47,7 @@ class GanttChart(wx.Window):
         :param vert_distance: The distance between grid line (Matched to the height of table row.)
         """
         dc = wx.PaintDC(self)
-        dc.SetPen(wx.Pen(wx.LIGHT_GREY, 1))
+        dc.SetPen(wx.Pen(wx.BLACK, 0.75))
 
         for i in range(num + 1):
             y = i * vert_distance + WBS_HEADER_HEIGHT
