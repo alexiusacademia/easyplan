@@ -89,7 +89,7 @@ class MoveTaskSegmentDialog(wx.Dialog):
                     # Stop the modal state
                     self.EndModal(event.GetEventObject().GetId())
                 else:
-                    print('Nope')
+                    wx.MessageBox('Start day should be an integer.', 'Error', wx.OK | wx.ICON_INFORMATION)
 
         else:
             self.Close()
