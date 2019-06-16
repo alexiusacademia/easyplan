@@ -88,10 +88,11 @@ class SplitTaskDialog(wx.Dialog):
 
                     self.parent.right_pane.redraw()
 
-                    # Stop the modal state
-                    self.EndModal(event.GetEventObject().GetId())
                 else:
-                    print('Nope')
+                    wx.MessageBox('Left duration should be an integer.', 'Error', wx.OK | wx.ICON_INFORMATION)
+
+            # Stop the modal state
+            self.EndModal(event.GetEventObject().GetId())
 
         else:
             self.Close()
