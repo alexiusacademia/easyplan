@@ -1,5 +1,6 @@
 # Import built-in modules
 from enum import Enum
+import datetime
 
 # Import project modules
 from . import task as tsk
@@ -27,12 +28,13 @@ class Project:
     # of hours used in work.
     _time_basis = TimeBasis.DAY
 
-    project_name = ''
+    project_name = 'New Project'
     project_location = ''
     project_amount = ''
     selected_task_index = None
     selected_task = None
     selected_task_segment = None
+    start_date = datetime.date.today()
 
     def __init__(self):
         self._initialized = True
