@@ -24,10 +24,15 @@ class GanttChart(wx.Window):
 
         self.SetBackgroundColour((255, 255, 255))
 
+        self.Bind(wx.EVT_PAINT, self.on_paint)
+
+    def on_paint(self, event):
+        self.draw_hor_grids(self.GetSize()[0], self.wbs.GetNumberRows(), WBS_ROW_HEIGHT)
+
     # def redraw(self, event):
     def redraw(self):
         """
-        Handles the drawing functionalities of the gantt chart canvas.
+        Handles the drawing functions of the gantt chart canvas.
         :param event:
         :return:
         """
