@@ -29,6 +29,8 @@ class Ribbon(wx.ribbon.RibbonBar):
         # -----------
         NEW_PROJECT = 80
         OPEN_PROJECT = 90
+        SAVE_PROJECT = 100
+        SAVE_AS_PROJECT = 110
 
     RIBBON_BUTTON_SIZE = (22, 22)
 
@@ -96,6 +98,10 @@ class Ribbon(wx.ribbon.RibbonBar):
         # Open project
         icon_open_project = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, size=self.RIBBON_BUTTON_SIZE)
         tb.AddTool(self.IDS.OPEN_PROJECT, 'Open Project', icon_open_project, 'Open a project file.', wx.ITEM_NORMAL)
+
+        # Save project
+        icon_save_project = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, size=self.RIBBON_BUTTON_SIZE)
+        tb.AddTool(self.IDS.SAVE_PROJECT, 'Save Project', icon_save_project, 'Save project file.', wx.ITEM_NORMAL)
 
         tb.Realize()
 
