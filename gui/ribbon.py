@@ -28,6 +28,7 @@ class Ribbon(wx.ribbon.RibbonBar):
         MOVE_SEGMENT = 70
         # -----------
         NEW_PROJECT = 80
+        OPEN_PROJECT = 90
 
     RIBBON_BUTTON_SIZE = (22, 22)
 
@@ -91,6 +92,14 @@ class Ribbon(wx.ribbon.RibbonBar):
         # New project
         icon_new_project = wx.ArtProvider.GetBitmap(wx.ART_NEW, size=self.RIBBON_BUTTON_SIZE)
         tb.AddTool(self.IDS.NEW_PROJECT, 'New Project', icon_new_project, 'Create new project.', wx.ITEM_NORMAL)
+
+        # Open project
+        icon_open_project = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, size=self.RIBBON_BUTTON_SIZE)
+        tb.AddTool(self.IDS.OPEN_PROJECT, 'Open Project', icon_open_project, 'Open a project file.', wx.ITEM_NORMAL)
+
+        tb.Realize()
+
+        project_general_panel.SetSizer(project_general_sizer)
 
     def panel_gantt_basic(self, page):
         # -- Task Panel -- #
