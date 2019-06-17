@@ -67,7 +67,7 @@ class MoveTaskSegmentDialog(wx.Dialog):
         instruction = 'Move the task segment at a given day.'
 
         label = wx.StaticText(self, label=instruction, style=wx.ALIGN_CENTER_HORIZONTAL)
-        font = wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.ITALIC, wx.NORMAL)
+        font = wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.ITALIC, wx.NORMAL)
         label.SetFont(font)
         label.SetForegroundColour((100, 100, 100))
 

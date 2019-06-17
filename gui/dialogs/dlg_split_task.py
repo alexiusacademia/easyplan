@@ -63,7 +63,7 @@ class SplitTaskDialog(wx.Dialog):
                 'The right segment will have the difference \nof the left segment and the original task segment.'
 
         label = wx.StaticText(self, label=title, style=wx.ALIGN_CENTER_HORIZONTAL)
-        font = wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.ITALIC, wx.NORMAL)
+        font = wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.ITALIC, wx.NORMAL)
         label.SetFont(font)
         label.SetForegroundColour((100, 100, 100))
 
