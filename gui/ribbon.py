@@ -103,6 +103,11 @@ class Ribbon(wx.ribbon.RibbonBar):
         icon_save_project = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, size=self.RIBBON_BUTTON_SIZE)
         tb.AddTool(self.IDS.SAVE_PROJECT, 'Save Project', icon_save_project, 'Save project file.', wx.ITEM_NORMAL)
 
+        # Save as project
+        icon_save_project_as = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, size=self.RIBBON_BUTTON_SIZE)
+        tb.AddTool(self.IDS.SAVE_AS_PROJECT, 'Save Project as',
+                   icon_save_project_as, 'Save project as new file.', wx.ITEM_NORMAL)
+
         tb.Realize()
 
         project_general_panel.SetSizer(project_general_sizer)
