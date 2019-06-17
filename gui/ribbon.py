@@ -26,6 +26,8 @@ class Ribbon(wx.ribbon.RibbonBar):
         SPLIT_TASK = 50
         RENAME_TASK = 60
         MOVE_SEGMENT = 70
+        # -----------
+        NEW_PROJECT = 80
 
     RIBBON_BUTTON_SIZE = (22, 22)
 
@@ -51,6 +53,7 @@ class Ribbon(wx.ribbon.RibbonBar):
     # --------------
     def page_project(self):
         project_page = wx.ribbon.RibbonPage(self, label='Project')
+        self.panel_project_general(project_page)
 
     def page_gantt_chart(self):
         # ---------------- GANTT CHART PAGE ---------------- #
@@ -82,6 +85,12 @@ class Ribbon(wx.ribbon.RibbonBar):
 
         tb = wx.ToolBar(project_general_panel, style=wx.TB_HORIZONTAL | wx.TB_FLAT | wx.NO_BORDER | wx.TB_DOCKABLE)
         tb.SetCursor(wx.Cursor(wx.CURSOR_HAND))
+
+        project_general_sizer.Add(tb, 0, wx.EXPAND)
+
+        # New project
+        icon_new_project = wx.ArtProvider.GetBitmap(wx.ART_NEW, size=self.RIBBON_BUTTON_SIZE)
+        tb.AddTool(self.IDS.NEW_PROJECT, 'New Project', icon_new_project, 'Create new project.', wx.ITEM_NORMAL)
 
     def panel_gantt_basic(self, page):
         # -- Task Panel -- #
