@@ -56,7 +56,7 @@ class Ribbon(wx.ribbon.RibbonBar):
     # --------------
     def page_project(self):
         project_page = wx.ribbon.RibbonPage(self, label='Project')
-        self.panel_project_general(project_page)
+        self.panel_project_file(project_page)
 
     def page_gantt_chart(self):
         # ---------------- GANTT CHART PAGE ---------------- #
@@ -80,13 +80,13 @@ class Ribbon(wx.ribbon.RibbonBar):
     # --------------
     # Ribbon Panels
     # --------------
-    def panel_project_general(self, page):
-        # -- General Panel -- #
-        project_general_panel = wx.ribbon.RibbonPanel(parent=page, label='GENERAL',
+    def panel_project_file(self, page):
+        # -- File Panel -- #
+        project_file_panel = wx.ribbon.RibbonPanel(parent=page, label='FILE',
                                                       style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
         project_general_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        tb = wx.ToolBar(project_general_panel, style=wx.TB_HORIZONTAL | wx.TB_FLAT | wx.NO_BORDER | wx.TB_DOCKABLE)
+        tb = wx.ToolBar(project_file_panel, style=wx.TB_HORIZONTAL | wx.TB_FLAT | wx.NO_BORDER | wx.TB_DOCKABLE)
         tb.SetCursor(wx.Cursor(wx.CURSOR_HAND))
 
         project_general_sizer.Add(tb, 0, wx.EXPAND)
@@ -110,7 +110,7 @@ class Ribbon(wx.ribbon.RibbonBar):
 
         tb.Realize()
 
-        project_general_panel.SetSizer(project_general_sizer)
+        project_file_panel.SetSizer(project_general_sizer)
 
     def panel_gantt_basic(self, page):
         # -- Task Panel -- #
