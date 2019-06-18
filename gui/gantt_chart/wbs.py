@@ -106,8 +106,10 @@ class WBS(gridlib.Grid):
         task = self.project.tasks[index]
         cell = index, col
         value = self.GetCellValue(cell)
+        # Task name
         if col == 0:
             task.task_name = value
+        # Task start day
         elif col == 1:
             if value.isdigit():
                 # Now check if this is the first task,
@@ -116,9 +118,19 @@ class WBS(gridlib.Grid):
                     self.SetCellValue(cell, old)
                 else:
                     task.set_start_day(value)
+        # Task duration
         elif col == 2:
             if value.isdigit():
                 task.set_duration(int(value))
+        # Predecessor
+        elif col == 3:
+            if value.isdigit():
+                if int(value) == index+1:
+                    self.SetCellValue(cell, old)
+                elif int(value) > len(self.project.tasks):
+                    self.SetCellValue(cell, old)
+                else:
+                    task.predecessor = value
 
 
 def show_error(message, caption):
