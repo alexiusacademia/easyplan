@@ -37,9 +37,15 @@ class GanttChart(wx.Window):
         :return:
         """
         self.draw_task_bars()
+        self.draw_predecessor_lines()
 
     def draw_predecessor_lines(self):
-        pass
+        tasks = self.project.tasks
+        for index, task in enumerate(tasks):
+            # Get the predecessor of the task
+            if task.predecessor != '':
+                print(task.predecessor)
+                # TODO To be continued
 
     def draw_hor_grids(self, length, num, vert_distance):
         """
