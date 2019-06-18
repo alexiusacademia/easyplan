@@ -103,6 +103,7 @@ class Ribbon(wx.ribbon.RibbonBar):
         # Save project
         icon_save_project = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, size=self.RIBBON_BUTTON_SIZE)
         tb.AddTool(self.IDS.SAVE_PROJECT, 'Save Project', icon_save_project, 'Save project file.', wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_save_project, id=self.IDS.SAVE_PROJECT)
 
         # Save as project
         icon_save_project_as = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, size=self.RIBBON_BUTTON_SIZE)
@@ -194,6 +195,9 @@ class Ribbon(wx.ribbon.RibbonBar):
 
     def on_new_project(self, event):
         print('New project')
+
+    def on_save_project(self, event):
+        print('Save project')
 
     def on_add_task(self, event):
         if self.project.selected_task_index is not None:
