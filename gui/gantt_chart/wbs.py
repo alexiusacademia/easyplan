@@ -1,6 +1,8 @@
 import wx.grid as gridlib
 import wx
 
+from .constants import *
+
 
 class Cols(enumerate):
     TASK_NAME = 0
@@ -64,7 +66,7 @@ class WBS(gridlib.Grid):
             else:
                 self.SetCellValue(index, 3, str(int(task.predecessor) + 1))
 
-            self.SetRowSize(index, 30)
+            self.SetRowSize(index, WBS_ROW_HEIGHT)
 
             index += 1
 
@@ -120,7 +122,7 @@ class WBS(gridlib.Grid):
                 if index == 0 and int(value) != 1:
                     self.SetCellValue(cell, old)
                 else:
-                    task.set_start_day(value - 1)
+                    task.set_start_day(int(value) - 1)
         # Task duration
         elif col == 2:
             if value.isdigit():
