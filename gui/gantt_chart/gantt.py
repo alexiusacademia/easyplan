@@ -44,7 +44,6 @@ class GanttChart(wx.Window):
         for index, task in enumerate(tasks):
             # Get the predecessor of the task
             if task.predecessor != '':
-                print(task.predecessor)
                 # Now get the predecessor of the task
                 predecessor = self.project.tasks[int(task.predecessor)]
 
@@ -63,7 +62,6 @@ class GanttChart(wx.Window):
                 # than the predecessor ends
                 if task.start_day < predecessor_end:
                     task.start_day = predecessor_end
-                    self.parent.left_pane.populate()
 
     def draw_hor_grids(self, length, num, vert_distance):
         """
