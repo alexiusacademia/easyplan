@@ -45,7 +45,12 @@ class GanttChart(wx.Window):
             # Get the predecessor of the task
             if task.predecessor != '':
                 print(task.predecessor)
-                # TODO To be continued
+                # Now get the predecessor of the task
+                predecessor = self.project.tasks[int(task.predecessor)]
+
+                # Now get the start and virtual duration of it
+                predecessor_start = predecessor.start_day
+                predecessor_duration = predecessor.get_virtual_duration()
 
     def draw_hor_grids(self, length, num, vert_distance):
         """
