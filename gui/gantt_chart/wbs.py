@@ -59,7 +59,10 @@ class WBS(gridlib.Grid):
             self.SetCellValue(index, 0, str(task.task_name))
             self.SetCellValue(index, 1, str(task.start_day))
             self.SetCellValue(index, 2, str(task.get_duration()))
-            self.SetCellValue(index, 3, str(task.predecessor))
+            if task.predecessor == '':
+                self.SetCellValue(index, 3, task.predecessor)
+            else:
+                self.SetCellValue(index, 3, str(int(task.predecessor) + 1))
 
             self.SetRowSize(index, 30)
 
