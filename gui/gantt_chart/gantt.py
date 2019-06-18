@@ -38,6 +38,9 @@ class GanttChart(wx.Window):
         """
         self.draw_task_bars()
 
+    def draw_predecessor_lines(self):
+        pass
+
     def draw_hor_grids(self, length, num, vert_distance):
         """
         Draw the horizontal grid lines based on the number of rows
