@@ -94,6 +94,7 @@ class Ribbon(wx.ribbon.RibbonBar):
         # New project
         icon_new_project = wx.ArtProvider.GetBitmap(wx.ART_NEW, size=self.RIBBON_BUTTON_SIZE)
         tb.AddTool(self.IDS.NEW_PROJECT, 'New Project', icon_new_project, 'Create new project.', wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_new_project, id=self.IDS.NEW_PROJECT)
 
         # Open project
         icon_open_project = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, size=self.RIBBON_BUTTON_SIZE)
@@ -190,6 +191,9 @@ class Ribbon(wx.ribbon.RibbonBar):
     def set_button_cursors(self):
         for button in self.ribbon_buttons:
             button.SetCursor(wx.Cursor(wx.CURSOR_HAND))
+
+    def on_new_project(self, event):
+        print('New project')
 
     def on_add_task(self, event):
         if self.project.selected_task_index is not None:
