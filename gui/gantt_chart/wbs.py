@@ -130,7 +130,7 @@ class WBS(gridlib.Grid):
                 elif int(value) > len(self.project.tasks):
                     self.SetCellValue(cell, old)
                 else:
-                    task.predecessor = value
+                    task.predecessor = int(value) - 1
 
 
 def show_error(message, caption):
