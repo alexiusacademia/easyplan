@@ -52,6 +52,19 @@ class GanttChart(wx.Window):
                 predecessor_start = predecessor.start_day
                 predecessor_duration = predecessor.get_virtual_duration()
 
+                # This end property is the earliest possible that the successor task
+                # can start but the actual end is the day before it.
+                # For example: If a task starts at day 1 and has a duration of 1 day,
+                # It ends on day 1 also, but the earliest possible that the next task can
+                # start is the day 2.
+                predecessor_end = predecessor_start + predecessor_duration
+
+                # Move the task forward if necessary, for instance, its starts earlier
+                # than the predecessor ends
+                if task.start_day < predecessor_end:
+                    task.start_day = predecessor_end
+                    self.parent.left_pane.populate()
+
     def draw_hor_grids(self, length, num, vert_distance):
         """
         Draw the horizontal grid lines based on the number of rows
