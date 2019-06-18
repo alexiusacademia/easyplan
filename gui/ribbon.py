@@ -99,6 +99,7 @@ class Ribbon(wx.ribbon.RibbonBar):
         # Open project
         icon_open_project = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, size=self.RIBBON_BUTTON_SIZE)
         tb.AddTool(self.IDS.OPEN_PROJECT, 'Open Project', icon_open_project, 'Open a project file.', wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_open_project, id=self.IDS.OPEN_PROJECT)
 
         # Save project
         icon_save_project = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, size=self.RIBBON_BUTTON_SIZE)
@@ -195,6 +196,9 @@ class Ribbon(wx.ribbon.RibbonBar):
 
     def on_new_project(self, event):
         print('New project')
+
+    def on_open_project(self, event):
+        print('Open project')
 
     def on_save_project(self, event):
         print('Save project')
