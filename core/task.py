@@ -14,7 +14,7 @@ class Task:
     task_id = 0
     task_segments = []
     start_day = 1
-    predecessor = None
+    predecessor = ''
 
     def __init__(self):
         self.task_name = 'Unnamed Task'
