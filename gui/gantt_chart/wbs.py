@@ -125,7 +125,7 @@ class WBS(gridlib.Grid):
         # Predecessor
         elif col == 3:
             if value.isdigit():
-                if int(value) == index+1:
+                if int(value) == index + 1:
                     self.SetCellValue(cell, old)
                 elif int(value) > len(self.project.tasks):
                     self.SetCellValue(cell, old)
