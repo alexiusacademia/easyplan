@@ -136,6 +136,13 @@ class WBS(gridlib.Grid):
                 else:
                     task.predecessor = int(value) - 1
 
+                    predecessor = self.project.tasks[task.predecessor]
+                    # Now get the start and virtual duration of it
+                    predecessor_start = predecessor.start_day
+                    predecessor_duration = predecessor.get_virtual_duration()
+                    predecessor_end = predecessor_start + predecessor_duration
+                    if task.start_day < predecessor_end:
+                        task.start_day = predecessor_end
 
 def show_error(message, caption):
     wx.MessageBox(message, caption)
