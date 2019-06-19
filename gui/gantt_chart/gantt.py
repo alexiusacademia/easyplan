@@ -58,11 +58,6 @@ class GanttChart(wx.Window):
                 # start is the day 2.
                 predecessor_end = predecessor_start + predecessor_duration
 
-                # Move the task forward if necessary, for instance, its starts earlier
-                # than the predecessor ends
-                if task.start_day < predecessor_end:
-                    task.start_day = predecessor_end
-
     def draw_hor_grids(self, length, num, vert_distance):
         """
         Draw the horizontal grid lines based on the number of rows
