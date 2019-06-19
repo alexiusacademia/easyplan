@@ -122,10 +122,14 @@ class WBS(gridlib.Grid):
                     self.SetCellValue(cell, old)
                 else:
                     task.set_start_day(int(value))
+
+                    # TODO Move start day of successor if any
         # Task duration
         elif col == 2:
             if value.isdigit():
                 task.set_duration(int(value))
+
+                # TODO Move start day of successor if any
         # Predecessor
         elif col == 3:
             if value.isdigit():
@@ -144,7 +148,6 @@ class WBS(gridlib.Grid):
                     if task.start_day < predecessor_end:
                         task.set_start_day(predecessor_end)
                         self.SetCellValue((index, 1), str(predecessor_end))
-                    # TODO Start day not changing when predecessor is set
 
 
 def show_error(message, caption):
