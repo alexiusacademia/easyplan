@@ -129,7 +129,15 @@ class WBS(gridlib.Grid):
             if value.isdigit():
                 task.set_duration(int(value))
 
-                # TODO Move start day of successor if any
+                # Move the start days of successor tasks if necessary
+                for tsk in self.project.tasks:
+                    if tsk.predecessor == index:
+                        pred_start = task.start_day
+                        pred_duration = task.get_virtual_duration()
+                        pred_end = pred_start + pred_duration
+                        tsk.set_start_day(pred_end)
+                        # TODO Change the start day in wbs
+
         # Predecessor
         elif col == 3:
             if value.isdigit():
