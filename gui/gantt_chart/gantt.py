@@ -66,8 +66,8 @@ class GanttChart(wx.Window):
         :param num: Number of tasks
         :param vert_distance: The distance between grid line (Matched to the height of table row.)
         """
-        dc = wx.PaintDC(self)
-        dc.SetPen(wx.Pen(wx.BLACK, 0.75))
+        dc = wx.ClientDC(self)
+        dc.SetPen(wx.Pen(wx.LIGHT_GREY, 0.75))
 
         for i in range(num + 1):
             y = i * vert_distance + WBS_HEADER_HEIGHT
