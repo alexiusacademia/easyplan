@@ -29,6 +29,7 @@ class GanttChart(wx.Window):
     def on_paint(self, event):
         self.ClearBackground()
         self.draw_hor_grids(self.GetSize()[0], len(self.project.tasks), WBS_ROW_HEIGHT)
+        self.draw_predecessor_lines()
 
     def redraw(self):
         """
@@ -37,9 +38,10 @@ class GanttChart(wx.Window):
         :return:
         """
         self.draw_task_bars()
-        self.draw_predecessor_lines()
 
     def draw_predecessor_lines(self):
+        dc = wx.ClientDC(self)
+
         tasks = self.project.tasks
         for index, task in enumerate(tasks):
             # Get the predecessor of the task
@@ -57,6 +59,21 @@ class GanttChart(wx.Window):
                 # It ends on day 1 also, but the earliest possible that the next task can
                 # start is the day 2.
                 predecessor_end = predecessor_start + predecessor_duration
+
+                # Convert the predecessor end to coordinate
+                pred_index = int(task.predecessor)
+                pred_y = WBS_ROW_HEIGHT * pred_index + WBS_ROW_HEIGHT/2 + WBS_HEADER_HEIGHT
+                pred_x = BAR_SCALE * predecessor_end
+
+                # Now get the coordinate of the start of the task
+                task_y = WBS_ROW_HEIGHT * index + WBS_ROW_HEIGHT/2 + WBS_HEADER_HEIGHT
+                task_x = task.start_day * BAR_SCALE
+
+                pen = wx.Pen(wx.RED, 2)
+                dc.SetPen(pen)
+                dc.DrawLine(pred_x, pred_y, task_x, task_y)
+
+                # TODO Bug in line location
 
     def draw_hor_grids(self, length, num, vert_distance):
         """
