@@ -143,7 +143,7 @@ class WBS(gridlib.Grid):
                     predecessor_end = predecessor_start + predecessor_duration
                     if task.start_day < predecessor_end:
                         task.set_start_day(predecessor_end)
-
+                    # TODO Start day not changing when predecessor is set
 
 def show_error(message, caption):
     wx.MessageBox(message, caption)
