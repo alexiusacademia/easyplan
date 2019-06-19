@@ -142,7 +142,8 @@ class WBS(gridlib.Grid):
                     predecessor_duration = predecessor.get_virtual_duration()
                     predecessor_end = predecessor_start + predecessor_duration
                     if task.start_day < predecessor_end:
-                        task.start_day = predecessor_end
+                        task.set_start_day(predecessor_end)
+
 
 def show_error(message, caption):
     wx.MessageBox(message, caption)
