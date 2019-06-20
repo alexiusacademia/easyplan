@@ -26,11 +26,13 @@ class Ribbon(wx.ribbon.RibbonBar):
         SPLIT_TASK = 50
         RENAME_TASK = 60
         MOVE_SEGMENT = 70
+        MOVE_UP = 80
+        MOVE_DOWN = 90
         # -----------
-        NEW_PROJECT = 80
-        OPEN_PROJECT = 90
-        SAVE_PROJECT = 100
-        SAVE_AS_PROJECT = 110
+        NEW_PROJECT = 100
+        OPEN_PROJECT = 110
+        SAVE_PROJECT = 120
+        SAVE_AS_PROJECT = 130
 
     RIBBON_BUTTON_SIZE = (22, 22)
 
@@ -173,17 +175,19 @@ class Ribbon(wx.ribbon.RibbonBar):
         tb.AddTool(self.IDS.SPLIT_TASK, 'Split Task', icon_split, 'Split a task segment.', wx.ITEM_NORMAL)
         self.Bind(wx.EVT_TOOL, self.on_split_task, id=self.IDS.SPLIT_TASK)
 
-        icon_rename = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
-                                             'ribbon', 'gantt', 'rename.png'))
-        # tb.AddTool(self.IDS.RENAME_TASK, 'Rename Task', icon_rename,
-        #            'Rename task.', wx.ITEM_NORMAL)
-        # self.Bind(wx.EVT_TOOL, self.on_rename, id=self.IDS.RENAME_TASK)
-
         icon_edit_start = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
                                                  'ribbon', 'gantt', 'edit_start.png'))
         tb.AddTool(self.IDS.MOVE_SEGMENT, 'Move Task Segment', icon_edit_start,
                    'Move the task segment start.', wx.ITEM_NORMAL)
         self.Bind(wx.EVT_TOOL, self.on_move_segment, id=self.IDS.MOVE_SEGMENT)
+
+        icon_move_up = wx.ArtProvider.GetBitmap(wx.ART_GO_UP)
+        tb.AddTool(self.IDS.MOVE_UP, 'Move Up', icon_move_up,
+                   'Move a task up by one row.', wx.ITEM_NORMAL)
+
+        icon_move_down = wx.ArtProvider.GetBitmap(wx.ART_GO_DOWN)
+        tb.AddTool(self.IDS.MOVE_DOWN, 'Move Down', icon_move_down,
+                   'Move a task down by one row.', wx.ITEM_NORMAL)
 
         panel.SetSizer(sizer)
         tb.Realize()
@@ -194,6 +198,12 @@ class Ribbon(wx.ribbon.RibbonBar):
     def set_button_cursors(self):
         for button in self.ribbon_buttons:
             button.SetCursor(wx.Cursor(wx.CURSOR_HAND))
+
+    def on_task_move_down(self, event):
+        print('Move task down')
+
+    def on_task_move_up(self, event):
+        print('Move task up')
 
     def on_new_project(self, event):
         print('New project')
