@@ -184,10 +184,12 @@ class Ribbon(wx.ribbon.RibbonBar):
         icon_move_up = wx.ArtProvider.GetBitmap(wx.ART_GO_UP)
         tb.AddTool(self.IDS.MOVE_UP, 'Move Up', icon_move_up,
                    'Move a task up by one row.', wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_task_move_up, id=self.IDS.MOVE_UP)
 
         icon_move_down = wx.ArtProvider.GetBitmap(wx.ART_GO_DOWN)
         tb.AddTool(self.IDS.MOVE_DOWN, 'Move Down', icon_move_down,
                    'Move a task down by one row.', wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_task_move_down, id=self.IDS.MOVE_DOWN)
 
         panel.SetSizer(sizer)
         tb.Realize()
