@@ -63,17 +63,22 @@ class GanttChart(wx.Window):
                 # Convert the predecessor end to coordinate
                 pred_index = int(task.predecessor)
                 pred_y = WBS_ROW_HEIGHT * pred_index + WBS_ROW_HEIGHT/2 + WBS_HEADER_HEIGHT
-                pred_x = BAR_SCALE * predecessor_end
+                pred_x = BAR_SCALE * (predecessor_end - 1)
 
                 # Now get the coordinate of the start of the task
                 task_y = WBS_ROW_HEIGHT * index + WBS_ROW_HEIGHT/2 + WBS_HEADER_HEIGHT
-                task_x = task.start_day * BAR_SCALE
+                task_x = (task.start_day - 1) * BAR_SCALE
+
+                # Get the middle of between these two task bars
+                m_x = abs(pred_x - task_x) / 2 + min(pred_x, task_x)
 
                 pen = wx.Pen(wx.RED, 2)
                 dc.SetPen(pen)
-                dc.DrawLine(pred_x, pred_y, task_x, task_y)
-
-                # TODO Bug in line location
+                # dc.DrawLine(pred_x, pred_y, task_x, task_y)
+                dc.DrawLines([(pred_x, pred_y),
+                              (m_x, pred_y),
+                              (m_x, task_y),
+                              (task_x, task_y)])
 
     def draw_hor_grids(self, length, num, vert_distance):
         """
