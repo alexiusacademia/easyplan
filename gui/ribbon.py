@@ -202,7 +202,18 @@ class Ribbon(wx.ribbon.RibbonBar):
             button.SetCursor(wx.Cursor(wx.CURSOR_HAND))
 
     def on_task_move_down(self, event):
-        print('Move task down')
+        if self.project.selected_task_index is None:
+            wx.MessageBox('A task shall be selected from the WBS before moving.', 'No Task Selected',
+                          style=wx.OK_DEFAULT)
+        else:
+            index = self.project.selected_task_index
+
+            if index == len(self.project.tasks) - 1:
+                pass
+            else:
+                self.project.tasks.insert(index + 1, self.project.tasks.pop(index))
+                self.parent.left_pane.populate()
+                self.parent.right_pane.redraw()
 
     def on_task_move_up(self, event):
         if self.project.selected_task_index is None:
