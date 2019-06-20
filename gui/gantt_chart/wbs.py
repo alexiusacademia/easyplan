@@ -137,10 +137,8 @@ class WBS(gridlib.Grid):
                         pred_duration = task.get_virtual_duration()
                         pred_end = pred_start + pred_duration
                         if tsk.start_day < pred_end:
-                            print('Old:', tsk.start_day)
                             tsk.set_start_day(pred_end)
-                            print('New:', tsk.start_day)
-                            # TODO Change the start day in wbs
+                            self.SetCellValue((i, 1), str(tsk.start_day))
 
         # Predecessor
         elif col == 3:
