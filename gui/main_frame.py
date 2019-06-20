@@ -12,6 +12,7 @@ class MainFrame(wx.Frame):
     project = None
     left_pane = None
     right_pane = None
+    project_file = ''
 
     def __init__(self):
         super().__init__(parent=None, title='EasyPlan')

@@ -2,6 +2,7 @@
 import wx
 import wx.ribbon
 import os
+import pickle
 
 # Import project modules
 from .dialogs.dlg_add_task import AddTaskDialog
@@ -230,7 +231,20 @@ class Ribbon(wx.ribbon.RibbonBar):
                 self.parent.right_pane.redraw()
 
     def on_new_project(self, event):
-        print('New project')
+        with wx.FileDialog(self.parent, 'Save project.', '', self.project.project_name,
+                           wildcard='EasyPlan files (*.epn)|*.epn',
+                           style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as file_dialog:
+            if file_dialog.ShowModal() == wx.ID_CANCEL:
+                return
+
+            # Save the current content of the file
+            pathname = file_dialog.GetPath()
+
+            try:
+                with open(pathname, 'wb') as file:
+                    pickle.dump(self.project, file, pickle.HIGHEST_PROTOCOL)
+            except IOError:
+                wx.LogError('Cannot save current file at', pathname)
 
     def on_open_project(self, event):
         print('Open project')
