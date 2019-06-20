@@ -205,7 +205,18 @@ class Ribbon(wx.ribbon.RibbonBar):
         print('Move task down')
 
     def on_task_move_up(self, event):
-        print('Move task up')
+        if self.project.selected_task_index is None:
+            wx.MessageBox('A task shall be selected from the WBS before moving.', 'No Task Selected',
+                          style=wx.OK_DEFAULT)
+        else:
+            index = self.project.selected_task_index
+
+            if index == 0:
+                pass
+            else:
+                self.project.tasks.insert(index-1, self.project.tasks.pop(index))
+                self.parent.left_pane.populate()
+                self.parent.right_pane.redraw()
 
     def on_new_project(self, event):
         print('New project')
@@ -237,7 +248,7 @@ class Ribbon(wx.ribbon.RibbonBar):
         :return:
         """
         if self.project.selected_task_index is None:
-            wx.MessageBox('A task shall be selected from the WBS before deleting.', 'Delete Task',
+            wx.MessageBox('A task shall be selected from the WBS before deleting.', 'No Task Selected',
                           style=wx.OK_DEFAULT)
         else:
             # Ask user for confirmation
