@@ -243,8 +243,9 @@ class Ribbon(wx.ribbon.RibbonBar):
             try:
                 with open(pathname, 'wb') as file:
                     pickle.dump(self.project, file, pickle.HIGHEST_PROTOCOL)
+                self.parent.project_file = pathname
             except IOError:
-                wx.LogError('Cannot save current file at', pathname)
+                wx.LogError('Cannot save current file')
 
     def on_open_project(self, event):
         print('Open project')

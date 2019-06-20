@@ -23,7 +23,6 @@ class MainFrame(wx.Frame):
 
     def initialize_project(self):
         self.project = Project()
-        self.project.project_name = 'Untitled project.'
 
     def init_ui(self):
         sizer = wx.GridBagSizer(vgap=5, hgap=5)
