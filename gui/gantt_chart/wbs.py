@@ -107,6 +107,7 @@ class WBS(gridlib.Grid):
         :param col: Column index
         :param old: Old cell value
         """
+        tasks = self.project.tasks
         task = self.project.tasks[index]
         cell = index, col
         value = self.GetCellValue(cell)
@@ -123,16 +124,23 @@ class WBS(gridlib.Grid):
                 else:
                     task.set_start_day(int(value))
 
-                    # TODO Move start day of successor if any
+                    for i, tsk in enumerate(tasks):
+                        if tsk.predecessor == index:
+                            pred_start = task.start_day
+                            pred_duration = task.get_virtual_duration()
+                            pred_end = pred_start + pred_duration
+                            if tsk.start_day < pred_end:
+                                tsk.set_start_day(pred_end)
+                                self.SetCellValue((i, 1), str(tsk.start_day))
+
         # Task duration
         elif col == 2:
             if value.isdigit():
                 task.set_duration(int(value))
 
                 # Move the start days of successor tasks if necessary
-                for i, tsk in enumerate(self.project.tasks):
+                for i, tsk in enumerate(tasks):
                     if tsk.predecessor == index:
-                        print('Successor: ', tsk)
                         pred_start = task.start_day
                         pred_duration = task.get_virtual_duration()
                         pred_end = pred_start + pred_duration
