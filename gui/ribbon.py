@@ -242,12 +242,13 @@ class Ribbon(wx.ribbon.RibbonBar):
 
             try:
                 with open(pathname, 'wb') as file:
-                    pickle.dump(self.project, file, pickle.HIGHEST_PROTOCOL)
+                    pickle.dump(self.project, file, pickle.DEFAULT_PROTOCOL)
                 self.parent.project_file = pathname
             except IOError:
                 wx.LogError('Cannot save current file')
 
     def on_open_project(self, event):
+        print(self.project.tasks)
         with wx.FileDialog(self.parent, 'Open project.', '',
                            wildcard='EasyPlan files (*.epn)|*.epn',
                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as file_dialog:
@@ -260,16 +261,24 @@ class Ribbon(wx.ribbon.RibbonBar):
             try:
                 with open(pathname, 'rb') as inp:
                     p = pickle.load(inp)
-                    self.parent.left_pane.populate()
-                    self.parent.right_pane.redraw()
+                    # self.parent.left_pane.populate()
+                    # self.parent.right_pane.redraw()
                     print(p)
-
                 self.parent.project_file = pathname
             except IOError:
                 wx.LogError('Cannot save current file')
 
     def on_save_project(self, event):
-        print('Save project')
+        p = {'path': self.parent.project_file, 'tasks': self.project.tasks}
+
+        if self.parent.project_file != '':
+            path = self.parent.project_file
+            try:
+                with open(path, 'wb') as file:
+                    pickle.dump(p, file, protocol=pickle.DEFAULT_PROTOCOL)
+                    print('Project saved.')
+            except IOError:
+                wx.LogError('Cannot save current file')
 
     def on_save_project_as(self, event):
         print('Save project as')
