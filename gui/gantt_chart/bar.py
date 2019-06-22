@@ -30,7 +30,7 @@ class BarSegment(wx.Panel):
         self.SetSize(l, h)
         self.SetBackgroundColour(BG_DEFAULT)
 
-        self.SetCursor(wx.Cursor(wx.CURSOR_IBEAM))
+        self.SetCursor(wx.Cursor(wx.CURSOR_SIZING))
 
         # TRefresh s needed to work on Windows
         self.Refresh()
