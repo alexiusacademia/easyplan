@@ -13,6 +13,7 @@ class MainFrame(wx.Frame):
     left_pane = None
     right_pane = None
     project_file = ''
+    status_bar = None
 
     def __init__(self):
         super().__init__(parent=None, title='EasyPlan')
@@ -45,6 +46,8 @@ class MainFrame(wx.Frame):
                   flag=wx.EXPAND | wx.TOP | wx.BOTTOM)
 
         self.Bind(wx.EVT_SPLITTER_DCLICK, self.on_sash_dbl_clicked)
+
+        self.status_bar = self.CreateStatusBar(2, wx.STB_ELLIPSIZE_MIDDLE)
 
         sizer.AddGrowableRow(1)
         sizer.AddGrowableCol(0)
