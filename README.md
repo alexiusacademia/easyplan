@@ -6,6 +6,13 @@ Yet another project scheduling and management software.
 - [ ] Graphical User Interface
   - [ ] Ribbon
     - [ ] Project page
+      - [ ] New Project
+      - [ ] Open Project
+      - [ ] Save Project
+      - [ ] Save Project As
+        - Save project as new file
+      - [ ] Export Project
+        - Export project to different formats
     - [ ] Gantt Page
       - [ ] Basic operations panel
       - [ ] Edit panel
