@@ -249,7 +249,6 @@ class Ribbon(wx.ribbon.RibbonBar):
                 wx.LogError('Cannot save current file')
 
     def on_open_project(self, event):
-        print(self.project.tasks)
         with wx.FileDialog(self.parent, 'Open project.', '',
                            wildcard='EasyPlan files (*.epn)|*.epn',
                            style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as file_dialog:
@@ -258,7 +257,6 @@ class Ribbon(wx.ribbon.RibbonBar):
 
             # Save the current content of the file
             pathname = file_dialog.GetPath()
-            project_dict = {}
             try:
                 with open(pathname, 'rb') as inp:
                     project_dict = pickle.load(inp)
@@ -271,9 +269,13 @@ class Ribbon(wx.ribbon.RibbonBar):
                         project.project_name = project_dict['project_name']
                     project.tasks = project_dict['tasks']
 
+                    self.parent.project = project
                     self.project = project
+                    self.parent.left_pane.project = project
+                    self.parent.right_pane.project = project
 
                     self.parent.left_pane.populate()
+                    self.parent.right_pane.redraw()
 
             except IOError:
                 wx.LogError('Cannot open current file')
