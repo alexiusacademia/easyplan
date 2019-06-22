@@ -145,6 +145,8 @@ class WBS(gridlib.Grid):
                             if tsk.start_day < pred_end:
                                 tsk.set_start_day(pred_end)
                                 self.SetCellValue((i, 1), str(tsk.start_day))
+            else:
+                self.SetCellValue(cell, old)
 
         # Task duration
         elif col == 2:
