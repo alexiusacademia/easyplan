@@ -124,13 +124,16 @@ class WBS(gridlib.Grid):
                     self.SetCellValue(cell, old)
                 else:
                     # Check if this task has predecessor
-                    predecessor_index = self.project.tasks[index].predecessor
-                    predecessor = self.project.tasks[predecessor_index]
-                    predecessor_end = predecessor.start_day + predecessor.get_virtual_duration()
+                    predecessor_index = str(self.project.tasks[index].predecessor)
+                    if predecessor_index.isdigit():
+                        predecessor = self.project.tasks[int(predecessor_index)]
+                        predecessor_end = predecessor.start_day + predecessor.get_virtual_duration()
 
-                    if int(value) < int(predecessor_end):
-                        task.set_start_day(int(predecessor_end))
-                        self.SetCellValue(cell, old)
+                        if int(value) < int(predecessor_end):
+                            task.set_start_day(int(predecessor_end))
+                            self.SetCellValue(cell, old)
+                        else:
+                            task.set_start_day(int(value))
                     else:
                         task.set_start_day(int(value))
 
