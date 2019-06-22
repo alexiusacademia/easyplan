@@ -22,6 +22,9 @@ Yet another project scheduling and management software.
     - [ ] Resources column
   - [ ] Gantt
     - [ ] Task Bars
+      - [x] Display bars
+      - [x] Show splitted task
+      - [ ] Draw imaginary line between splitted tasks
       - [ ] Drag to move start day
       - [ ] Drag to split segment
       - [ ] Drag to move segment
