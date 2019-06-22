@@ -27,9 +27,10 @@ class GanttChart(wx.Window):
         self.Bind(wx.EVT_PAINT, self.on_paint)
 
     def on_paint(self, event):
-        self.ClearBackground()
-        self.draw_hor_grids(self.GetSize()[0], len(self.project.tasks), WBS_ROW_HEIGHT)
-        self.draw_predecessor_lines()
+        if self.project is not None:
+            self.ClearBackground()
+            self.draw_hor_grids(self.GetSize()[0], len(self.project.tasks), WBS_ROW_HEIGHT)
+            self.draw_predecessor_lines()
 
     def redraw(self):
         """
