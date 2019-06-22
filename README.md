@@ -2,7 +2,7 @@ EasyPlan
 ---
 Yet another project scheduling and management software.
 
-### Milestone
+### Roadmap
 - [ ] Graphical User Interface
   - [ ] Ribbon
     - [ ] Project page
