@@ -22,7 +22,8 @@ class MainFrame(wx.Frame):
         self.Maximize(True)
 
     def initialize_project(self):
-        self.project = Project()
+        # self.project = Project()
+        pass
 
     def init_ui(self):
         sizer = wx.GridBagSizer(vgap=5, hgap=5)
