@@ -14,12 +14,14 @@ Yet another project scheduling and management software.
         - [x] Move task up
         - [x] Move task down
     - [ ] Report Page
+      - [ ] Printing
   - [ ] WBS
     - [x] Listing of Tasks
     - [x] Start Day column
     - [x] Duration column
     - [x] Predecessor column
     - [ ] Resources column
+    - [ ] Group tasks
   - [ ] Gantt
     - [ ] Task Bars
       - [x] Display bars
@@ -34,3 +36,4 @@ Yet another project scheduling and management software.
   - [ ] Project Class
   - [x] Task Class
   - [x] Task Segment Class
+  - [ ] Resources
