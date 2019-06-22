@@ -9,6 +9,7 @@ from .dialogs.dlg_add_task import AddTaskDialog
 from .dialogs.dlg_split_task import SplitTaskDialog
 from .dialogs.dlg_move_task_segment import MoveTaskSegmentDialog
 from core.task import Task
+from core.project import Project
 from .gantt_chart.constants import *
 
 
@@ -257,19 +258,29 @@ class Ribbon(wx.ribbon.RibbonBar):
 
             # Save the current content of the file
             pathname = file_dialog.GetPath()
-
+            project_dict = {}
             try:
                 with open(pathname, 'rb') as inp:
-                    p = pickle.load(inp)
-                    # self.parent.left_pane.populate()
-                    # self.parent.right_pane.redraw()
-                    print(p)
-                self.parent.project_file = pathname
+                    project_dict = pickle.load(inp)
+
+                    self.parent.project_file = pathname
+
+                    # Create new instance of project
+                    project = Project()
+                    if 'project_name' in project_dict:
+                        project.project_name = project_dict['project_name']
+                    project.tasks = project_dict['tasks']
+
+                    self.project = project
+
+                    self.parent.left_pane.populate()
+
             except IOError:
-                wx.LogError('Cannot save current file')
+                wx.LogError('Cannot open current file')
 
     def on_save_project(self, event):
-        p = {'path': self.parent.project_file, 'tasks': self.project.tasks}
+        p = {'path': self.parent.project_file,
+             'tasks': self.project.tasks}
 
         if self.parent.project_file != '':
             path = self.parent.project_file
