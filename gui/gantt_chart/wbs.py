@@ -52,23 +52,24 @@ class WBS(gridlib.Grid):
         Populate the grid with the data from the project object.
         :return:
         """
-        self.delete_all_rows()
-        num_rows = self.GetNumberRows()
-        index = 0
-        for task in self.project.tasks:
-            if num_rows < index+1:
-                self.AppendRows()
-            self.SetCellValue(index, 0, str(task.task_name))
-            self.SetCellValue(index, 1, str(task.start_day))
-            self.SetCellValue(index, 2, str(task.get_duration()))
-            if task.predecessor == '':
-                self.SetCellValue(index, 3, task.predecessor)
-            else:
-                self.SetCellValue(index, 3, str(int(task.predecessor) + 1))
+        if self.project is not None:
+            self.delete_all_rows()
+            num_rows = self.GetNumberRows()
+            index = 0
+            for task in self.project.tasks:
+                if num_rows < index+1:
+                    self.AppendRows()
+                self.SetCellValue(index, 0, str(task.task_name))
+                self.SetCellValue(index, 1, str(task.start_day))
+                self.SetCellValue(index, 2, str(task.get_duration()))
+                if task.predecessor == '':
+                    self.SetCellValue(index, 3, task.predecessor)
+                else:
+                    self.SetCellValue(index, 3, str(int(task.predecessor) + 1))
 
-            self.SetRowSize(index, WBS_ROW_HEIGHT)
+                self.SetRowSize(index, WBS_ROW_HEIGHT)
 
-            index += 1
+                index += 1
 
     def delete_all_rows(self):
         """
