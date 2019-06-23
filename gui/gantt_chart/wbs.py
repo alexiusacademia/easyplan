@@ -180,7 +180,7 @@ class WBS(gridlib.Grid):
                         self.SetCellValue((index, 1), str(predecessor_end))
             else:
                 if value == '':
-                    self.project.tasks[index] = ''
+                    self.project.tasks[index].predecessor = ''
                 else:
                     self.SetCellValue(cell, old)
 
