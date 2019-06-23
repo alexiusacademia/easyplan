@@ -233,21 +233,26 @@ class Ribbon(wx.ribbon.RibbonBar):
                 self.parent.right_pane.redraw()
 
     def on_new_project(self, event):
-        with wx.FileDialog(self.parent, 'Save project.', '', self.project.project_name,
-                           wildcard='EasyPlan files (*.epn)|*.epn',
-                           style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as file_dialog:
-            if file_dialog.ShowModal() == wx.ID_CANCEL:
-                return
+        dlg = wx.MessageDialog(self, 'Create new project?',
+                               'New Project', wx.YES_NO | wx.CANCEL)
+        if dlg.ShowModal() == wx.ID_YES:
+            print('Yes')
 
-            # Save the current content of the file
-            pathname = file_dialog.GetPath()
+            with wx.FileDialog(self.parent, 'Save project.', '', 'New Project',
+                               wildcard='EasyPlan files (*.epn)|*.epn',
+                               style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as file_dialog:
+                if file_dialog.ShowModal() == wx.ID_CANCEL:
+                    return
 
-            try:
-                with open(pathname, 'wb') as file:
-                    pickle.dump(self.project, file, pickle.DEFAULT_PROTOCOL)
-                self.parent.project_file = pathname
-            except IOError:
-                wx.LogError('Cannot save current file')
+                # Save the current content of the file
+                pathname = file_dialog.GetPath()
+
+                try:
+                    with open(pathname, 'wb') as file:
+                        pickle.dump(self.project, file, pickle.DEFAULT_PROTOCOL)
+                    self.parent.project_file = pathname
+                except IOError:
+                    wx.LogError('Cannot save current file')
 
     def on_open_project(self, event):
         with wx.FileDialog(self.parent, 'Open project.', '',
