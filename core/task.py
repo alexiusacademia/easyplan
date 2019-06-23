@@ -69,12 +69,15 @@ class Task:
         diff = total_duration - d
 
         if diff <= 0:
+            # New duration is longer than the previous
             # Add the difference to the last segment
             self.task_segments[len(self.task_segments) - 1].duration += abs(diff)
             return True
         else:
-            if abs(diff) < segment_n.duration:
-                segment_n.duration = abs(diff)
+            # New duration is shorter
+            if d < segment_n.duration:
+                segment_n.duration = segment_n.duration - diff
+                print('Second scenario')
                 return True
             else:
                 return False, 'Task segments length shall be corrected before applying the ' \
