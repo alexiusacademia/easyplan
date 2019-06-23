@@ -145,6 +145,7 @@ class WBS(gridlib.Grid):
                             if tsk.start_day < pred_end:
                                 tsk.set_start_day(pred_end)
                                 self.SetCellValue((i, 1), str(tsk.start_day))
+                    # TODO Recursively update successor start days
             else:
                 self.SetCellValue(cell, old)
 
@@ -162,6 +163,7 @@ class WBS(gridlib.Grid):
                         if tsk.start_day < pred_end:
                             tsk.set_start_day(pred_end)
                             self.SetCellValue((i, 1), str(tsk.start_day))
+                # TODO Recursively update successor start days
 
         # Predecessor
         elif col == 3:
