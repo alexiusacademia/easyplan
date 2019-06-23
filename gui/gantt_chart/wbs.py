@@ -2,6 +2,7 @@ import wx.grid as gridlib
 import wx
 
 from .constants import *
+from core.task import Task
 
 
 class Cols(enumerate):
@@ -137,6 +138,8 @@ class WBS(gridlib.Grid):
                     else:
                         task.set_start_day(int(value))
 
+                    # Update tasks start days if necessary
+                    '''
                     for i, tsk in enumerate(tasks):
                         if tsk.predecessor == index:
                             pred_start = task.start_day
@@ -145,7 +148,17 @@ class WBS(gridlib.Grid):
                             if tsk.start_day < pred_end:
                                 tsk.set_start_day(pred_end)
                                 self.SetCellValue((i, 1), str(tsk.start_day))
+                    '''
                     # TODO Recursively update successor start days
+                    for i, tsk in enumerate(tasks):
+                        if tsk.predecessor != '':
+                            pred_start: Task = tasks[int(tsk.predecessor)]
+                            pred_duration = pred_start.get_virtual_duration()
+                            pred_end = pred_start.start_day + pred_duration
+                            if tsk.start_day < pred_end:
+                                tsk.set_start_day(pred_end)
+                                self.SetCellValue((i, 1), str(tsk.start_day))
+
             else:
                 self.SetCellValue(cell, old)
 
