@@ -139,17 +139,6 @@ class WBS(gridlib.Grid):
                         task.set_start_day(int(value))
 
                     # Update tasks start days if necessary
-                    '''
-                    for i, tsk in enumerate(tasks):
-                        if tsk.predecessor == index:
-                            pred_start = task.start_day
-                            pred_duration = task.get_virtual_duration()
-                            pred_end = pred_start + pred_duration
-                            if tsk.start_day < pred_end:
-                                tsk.set_start_day(pred_end)
-                                self.SetCellValue((i, 1), str(tsk.start_day))
-                    '''
-                    # TODO Recursively update successor start days
                     self.update_start_days()
 
             else:
@@ -169,7 +158,6 @@ class WBS(gridlib.Grid):
                         if tsk.start_day < pred_end:
                             tsk.set_start_day(pred_end)
                             self.SetCellValue((i, 1), str(tsk.start_day))
-                # TODO Recursively update successor start days
                 self.update_start_days()
 
         # Predecessor
@@ -190,6 +178,11 @@ class WBS(gridlib.Grid):
                     if task.start_day < predecessor_end:
                         task.set_start_day(predecessor_end)
                         self.SetCellValue((index, 1), str(predecessor_end))
+            else:
+                if value == '':
+                    self.project.tasks[index] = ''
+                else:
+                    self.SetCellValue(cell, old)
 
     def update_start_days(self):
         tasks = self.project.tasks
