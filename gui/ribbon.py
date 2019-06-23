@@ -277,6 +277,8 @@ class Ribbon(wx.ribbon.RibbonBar):
                     self.parent.left_pane.populate()
                     self.parent.right_pane.redraw()
 
+                    self.parent.status_bar.SetStatusText('Project ' + pathname + ' opened.')
+
             except IOError:
                 wx.LogError('Cannot open current file')
 
