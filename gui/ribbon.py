@@ -235,10 +235,13 @@ class Ribbon(wx.ribbon.RibbonBar):
     def on_new_project(self, event):
         dlg = wx.MessageDialog(self, 'Create new project?',
                                'New Project', wx.YES_NO | wx.CANCEL)
-        if dlg.ShowModal() == wx.ID_YES:
-            print('Yes')
 
-            with wx.FileDialog(self.parent, 'Save project.', '', 'New Project',
+        # Ask for confirmation first before creating an empty file.
+        if dlg.ShowModal() == wx.ID_YES:
+
+            project_dict = {'tasks': []}
+
+            with wx.FileDialog(self.parent, 'New project.', '', 'New Project',
                                wildcard='EasyPlan files (*.epn)|*.epn',
                                style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as file_dialog:
                 if file_dialog.ShowModal() == wx.ID_CANCEL:
@@ -249,7 +252,12 @@ class Ribbon(wx.ribbon.RibbonBar):
 
                 try:
                     with open(pathname, 'wb') as file:
-                        pickle.dump(self.project, file, pickle.DEFAULT_PROTOCOL)
+                        pickle.dump(project_dict, file, pickle.DEFAULT_PROTOCOL)
+
+                        self.initialize_project(project_dict)
+
+                        self.parent.status_bar.SetStatusText(STATUS_PROJECT_CREATED)
+                        self.parent.status_bar.SetStatusText(pathname, 1)
                     self.parent.project_file = pathname
                 except IOError:
                     wx.LogError('Cannot save current file')
@@ -269,24 +277,26 @@ class Ribbon(wx.ribbon.RibbonBar):
 
                     self.parent.project_file = pathname
 
-                    # Create new instance of project
-                    project = Project()
-                    if 'project_name' in project_dict:
-                        project.project_name = project_dict['project_name']
-                    project.tasks = project_dict['tasks']
-
-                    self.parent.project = project
-                    self.project = project
-                    self.parent.left_pane.project = project
-                    self.parent.right_pane.project = project
-
-                    self.parent.left_pane.populate()
-                    self.parent.right_pane.redraw()
-
-                    self.parent.status_bar.SetStatusText(STATUS_PROJECT_OPENED + ' : ' + pathname)
-
+                    self.initialize_project(project_dict)
+                    self.parent.status_bar.SetStatusText(STATUS_PROJECT_OPENED)
+                    self.parent.status_bar.SetStatusText(pathname, 1)
             except IOError:
                 wx.LogError('Cannot open current file')
+
+    def initialize_project(self, project_dict):
+        # Create new instance of project
+        project = Project()
+        if 'project_name' in project_dict:
+            project.project_name = project_dict['project_name']
+        project.tasks = project_dict['tasks']
+
+        self.parent.project = project
+        self.project = project
+        self.parent.left_pane.project = project
+        self.parent.right_pane.project = project
+
+        self.parent.left_pane.populate()
+        self.parent.right_pane.redraw()
 
     def on_save_project(self, event):
         p = {'path': self.parent.project_file,
