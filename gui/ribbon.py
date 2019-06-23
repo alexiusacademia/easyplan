@@ -11,6 +11,7 @@ from .dialogs.dlg_move_task_segment import MoveTaskSegmentDialog
 from core.task import Task
 from core.project import Project
 from .gantt_chart.constants import *
+from .gantt_chart.status import *
 
 
 class Ribbon(wx.ribbon.RibbonBar):
@@ -277,7 +278,7 @@ class Ribbon(wx.ribbon.RibbonBar):
                     self.parent.left_pane.populate()
                     self.parent.right_pane.redraw()
 
-                    self.parent.status_bar.SetStatusText('Project ' + pathname + ' opened.')
+                    self.parent.status_bar.SetStatusText(STATUS_PROJECT_OPENED + ' : ' + pathname)
 
             except IOError:
                 wx.LogError('Cannot open current file')
@@ -291,7 +292,7 @@ class Ribbon(wx.ribbon.RibbonBar):
             try:
                 with open(path, 'wb') as file:
                     pickle.dump(p, file, protocol=pickle.DEFAULT_PROTOCOL)
-                    print('Project saved.')
+                    self.parent.status_bar.SetStatusText(STATUS_PROJECT_SAVED + ' : ' + path)
             except IOError:
                 wx.LogError('Cannot save current file')
 
