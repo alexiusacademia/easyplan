@@ -150,14 +150,7 @@ class WBS(gridlib.Grid):
                                 self.SetCellValue((i, 1), str(tsk.start_day))
                     '''
                     # TODO Recursively update successor start days
-                    for i, tsk in enumerate(tasks):
-                        if tsk.predecessor != '':
-                            pred_start: Task = tasks[int(tsk.predecessor)]
-                            pred_duration = pred_start.get_virtual_duration()
-                            pred_end = pred_start.start_day + pred_duration
-                            if tsk.start_day < pred_end:
-                                tsk.set_start_day(pred_end)
-                                self.SetCellValue((i, 1), str(tsk.start_day))
+                    self.update_start_days()
 
             else:
                 self.SetCellValue(cell, old)
@@ -177,6 +170,7 @@ class WBS(gridlib.Grid):
                             tsk.set_start_day(pred_end)
                             self.SetCellValue((i, 1), str(tsk.start_day))
                 # TODO Recursively update successor start days
+                self.update_start_days()
 
         # Predecessor
         elif col == 3:
@@ -197,6 +191,16 @@ class WBS(gridlib.Grid):
                         task.set_start_day(predecessor_end)
                         self.SetCellValue((index, 1), str(predecessor_end))
 
+    def update_start_days(self):
+        tasks = self.project.tasks
+        for i, tsk in enumerate(tasks):
+            if tsk.predecessor != '':
+                pred_start: Task = tasks[int(tsk.predecessor)]
+                pred_duration = pred_start.get_virtual_duration()
+                pred_end = pred_start.start_day + pred_duration
+                if tsk.start_day < pred_end:
+                    tsk.set_start_day(pred_end)
+                    self.SetCellValue((i, 1), str(tsk.start_day))
 
 def show_error(message, caption):
     wx.MessageBox(message, caption)
