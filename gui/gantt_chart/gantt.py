@@ -4,7 +4,7 @@ from .bar import BarSegment
 from .constants import *
 
 
-class GanttChart(wx.Window):
+class GanttChart(wx.ScrolledCanvas):
     wbs = None
     project = None
 
@@ -25,6 +25,8 @@ class GanttChart(wx.Window):
         self.SetBackgroundColour((255, 255, 255))
 
         self.Bind(wx.EVT_PAINT, self.on_paint)
+
+        self.SetScrollbars(1, 1, 1000, 1000, 0, 0)
 
     def on_paint(self, event):
         if self.project is not None:
