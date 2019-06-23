@@ -147,7 +147,8 @@ class WBS(gridlib.Grid):
         # Task duration
         elif col == 2:
             if value.isdigit():
-                print(task.set_duration(int(value)))
+                duration = int(value)
+                task.set_duration(duration)
 
                 # Move the start days of successor tasks if necessary
                 for i, tsk in enumerate(tasks):
