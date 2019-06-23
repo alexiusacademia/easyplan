@@ -40,7 +40,6 @@ class BarSegment(wx.Panel):
         self.Bind(wx.EVT_LEFT_DOWN, self.on_mouse_left_down)
         self.Bind(wx.EVT_SET_FOCUS, self.on_received_focus)
         self.Bind(wx.EVT_KILL_FOCUS, self.on_lost_focus)
-        # self.Bind(wx.EVT_LEFT_DCLICK, self.on_double_clicked)
         self.Bind(wx.EVT_MOTION, self.on_mouse_move)
 
     def on_mouse_left_down(self, event):
@@ -58,7 +57,8 @@ class BarSegment(wx.Panel):
 
         dx = (event.GetPosition()[0] - start_x)
 
-        self.Move(starting_point + dx, self.GetPosition()[1])
+        if (starting_point + dx) >= 0:
+            self.Move(starting_point + dx, self.GetPosition()[1])
 
     def on_hover(self, event):
         # print('Hovered')
