@@ -110,7 +110,7 @@ class WBS(gridlib.Grid):
         :param old: Old cell value
         """
         tasks = self.project.tasks
-        task = self.project.tasks[index]
+        task = tasks[index]
         cell = index, col
         value = self.GetCellValue(cell)
         # Task name
@@ -147,11 +147,11 @@ class WBS(gridlib.Grid):
         # Task duration
         elif col == 2:
             if value.isdigit():
-                task.set_duration(int(value))
+                print(task.set_duration(int(value)))
 
                 # Move the start days of successor tasks if necessary
                 for i, tsk in enumerate(tasks):
-                    if tsk.predecessor == index:
+                    if tsk.predecessor != '' and int(tsk.predecessor) == index:
                         pred_start = task.start_day
                         pred_duration = task.get_virtual_duration()
                         pred_end = pred_start + pred_duration
