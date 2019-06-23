@@ -76,8 +76,7 @@ class Task:
         else:
             # New duration is shorter
             if d < segment_n.duration:
-                segment_n.duration = segment_n.duration - diff
-                print('Second scenario')
+                segment_n.duration -= diff
                 return True
             else:
                 return False, 'Task segments length shall be corrected before applying the ' \
