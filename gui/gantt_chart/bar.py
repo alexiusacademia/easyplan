@@ -60,6 +60,8 @@ class BarSegment(wx.Panel):
         if (starting_point + dx) >= 0:
             self.Move(starting_point + dx, self.GetPosition()[1])
 
+        # TODO Check for update
+
     def on_hover(self, event):
         # print('Hovered')
         pass
