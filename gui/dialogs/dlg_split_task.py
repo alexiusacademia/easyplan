@@ -86,8 +86,7 @@ class SplitTaskDialog(wx.Dialog):
                 if left_duration.isdigit():
                     left_duration = int(left_duration)
                     self.selected_task.split_task(self.selected_task_segment, left_duration)
-
-                    pub.sendMessage(EVENT_PROJECT_UPDATED)
+                    self.project.update_successors()
                 else:
                     wx.MessageBox('Left duration should be an integer.', 'Error', wx.OK | wx.ICON_INFORMATION)
 
