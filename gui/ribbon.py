@@ -5,12 +5,11 @@ import os
 import pickle
 
 # Import project modules
-from .dialogs.dlg_add_task import AddTaskDialog
 from .dialogs.dlg_split_task import SplitTaskDialog
 from .dialogs.dlg_move_task_segment import MoveTaskSegmentDialog
 from core.task import Task
 from core.project import Project
-from .gantt_chart.constants import *
+from constants import *
 from .gantt_chart.status import *
 
 
@@ -317,13 +316,10 @@ class Ribbon(wx.ribbon.RibbonBar):
     def on_add_task(self, event):
         if self.project.selected_task_index is not None:
             index = self.project.selected_task_index
-            self.project.tasks.insert(index, Task())
+            self.project.insert_task(index, Task())
         else:
             self.project.add_task(Task())
-        # self.parent.refresh(populate=True)
         self.project.selected_task_index = None
-        self.wbs.populate()
-        self.parent.right_pane.redraw()
 
     def on_delete_task(self, event):
         """
@@ -343,7 +339,6 @@ class Ribbon(wx.ribbon.RibbonBar):
                 dlg = wx.MessageBox('Delete the selected task?', 'Delete Task', style=wx.YES_NO | wx.CANCEL)
                 if dlg == wx.YES:
                     self.project.remove_task(self.project.tasks[index])
-                    self.parent.left_pane.populate()
                     self.parent.right_pane.redraw()
                     self.project.selected_task_index = None
 

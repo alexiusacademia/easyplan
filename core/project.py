@@ -1,9 +1,11 @@
 # Import built-in modules
 from enum import Enum
 import datetime
+from pubsub import pub
 
 # Import project modules
 from . import task as tsk
+from constants import *
 
 
 class TimeBasis(Enum):
@@ -48,9 +50,14 @@ class Project:
         """
         if isinstance(task, tsk.Task):
             self.tasks.append(task)
+            pub.sendMessage(EVENT_PROJECT_UPDATED)
             return True
         else:
             return False
+
+    def insert_task(self, index, task):
+        self.tasks.insert(index, task)
+        pub.sendMessage(EVENT_PROJECT_UPDATED)
 
     def remove_task(self, task):
         """
@@ -60,7 +67,15 @@ class Project:
         """
         try:
             if isinstance(task, tsk.Task):
+                index = self.tasks.index(task)
+
+                # Find all tasks that depend on this then remove the dependency
+                for t in self.tasks:
+                    if t.predecessor != '' and t.predecessor == index:
+                        t.predecessor = ''
+
                 self.tasks.remove(task)
+                pub.sendMessage(EVENT_PROJECT_UPDATED)
                 return True
             else:
                 return False
