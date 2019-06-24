@@ -15,7 +15,7 @@ class MoveTaskSegmentDialog(wx.Dialog):
     def __init__(self, parent):
         wx.Dialog.__init__(self, parent)
 
-        self.SetTitle('Split Task')
+        self.SetTitle('Move Task Segment')
 
         self.project = parent.project
         self.selected_task = self.project.selected_task
