@@ -1,4 +1,5 @@
 import wx
+from pubsub import pub
 
 from .bar import BarSegment
 from constants import *
@@ -25,8 +26,9 @@ class GanttChart(wx.ScrolledCanvas):
         self.SetBackgroundColour((255, 255, 255))
 
         self.Bind(wx.EVT_PAINT, self.on_paint)
+        pub.subscribe(self.on_project_updated, EVENT_PROJECT_UPDATED)
 
-        self.SetScrollbars(1, 1, 1000, 1000, 0, 0)
+        # self.SetScrollbars(1, 1, 1000, 1000, 0, 0)
 
     def on_paint(self, event):
         if self.project is not None:
@@ -156,3 +158,6 @@ class GanttChart(wx.ScrolledCanvas):
                                  ts.duration * BAR_SCALE,
                                  BAR_HEIGHT, task, ts)
                 self.bars.append(bs1)
+
+    def on_project_updated(self):
+        self.redraw()
