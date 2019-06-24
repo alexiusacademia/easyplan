@@ -1,7 +1,7 @@
 import wx
 
 from .bar import BarSegment
-from .constants import *
+from constants import *
 
 
 class GanttChart(wx.ScrolledCanvas):

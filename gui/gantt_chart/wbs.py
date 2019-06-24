@@ -1,7 +1,8 @@
 import wx.grid as gridlib
 import wx
+from pubsub import pub
 
-from .constants import *
+from constants import *
 from core.task import Task
 
 
@@ -44,6 +45,8 @@ class WBS(gridlib.Grid):
     def create_bindings(self):
         self.Bind(gridlib.EVT_GRID_LABEL_LEFT_CLICK, self.on_row_selected)
         self.Bind(gridlib.EVT_GRID_CELL_CHANGED, self.on_cell_edit_complete)
+
+        pub.subscribe(self.on_task_removed, EVENT_TASK_REMOVED)
 
     def on_hide(self, event):
         print('Hide')
@@ -195,6 +198,9 @@ class WBS(gridlib.Grid):
                 if tsk.start_day < pred_end:
                     tsk.set_start_day(pred_end)
                     self.SetCellValue((i, 1), str(tsk.start_day))
+
+    def on_task_removed(self, task, index):
+        self.DeleteRows(index)
 
 def show_error(message, caption):
     wx.MessageBox(message, caption)

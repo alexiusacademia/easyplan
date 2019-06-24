@@ -1,11 +1,18 @@
 # Import built-in modules
 import wx
+from pubsub import pub
+# Notifications
+from pubsub.utils.notification import useNotifyByWriteFile
+import sys
+
+useNotifyByWriteFile(sys.stdout)
 
 # Import project modules
 from .gantt_chart.wbs import WBS
 from .gantt_chart.gantt import GanttChart
 from .ribbon import Ribbon
 from core.project import Project
+from constants import *
 
 
 class MainFrame(wx.Frame):

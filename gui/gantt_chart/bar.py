@@ -1,8 +1,6 @@
 import wx
-import copy
 
-
-from .constants import *
+from constants import *
 from ..dialogs.dlg_split_task import SplitTaskDialog
 
 BG_RECEIVED_FOCUS = wx.Colour(0, 0, 0)

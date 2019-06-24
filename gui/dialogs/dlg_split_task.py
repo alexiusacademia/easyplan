@@ -1,6 +1,6 @@
 import wx
 
-from ..gantt_chart.constants import *
+from constants import *
 
 
 class SplitTaskDialog(wx.Dialog):

@@ -1,9 +1,11 @@
 # Import built-in modules
 from enum import Enum
 import datetime
+from pubsub import pub
 
 # Import project modules
 from . import task as tsk
+from constants import *
 
 
 class TimeBasis(Enum):
@@ -48,6 +50,8 @@ class Project:
         """
         if isinstance(task, tsk.Task):
             self.tasks.append(task)
+            index = self.tasks.index(task)
+            pub.sendMessage(EVENT_TASK_ADDED, task=task, index=index)
             return True
         else:
             return False
@@ -60,7 +64,9 @@ class Project:
         """
         try:
             if isinstance(task, tsk.Task):
+                index = self.tasks.index(task)
                 self.tasks.remove(task)
+                pub.sendMessage(EVENT_TASK_REMOVED, task=task, index=index)
                 return True
             else:
                 return False

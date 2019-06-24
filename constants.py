@@ -13,3 +13,7 @@ BAR_SCALE = 10
 # -------------------------
 # IDS
 ID_OK = 1
+
+# Event Messages
+EVENT_TASK_REMOVED = 'task_removed'
+EVENT_TASK_ADDED = 'task_added'
