@@ -213,9 +213,7 @@ class Ribbon(wx.ribbon.RibbonBar):
             if index == len(self.project.tasks) - 1:
                 pass
             else:
-                self.project.tasks.insert(index + 1, self.project.tasks.pop(index))
-                self.parent.left_pane.populate()
-                self.parent.right_pane.redraw()
+                self.project.change_task_index(index, direction=1)
 
     def on_task_move_up(self, event):
         if self.project.selected_task_index is None:
@@ -227,9 +225,7 @@ class Ribbon(wx.ribbon.RibbonBar):
             if index == 0:
                 pass
             else:
-                self.project.tasks.insert(index-1, self.project.tasks.pop(index))
-                self.parent.left_pane.populate()
-                self.parent.right_pane.redraw()
+                self.project.change_task_index(index, direction=-1)
 
     def on_new_project(self, event):
         dlg = wx.MessageDialog(self, 'Create new project?',

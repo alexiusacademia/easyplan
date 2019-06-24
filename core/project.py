@@ -93,3 +93,8 @@ class Project:
                         task.set_start_day(pred_end)
 
         pub.sendMessage(EVENT_PROJECT_UPDATED)
+
+    def change_task_index(self, index, direction=-1):
+        self.tasks.insert(index + direction, self.tasks.pop(index))
+        pub.sendMessage(EVENT_PROJECT_UPDATED)
+
