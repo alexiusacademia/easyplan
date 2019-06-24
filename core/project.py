@@ -65,8 +65,14 @@ class Project:
         try:
             if isinstance(task, tsk.Task):
                 index = self.tasks.index(task)
+
+                # Find all tasks that depend on this then remove the dependency
+                for t in self.tasks:
+                    if t.predecessor != '' and t.predecessor == index:
+                        t.predecessor = ''
+
                 self.tasks.remove(task)
-                pub.sendMessage(EVENT_TASK_REMOVED, task=task, index=index)
+                pub.sendMessage(EVENT_PROJECT_UPDATED)
                 return True
             else:
                 return False
