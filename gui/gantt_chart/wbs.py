@@ -202,6 +202,7 @@ class WBS(gridlib.Grid):
     def on_project_updated(self):
         self.populate()
 
+
 def show_error(message, caption):
     wx.MessageBox(message, caption)
 
