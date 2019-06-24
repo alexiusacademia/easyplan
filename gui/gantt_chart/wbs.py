@@ -46,7 +46,7 @@ class WBS(gridlib.Grid):
         self.Bind(gridlib.EVT_GRID_LABEL_LEFT_CLICK, self.on_row_selected)
         self.Bind(gridlib.EVT_GRID_CELL_CHANGED, self.on_cell_edit_complete)
 
-        pub.subscribe(self.on_task_removed, EVENT_TASK_REMOVED)
+        pub.subscribe(self.on_project_updated, EVENT_PROJECT_UPDATED)
 
     def on_hide(self, event):
         print('Hide')
@@ -199,8 +199,8 @@ class WBS(gridlib.Grid):
                     tsk.set_start_day(pred_end)
                     self.SetCellValue((i, 1), str(tsk.start_day))
 
-    def on_task_removed(self, task, index):
-        self.DeleteRows(index)
+    def on_project_updated(self):
+        self.populate()
 
 def show_error(message, caption):
     wx.MessageBox(message, caption)
