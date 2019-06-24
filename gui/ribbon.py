@@ -320,8 +320,6 @@ class Ribbon(wx.ribbon.RibbonBar):
         else:
             self.project.add_task(Task())
         self.project.selected_task_index = None
-        # self.wbs.populate()
-        # self.parent.right_pane.redraw()
 
     def on_delete_task(self, event):
         """
