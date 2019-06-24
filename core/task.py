@@ -1,8 +1,10 @@
 # Import built-in modules
 import uuid
+from pubsub import pub
 
 # Import project modules
 from core.task_segment import TaskSegment
+from constants import *
 
 
 def id_generator():
@@ -81,6 +83,7 @@ class Task:
             else:
                 return False, 'Task segments length shall be corrected before applying the ' \
                               'change in the total duration.'
+        pub.sendMessage(EVENT_PROJECT_UPDATED)
 
     def set_start_day(self, s):
         """
@@ -98,6 +101,7 @@ class Task:
 
         for ts in self.task_segments:
             ts.start += diff
+        pub.sendMessage(EVENT_PROJECT_UPDATED)
 
     def set_upstream(self, task):
         """
@@ -107,6 +111,7 @@ class Task:
         """
         if isinstance(task, Task):
             self.predecessor = task
+            pub.sendMessage(EVENT_PROJECT_UPDATED)
             return True
         else:
             return False, 'Task must be an instance of task.'
