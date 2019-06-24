@@ -55,6 +55,10 @@ class Project:
         else:
             return False
 
+    def insert_task(self, index, task):
+        self.tasks.insert(index, task)
+        pub.sendMessage(EVENT_PROJECT_UPDATED)
+
     def remove_task(self, task):
         """
         Remove a specific task.

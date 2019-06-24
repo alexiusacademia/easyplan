@@ -316,7 +316,7 @@ class Ribbon(wx.ribbon.RibbonBar):
     def on_add_task(self, event):
         if self.project.selected_task_index is not None:
             index = self.project.selected_task_index
-            self.project.tasks.insert(index, Task())
+            self.project.insert_task(index, Task())
         else:
             self.project.add_task(Task())
         self.project.selected_task_index = None
@@ -339,7 +339,6 @@ class Ribbon(wx.ribbon.RibbonBar):
                 dlg = wx.MessageBox('Delete the selected task?', 'Delete Task', style=wx.YES_NO | wx.CANCEL)
                 if dlg == wx.YES:
                     self.project.remove_task(self.project.tasks[index])
-                    # self.parent.left_pane.populate()
                     self.parent.right_pane.redraw()
                     self.project.selected_task_index = None
 
