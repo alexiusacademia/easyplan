@@ -103,7 +103,6 @@ class WBS(gridlib.Grid):
         if isinstance(event, gridlib.GridEvent):
             cell = event.GetRow(), event.GetCol()
             self.update_project(cell[0], cell[1], event.GetString())
-            self.controller.right_pane.redraw()
 
     def update_project(self, index, col, old):
         """
