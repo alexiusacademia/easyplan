@@ -335,7 +335,6 @@ class Ribbon(wx.ribbon.RibbonBar):
                 dlg = wx.MessageBox('Delete the selected task?', 'Delete Task', style=wx.YES_NO | wx.CANCEL)
                 if dlg == wx.YES:
                     self.project.remove_task(self.project.tasks[index])
-                    self.parent.right_pane.redraw()
                     self.project.selected_task_index = None
 
     def on_outdent_task(self, event):
