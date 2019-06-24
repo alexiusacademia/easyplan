@@ -94,7 +94,8 @@ class MoveTaskSegmentDialog(wx.Dialog):
                 if new_start.isdigit():
                     new_start = int(new_start)
                     self.selected_task_segment.move(new_start)
-                    self.parent.right_pane.redraw()
+
+                    self.project.update_successors()
 
                     # Stop the modal state
                     self.EndModal(event.GetEventObject().GetId())
