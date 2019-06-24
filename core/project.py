@@ -95,6 +95,13 @@ class Project:
         pub.sendMessage(EVENT_PROJECT_UPDATED)
 
     def change_task_index(self, index, direction=-1):
-        self.tasks.insert(index + direction, self.tasks.pop(index))
+        new_index = index + direction
+        self.tasks.insert(new_index, self.tasks.pop(index))
+
+        for i in range(len(self.tasks)):
+            for task in self.tasks:
+                if task.predecessor != '' and int(task.predecessor) == index:
+                    task.predecessor = new_index
+
         pub.sendMessage(EVENT_PROJECT_UPDATED)
 
