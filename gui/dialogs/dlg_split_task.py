@@ -1,4 +1,5 @@
 import wx
+from pubsub import pub
 
 from constants import *
 
@@ -86,8 +87,7 @@ class SplitTaskDialog(wx.Dialog):
                     left_duration = int(left_duration)
                     self.selected_task.split_task(self.selected_task_segment, left_duration)
 
-                    self.parent.right_pane.redraw()
-
+                    pub.sendMessage(EVENT_PROJECT_UPDATED)
                 else:
                     wx.MessageBox('Left duration should be an integer.', 'Error', wx.OK | wx.ICON_INFORMATION)
 
