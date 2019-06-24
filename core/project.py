@@ -50,8 +50,7 @@ class Project:
         """
         if isinstance(task, tsk.Task):
             self.tasks.append(task)
-            index = self.tasks.index(task)
-            pub.sendMessage(EVENT_TASK_ADDED, task=task, index=index)
+            pub.sendMessage(EVENT_PROJECT_UPDATED)
             return True
         else:
             return False
