@@ -16,7 +16,7 @@ class Task:
     task_id = 0
     task_segments = []
     start_day = 1
-    predecessor = ''
+    predecessors = []
 
     def __init__(self):
         self.task_name = 'Unnamed Task'
@@ -102,18 +102,13 @@ class Task:
             ts.start += diff
         # pub.sendMessage(EVENT_PROJECT_UPDATED)
 
-    def set_upstream(self, task):
+    def set_predecessors(self, task_indices_list):
         """
         Set the upstream task. The one it depends on to finish.
-        :param task:
+        :param task_indices_list: The list of task indices to be set as predecessor
         :return:
         """
-        if isinstance(task, Task):
-            self.predecessor = task
-            pub.sendMessage(EVENT_PROJECT_UPDATED)
-            return True
-        else:
-            return False, 'Task must be an instance of task.'
+        self.predecessors = task_indices_list
 
     def split_task(self, task_segment, left):
         """
