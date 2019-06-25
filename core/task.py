@@ -101,7 +101,7 @@ class Task:
 
         for ts in self.task_segments:
             ts.start += diff
-        pub.sendMessage(EVENT_PROJECT_UPDATED)
+        # pub.sendMessage(EVENT_PROJECT_UPDATED)
 
     def set_upstream(self, task):
         """
