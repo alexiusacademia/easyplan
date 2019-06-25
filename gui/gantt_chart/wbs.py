@@ -143,6 +143,7 @@ class WBS(gridlib.Grid):
             if value.isdigit():
                 task.set_start_day(int(value))
                 self.update_start_days()
+                pub.sendMessage(EVENT_TASK_START_UPDATED, index=index, start=int(value))
             else:
                 self.SetCellValue(cell, old)
 
