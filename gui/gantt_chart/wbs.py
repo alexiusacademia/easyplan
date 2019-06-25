@@ -48,6 +48,12 @@ class WBS(gridlib.Grid):
         self.Bind(gridlib.EVT_GRID_CELL_CHANGED, self.on_cell_edit_complete)
 
         pub.subscribe(self.on_project_updated, EVENT_PROJECT_UPDATED)
+        pub.subscribe(self.on_task_moving, EVENT_BAR_SEGMENT_MOVING)
+
+    def on_task_moving(self, task, task_segment, task_start):
+        index = self.project.tasks.index(task)
+        if task_start is not None:
+            self.SetCellValue(index, 1, str(task_start))
 
     def on_hide(self, event):
         print('Hide')
