@@ -34,7 +34,7 @@ class WBS(gridlib.Grid):
         self.SetColLabelValue(0, 'Task Name')
         self.SetColLabelValue(1, 'Start Day')
         self.SetColLabelValue(2, 'Duration')
-        self.SetColLabelValue(3, 'Predecessor')
+        self.SetColLabelValue(3, 'Predecessors')
         self.SetColLabelValue(4, 'Resources')
 
         # self.AutoSizeColumns(True)
@@ -73,10 +73,16 @@ class WBS(gridlib.Grid):
                 self.SetCellValue(index, 0, str(task.task_name))
                 self.SetCellValue(index, 1, str(task.start_day))
                 self.SetCellValue(index, 2, str(task.get_duration()))
-                if task.predecessor == '':
+
+                task_predecessors_str = str(task.predecessors)
+                task_predecessors_str = task_predecessors_str.replace('[', '')
+                task_predecessors_str = task_predecessors_str.replace(']', '')
+
+                self.SetCellValue(index, 3, task_predecessors_str)
+                '''if task.predecessor == '':
                     self.SetCellValue(index, 3, task.predecessor)
                 else:
-                    self.SetCellValue(index, 3, str(int(task.predecessor) + 1))
+                    self.SetCellValue(index, 3, str(int(task.predecessor) + 1))'''
                 self.SetCellValue(index, 4, '')
 
                 self.SetRowSize(index, WBS_ROW_HEIGHT)
@@ -177,7 +183,8 @@ class WBS(gridlib.Grid):
 
         # Predecessor
         elif col == 3:
-            if value.isdigit():
+            # Value must be a single integer or a list of integers
+            '''if value.isdigit():
                 if int(value) == index + 1:
                     self.SetCellValue(cell, old)
                 elif int(value) > len(self.project.tasks):
@@ -201,7 +208,15 @@ class WBS(gridlib.Grid):
 
             self.update_start_days()
 
-            pub.sendMessage(EVENT_TASK_PREDECESSOR_UPDATED)
+            pub.sendMessage(EVENT_TASK_PREDECESSORS_UPDATED)'''
+
+            temp = value.replace(' ', '')
+            temp = temp.split(',')
+            predecessors = []
+            for t in temp:
+                predecessors.append(int(t))
+
+            self.project.set_task_predecessors(task, temp)
 
     def update_start_days(self):
         tasks = self.project.tasks
