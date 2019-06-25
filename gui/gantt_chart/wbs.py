@@ -22,7 +22,7 @@ class WBS(gridlib.Grid):
         self.project = project
         self.controller = controller
 
-        self.CreateGrid(0, 4)
+        self.CreateGrid(0, 5)
         # self.SetTable(table, True)
         self.SetRowLabelSize(30)
         self.SetColLabelSize(40)
@@ -35,6 +35,7 @@ class WBS(gridlib.Grid):
         self.SetColLabelValue(1, 'Start Day')
         self.SetColLabelValue(2, 'Duration')
         self.SetColLabelValue(3, 'Predecessor')
+        self.SetColLabelValue(4, 'Resources')
 
         # self.AutoSizeColumns(True)
         self.SetColSize(0, 200)
@@ -70,6 +71,7 @@ class WBS(gridlib.Grid):
                     self.SetCellValue(index, 3, task.predecessor)
                 else:
                     self.SetCellValue(index, 3, str(int(task.predecessor) + 1))
+                self.SetCellValue(index, 4, '')
 
                 self.SetRowSize(index, WBS_ROW_HEIGHT)
 
