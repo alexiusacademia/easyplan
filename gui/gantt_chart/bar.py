@@ -36,7 +36,7 @@ class BarSegment(wx.Panel):
         self.Refresh()
 
         self.Bind(wx.EVT_ENTER_WINDOW, self.on_hover)
-        self.Bind(wx.EVT_LEFT_UP, self.on_left_clicked)
+        self.Bind(wx.EVT_LEFT_UP, self.on_left_up)
         self.Bind(wx.EVT_LEFT_DOWN, self.on_mouse_left_down)
         self.Bind(wx.EVT_SET_FOCUS, self.on_received_focus)
         self.Bind(wx.EVT_KILL_FOCUS, self.on_lost_focus)
@@ -70,9 +70,10 @@ class BarSegment(wx.Panel):
         # print('Hovered')
         pass
 
-    def on_left_clicked(self, event):
-        # self.SetFocus()
-        pass
+    def on_left_up(self, event):
+        # Get the task start
+        start_x = self.task_segment.start
+        self.SetPosition((start_x * BAR_SCALE, self.GetPosition()[1]))
 
     def on_received_focus(self, event):
         """
