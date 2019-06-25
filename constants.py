@@ -16,3 +16,5 @@ ID_OK = 1
 
 # Event Messages
 EVENT_PROJECT_UPDATED = 'project_updated'
+EVENT_BAR_SEGMENT_MOVING = 'bar_segment_moving'
+EVENT_BAR_SEGMENT_STOPPED = 'bar_segment_stopped'
