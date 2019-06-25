@@ -27,6 +27,7 @@ class GanttChart(wx.ScrolledCanvas):
 
         self.Bind(wx.EVT_PAINT, self.on_paint)
         pub.subscribe(self.on_project_updated, EVENT_PROJECT_UPDATED)
+        pub.subscribe(self.redraw, EVENT_TASK_START_UPDATED)
 
         # self.SetScrollbars(1, 1, 1000, 1000, 0, 0)
 
@@ -42,6 +43,7 @@ class GanttChart(wx.ScrolledCanvas):
         :param event:
         :return:
         """
+        print('Redraw called!')
         self.draw_task_bars()
 
     def draw_predecessor_lines(self):

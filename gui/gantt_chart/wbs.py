@@ -151,6 +151,8 @@ class WBS(gridlib.Grid):
                     # Update tasks start days if necessary
                     self.update_start_days()
 
+                    pub.sendMessage(EVENT_TASK_START_UPDATED)
+
             else:
                 self.SetCellValue(cell, old)
 

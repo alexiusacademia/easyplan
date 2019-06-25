@@ -5,7 +5,7 @@ from pubsub import pub
 from pubsub.utils.notification import useNotifyByWriteFile
 import sys
 
-useNotifyByWriteFile(sys.stdout)
+# useNotifyByWriteFile(sys.stdout)
 
 # Import project modules
 from .gantt_chart.wbs import WBS
