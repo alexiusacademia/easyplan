@@ -119,3 +119,4 @@ class Project:
             task_start = None
 
         pub.sendMessage(EVENT_BAR_SEGMENT_MOVING, task=task, task_segment=task_segment, task_start=task_start)
+        pub.sendMessage(EVENT_UPDATE_PREDECESSOR_LINES)
