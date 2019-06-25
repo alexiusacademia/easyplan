@@ -214,7 +214,11 @@ class WBS(gridlib.Grid):
             temp = temp.split(',')
             predecessors = []
             for t in temp:
-                predecessors.append(self.project.tasks[int(t) - 1])
+                if not t.isdigit():
+                    self.SetCellValue(cell, old)
+                    return
+                else:
+                    predecessors.append(self.project.tasks[int(t) - 1])
 
             self.project.set_task_predecessors(task, predecessors)
 
