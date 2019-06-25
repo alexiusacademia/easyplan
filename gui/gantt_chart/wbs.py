@@ -74,15 +74,20 @@ class WBS(gridlib.Grid):
                 self.SetCellValue(index, 1, str(task.start_day))
                 self.SetCellValue(index, 2, str(task.get_duration()))
 
-                task_predecessors_str = str(task.predecessors)
+                task_predecessors_temp = task.predecessors
+
+                # Convert to indices
+                task_list = []
+                for tpt in task_predecessors_temp:
+                    task_list.append(self.project.tasks.index(tpt) + 1)
+
+                # Convert list to comma delimited string
+                task_predecessors_str = str(task_list)
                 task_predecessors_str = task_predecessors_str.replace('[', '')
                 task_predecessors_str = task_predecessors_str.replace(']', '')
 
                 self.SetCellValue(index, 3, task_predecessors_str)
-                '''if task.predecessor == '':
-                    self.SetCellValue(index, 3, task.predecessor)
-                else:
-                    self.SetCellValue(index, 3, str(int(task.predecessor) + 1))'''
+
                 self.SetCellValue(index, 4, '')
 
                 self.SetRowSize(index, WBS_ROW_HEIGHT)
@@ -169,15 +174,10 @@ class WBS(gridlib.Grid):
                 task.set_duration(duration)
 
                 # Move the start days of successor tasks if necessary
-                for i, tsk in enumerate(tasks):
-                    if tsk.predecessor != '' and int(tsk.predecessor) == index:
-                        pred_start = task.start_day
-                        pred_duration = task.get_virtual_duration()
-                        pred_end = pred_start + pred_duration
-                        if tsk.start_day < pred_end:
-                            tsk.set_start_day(pred_end)
-                            self.SetCellValue((i, 1), str(tsk.start_day))
-                self.update_start_days()
+                for i, tsk in enumerate(self.project.tasks):
+                    if len(tsk.predecessors) > 0:
+                        for pred_index in tsk.predecessors:
+                            pass
 
                 pub.sendMessage(EVENT_TASK_DURATION_UPDATED)
 
@@ -214,9 +214,9 @@ class WBS(gridlib.Grid):
             temp = temp.split(',')
             predecessors = []
             for t in temp:
-                predecessors.append(int(t))
+                predecessors.append(self.project.tasks[int(t) - 1])
 
-            self.project.set_task_predecessors(task, temp)
+            self.project.set_task_predecessors(task, predecessors)
 
     def update_start_days(self):
         tasks = self.project.tasks
