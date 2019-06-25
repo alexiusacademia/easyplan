@@ -114,5 +114,8 @@ class Project:
         if index_of_ts == 0:
             # Start of this segment represents start of the task
             task.set_start_day(start)
+            task_start = start
+        else:
+            task_start = None
 
-        pub.sendMessage(EVENT_BAR_SEGMENT_MOVING, task=task, task_segment=task_segment, start=start)
+        pub.sendMessage(EVENT_BAR_SEGMENT_MOVING, task=task, task_segment=task_segment, task_start=task_start)
