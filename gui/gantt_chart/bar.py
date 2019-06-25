@@ -43,6 +43,7 @@ class BarSegment(wx.Panel):
         self.Bind(wx.EVT_MOTION, self.on_mouse_move)
 
     def on_mouse_left_down(self, event):
+        self.SetFocus()
         self.mouse_start_position = event.GetPosition().x
 
     def on_mouse_move(self, event):
@@ -70,7 +71,8 @@ class BarSegment(wx.Panel):
         pass
 
     def on_left_clicked(self, event):
-        self.SetFocus()
+        # self.SetFocus()
+        pass
 
     def on_received_focus(self, event):
         """
