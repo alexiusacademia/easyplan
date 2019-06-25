@@ -26,10 +26,11 @@ class GanttChart(wx.ScrolledCanvas):
         self.SetBackgroundColour((255, 255, 255))
 
         self.Bind(wx.EVT_PAINT, self.on_paint)
+
         pub.subscribe(self.on_project_updated, EVENT_PROJECT_UPDATED)
-        pub.subscribe(self.redraw, EVENT_TASK_START_UPDATED)
+        pub.subscribe(self.on_task_start_updated, EVENT_TASK_START_UPDATED)
         pub.subscribe(self.redraw, EVENT_TASK_DURATION_UPDATED)
-        pub.subscribe(self.redraw, EVENT_TASK_PREDECESSOR_UPDATED)
+        pub.subscribe(self.redraw, EVENT_TASK_PREDECESSORS_UPDATED)
 
         # self.SetScrollbars(1, 1, 1000, 1000, 0, 0)
 
@@ -37,7 +38,7 @@ class GanttChart(wx.ScrolledCanvas):
         if self.project is not None:
             self.ClearBackground()
             self.draw_hor_grids(self.GetSize()[0], len(self.project.tasks), WBS_ROW_HEIGHT)
-            self.draw_predecessor_lines()
+            # self.draw_predecessor_lines()
 
     def redraw(self):
         """
@@ -46,6 +47,14 @@ class GanttChart(wx.ScrolledCanvas):
         :return:
         """
         self.draw_task_bars()
+
+    def on_task_start_updated(self, index, start):
+        y = index * WBS_ROW_HEIGHT + WBS_HEADER_HEIGHT
+        for bar in self.bars:
+            if bar.GetPosition()[1] == y:
+                bar_x = bar.GetPosition()[0]
+                bar.SetPosition((start * BAR_SCALE - bar_x), y)
+        self.redraw()
 
     def draw_predecessor_lines(self):
         dc = wx.ClientDC(self)
