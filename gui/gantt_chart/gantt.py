@@ -28,6 +28,7 @@ class GanttChart(wx.ScrolledCanvas):
         self.Bind(wx.EVT_PAINT, self.on_paint)
         pub.subscribe(self.on_project_updated, EVENT_PROJECT_UPDATED)
         pub.subscribe(self.redraw, EVENT_TASK_START_UPDATED)
+        pub.subscribe(self.redraw, EVENT_TASK_DURATION_UPDATED)
 
         # self.SetScrollbars(1, 1, 1000, 1000, 0, 0)
 

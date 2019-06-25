@@ -173,6 +173,8 @@ class WBS(gridlib.Grid):
                             self.SetCellValue((i, 1), str(tsk.start_day))
                 self.update_start_days()
 
+                pub.sendMessage(EVENT_TASK_DURATION_UPDATED)
+
         # Predecessor
         elif col == 3:
             if value.isdigit():
