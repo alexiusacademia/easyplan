@@ -142,7 +142,7 @@ class WBS(gridlib.Grid):
         elif col == 1:
             if value.isdigit():
                 task.set_start_day(int(value))
-                self.update_start_days()
+                self.project.update_start_days()
                 pub.sendMessage(EVENT_TASK_START_UPDATED, index=index, start=int(value))
             else:
                 self.SetCellValue(cell, old)
@@ -153,7 +153,7 @@ class WBS(gridlib.Grid):
                 duration = int(value)
                 task.set_duration(duration)
 
-                self.update_start_days()
+                self.project.update_start_days()
 
                 pub.sendMessage(EVENT_TASK_DURATION_UPDATED)
 
@@ -191,7 +191,7 @@ class WBS(gridlib.Grid):
             predecessors = []
             if value == '':
                 self.project.set_task_predecessors(task, predecessors)
-                self.update_start_days()
+                self.project.update_start_days()
                 return
 
             for t in temp:
@@ -203,26 +203,7 @@ class WBS(gridlib.Grid):
 
             self.project.set_task_predecessors(task, predecessors)
 
-        self.update_start_days()
-
-    def update_start_days(self):
-        tasks = self.project.tasks
-
-        for i, task in enumerate(tasks):
-            num_predecessors = len(task.predecessors)
-            if num_predecessors > 0:
-                first_predecessor: Task = task.predecessors[0]
-                max_end = first_predecessor.start_day + first_predecessor.get_virtual_duration()
-
-                for pred in task.predecessors:
-                    end = pred.start_day + pred.get_virtual_duration()
-                    if end > max_end:
-                        max_end = end
-
-                if task.start_day < max_end:
-                    task.set_start_day(max_end)
-
-                    pub.sendMessage(EVENT_TASK_START_UPDATED, index=i, start=max_end)
+        self.project.update_start_days()
 
     def on_task_start_updated(self, index, start):
         self.SetCellValue((index, 1), str(start))
