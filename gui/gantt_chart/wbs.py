@@ -199,6 +199,8 @@ class WBS(gridlib.Grid):
                 else:
                     self.SetCellValue(cell, old)
 
+            pub.sendMessage(EVENT_TASK_PREDECESSOR_UPDATED)
+
     def update_start_days(self):
         tasks = self.project.tasks
         for i, tsk in enumerate(tasks):
