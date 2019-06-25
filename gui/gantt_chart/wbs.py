@@ -10,7 +10,8 @@ class Cols(enumerate):
     TASK_NAME = 0
     START_DAY = 1
     DURATION = 2
-    PREDECESSOR = 3
+    PREDECESSORS = 3
+    RESOURCES = 4
 
 
 class WBS(gridlib.Grid):
@@ -31,14 +32,14 @@ class WBS(gridlib.Grid):
         for i in range(100):
             self.SetRowLabelValue(i, str(i + 1))
 
-        self.SetColLabelValue(0, 'Task Name')
-        self.SetColLabelValue(1, 'Start Day')
-        self.SetColLabelValue(2, 'Duration')
-        self.SetColLabelValue(3, 'Predecessors')
-        self.SetColLabelValue(4, 'Resources')
+        self.SetColLabelValue(Cols.TASK_NAME, 'Task Name')
+        self.SetColLabelValue(Cols.START_DAY, 'Start Day')
+        self.SetColLabelValue(Cols.DURATION, 'Duration')
+        self.SetColLabelValue(Cols.PREDECESSORS, 'Predecessors')
+        self.SetColLabelValue(Cols.RESOURCES, 'Resources')
 
         # self.AutoSizeColumns(True)
-        self.SetColSize(0, 200)
+        self.SetColSize(Cols.TASK_NAME, 200)
         self.Layout()
 
         self.create_bindings()
@@ -54,7 +55,7 @@ class WBS(gridlib.Grid):
     def on_task_moving(self, task, task_segment, task_start):
         index = self.project.tasks.index(task)
         if task_start is not None:
-            self.SetCellValue(index, 1, str(task_start))
+            self.SetCellValue(index, Cols.START_DAY, str(task_start))
 
     def on_hide(self, event):
         print('Hide')
@@ -136,10 +137,10 @@ class WBS(gridlib.Grid):
         cell = index, col
         value = self.GetCellValue(cell)
         # Task name
-        if col == 0:
+        if col == Cols.TASK_NAME:
             task.task_name = value
         # Task start day
-        elif col == 1:
+        elif col == Cols.START_DAY:
             if value.isdigit():
                 task.set_start_day(int(value))
                 self.project.update_start_days()
@@ -148,7 +149,7 @@ class WBS(gridlib.Grid):
                 self.SetCellValue(cell, old)
 
         # Task duration
-        elif col == 2:
+        elif col == Cols.DURATION:
             if value.isdigit():
                 duration = int(value)
                 task.set_duration(duration)
@@ -158,33 +159,8 @@ class WBS(gridlib.Grid):
                 pub.sendMessage(EVENT_TASK_DURATION_UPDATED)
 
         # Predecessor
-        elif col == 3:
+        elif col == Cols.PREDECESSORS:
             # Value must be a single integer or a list of integers
-            '''if value.isdigit():
-                if int(value) == index + 1:
-                    self.SetCellValue(cell, old)
-                elif int(value) > len(self.project.tasks):
-                    self.SetCellValue(cell, old)
-                else:
-                    task.predecessor = int(value) - 1
-
-                    predecessor = self.project.tasks[task.predecessor]
-                    # Now get the start and virtual duration of it
-                    predecessor_start = predecessor.start_day
-                    predecessor_duration = predecessor.get_virtual_duration()
-                    predecessor_end = predecessor_start + predecessor_duration
-                    if task.start_day < predecessor_end:
-                        task.set_start_day(predecessor_end)
-                        self.SetCellValue((index, 1), str(predecessor_end))
-            else:
-                if value == '':
-                    self.project.tasks[index].predecessor = ''
-                else:
-                    self.SetCellValue(cell, old)
-
-            self.update_start_days()
-
-            pub.sendMessage(EVENT_TASK_PREDECESSORS_UPDATED)'''
 
             temp = value.replace(' ', '')
             temp = temp.split(',')
@@ -206,7 +182,7 @@ class WBS(gridlib.Grid):
         self.project.update_start_days()
 
     def on_task_start_updated(self, index, start):
-        self.SetCellValue((index, 1), str(start))
+        self.SetCellValue((index, Cols.START_DAY), str(start))
 
     def on_project_updated(self):
         self.populate()
