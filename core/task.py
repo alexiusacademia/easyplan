@@ -83,7 +83,6 @@ class Task:
             else:
                 return False, 'Task segments length shall be corrected before applying the ' \
                               'change in the total duration.'
-        pub.sendMessage(EVENT_PROJECT_UPDATED)
 
     def set_start_day(self, s):
         """
@@ -101,7 +100,7 @@ class Task:
 
         for ts in self.task_segments:
             ts.start += diff
-        pub.sendMessage(EVENT_PROJECT_UPDATED)
+        # pub.sendMessage(EVENT_PROJECT_UPDATED)
 
     def set_upstream(self, task):
         """

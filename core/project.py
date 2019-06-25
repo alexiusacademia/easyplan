@@ -105,3 +105,18 @@ class Project:
 
         pub.sendMessage(EVENT_PROJECT_UPDATED)
 
+    def move_task_segment(self, task, task_segment, start):
+        task_segment.start = start
+
+        # Get the task segment index from the task
+        index_of_ts = task.task_segments.index(task_segment)
+
+        if index_of_ts == 0:
+            # Start of this segment represents start of the task
+            task.set_start_day(start)
+            task_start = start
+        else:
+            task_start = None
+
+        pub.sendMessage(EVENT_BAR_SEGMENT_MOVING, task=task, task_segment=task_segment, task_start=task_start)
+        pub.sendMessage(EVENT_UPDATE_PREDECESSOR_LINES)

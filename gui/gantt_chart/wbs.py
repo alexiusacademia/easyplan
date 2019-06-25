@@ -48,6 +48,12 @@ class WBS(gridlib.Grid):
         self.Bind(gridlib.EVT_GRID_CELL_CHANGED, self.on_cell_edit_complete)
 
         pub.subscribe(self.on_project_updated, EVENT_PROJECT_UPDATED)
+        pub.subscribe(self.on_task_moving, EVENT_BAR_SEGMENT_MOVING)
+
+    def on_task_moving(self, task, task_segment, task_start):
+        index = self.project.tasks.index(task)
+        if task_start is not None:
+            self.SetCellValue(index, 1, str(task_start))
 
     def on_hide(self, event):
         print('Hide')
@@ -145,6 +151,8 @@ class WBS(gridlib.Grid):
                     # Update tasks start days if necessary
                     self.update_start_days()
 
+                    pub.sendMessage(EVENT_TASK_START_UPDATED)
+
             else:
                 self.SetCellValue(cell, old)
 
@@ -164,6 +172,8 @@ class WBS(gridlib.Grid):
                             tsk.set_start_day(pred_end)
                             self.SetCellValue((i, 1), str(tsk.start_day))
                 self.update_start_days()
+
+                pub.sendMessage(EVENT_TASK_DURATION_UPDATED)
 
         # Predecessor
         elif col == 3:
@@ -188,6 +198,10 @@ class WBS(gridlib.Grid):
                     self.project.tasks[index].predecessor = ''
                 else:
                     self.SetCellValue(cell, old)
+
+            self.update_start_days()
+
+            pub.sendMessage(EVENT_TASK_PREDECESSOR_UPDATED)
 
     def update_start_days(self):
         tasks = self.project.tasks
