@@ -49,6 +49,7 @@ class WBS(gridlib.Grid):
 
         pub.subscribe(self.on_project_updated, EVENT_PROJECT_UPDATED)
         pub.subscribe(self.on_task_moving, EVENT_BAR_SEGMENT_MOVING)
+        pub.subscribe(self.on_task_start_updated, EVENT_TASK_START_UPDATED)
 
     def on_task_moving(self, task, task_segment, task_start):
         index = self.project.tasks.index(task)
@@ -140,30 +141,8 @@ class WBS(gridlib.Grid):
         # Task start day
         elif col == 1:
             if value.isdigit():
-                # Now check if this is the first task,
-                # if it is, make sure that it starts at first day (e.g. day 1)
-                if index == 0 and int(value) != 1:
-                    self.SetCellValue(cell, old)
-                else:
-                    # Check if this task has predecessor
-                    predecessor_index = str(self.project.tasks[index].predecessor)
-                    if predecessor_index.isdigit():
-                        predecessor = self.project.tasks[int(predecessor_index)]
-                        predecessor_end = predecessor.start_day + predecessor.get_virtual_duration()
-
-                        if int(value) < int(predecessor_end):
-                            task.set_start_day(int(predecessor_end))
-                            self.SetCellValue(cell, old)
-                        else:
-                            task.set_start_day(int(value))
-                    else:
-                        task.set_start_day(int(value))
-
-                    # Update tasks start days if necessary
-                    self.update_start_days()
-
-                    pub.sendMessage(EVENT_TASK_START_UPDATED)
-
+                task.set_start_day(int(value))
+                self.update_start_days()
             else:
                 self.SetCellValue(cell, old)
 
@@ -173,11 +152,7 @@ class WBS(gridlib.Grid):
                 duration = int(value)
                 task.set_duration(duration)
 
-                # Move the start days of successor tasks if necessary
-                for i, tsk in enumerate(self.project.tasks):
-                    if len(tsk.predecessors) > 0:
-                        for pred_index in tsk.predecessors:
-                            pass
+                self.update_start_days()
 
                 pub.sendMessage(EVENT_TASK_DURATION_UPDATED)
 
@@ -213,6 +188,11 @@ class WBS(gridlib.Grid):
             temp = value.replace(' ', '')
             temp = temp.split(',')
             predecessors = []
+            if value == '':
+                self.project.set_task_predecessors(task, predecessors)
+                self.update_start_days()
+                return
+
             for t in temp:
                 if not t.isdigit():
                     self.SetCellValue(cell, old)
@@ -222,16 +202,29 @@ class WBS(gridlib.Grid):
 
             self.project.set_task_predecessors(task, predecessors)
 
+        self.update_start_days()
+
     def update_start_days(self):
         tasks = self.project.tasks
-        for i, tsk in enumerate(tasks):
-            if tsk.predecessor != '':
-                pred_start: Task = tasks[int(tsk.predecessor)]
-                pred_duration = pred_start.get_virtual_duration()
-                pred_end = pred_start.start_day + pred_duration
-                if tsk.start_day < pred_end:
-                    tsk.set_start_day(pred_end)
-                    self.SetCellValue((i, 1), str(tsk.start_day))
+
+        for i, task in enumerate(tasks):
+            num_predecessors = len(task.predecessors)
+            if num_predecessors > 0:
+                first_predecessor: Task = task.predecessors[0]
+                max_end = first_predecessor.start_day + first_predecessor.get_virtual_duration()
+
+                for pred in task.predecessors:
+                    end = pred.start_day + pred.get_virtual_duration()
+                    if end > max_end:
+                        max_end = end
+
+                if task.start_day < max_end:
+                    task.set_start_day(max_end)
+
+                    pub.sendMessage(EVENT_TASK_START_UPDATED, index=i, start=max_end)
+
+    def on_task_start_updated(self, index, start):
+        self.SetCellValue((index, 1), str(start))
 
     def on_project_updated(self):
         self.populate()
