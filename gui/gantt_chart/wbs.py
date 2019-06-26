@@ -72,9 +72,9 @@ class WBS(gridlib.Grid):
             for task in self.project.tasks:
                 if num_rows < index+1:
                     self.AppendRows()
-                self.SetCellValue(index, 0, str(task.task_name))
-                self.SetCellValue(index, 1, str(task.start_day))
-                self.SetCellValue(index, 2, str(task.get_duration()))
+                self.SetCellValue(index, Cols.TASK_NAME, str(task.task_name))
+                self.SetCellValue(index, Cols.START_DAY, str(task.start_day + 1))
+                self.SetCellValue(index, Cols.DURATION, str(task.get_duration()))
 
                 task_predecessors_temp = task.predecessors
 
@@ -93,6 +93,7 @@ class WBS(gridlib.Grid):
                 self.SetCellValue(index, 4, '')
 
                 self.SetRowSize(index, WBS_ROW_HEIGHT)
+                print(task.start_day)
 
                 index += 1
 
@@ -142,7 +143,7 @@ class WBS(gridlib.Grid):
         # Task start day
         elif col == Cols.START_DAY:
             if value.isdigit():
-                task.set_start_day(int(value))
+                task.set_start_day(int(value) - 1)
                 self.project.update_start_days()
                 pub.sendMessage(EVENT_TASK_START_UPDATED, index=index, start=int(value))
             else:

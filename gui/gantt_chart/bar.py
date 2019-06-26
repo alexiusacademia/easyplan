@@ -60,14 +60,13 @@ class BarSegment(wx.Panel):
 
         new_x = starting_point + dx
 
-        if (new_x) >= 0:
-            self.Move(new_x, self.GetPosition()[1])
+        if new_x >= 0:
             self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
+            self.Move(self.task_segment.start * BAR_SCALE, self.GetPosition()[1])
 
         # TODO Check for update
 
     def on_hover(self, event):
-        # print('Hovered')
         pass
 
     def on_left_up(self, event):
@@ -109,6 +108,3 @@ class BarSegment(wx.Panel):
         res = dlg.ShowModal()
         if res == ID_OK:
             dlg.Destroy()
-
-    def on_dragging_stopped(self, x_pos):
-        print(x_pos)
