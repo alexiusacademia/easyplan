@@ -93,7 +93,6 @@ class WBS(gridlib.Grid):
                 self.SetCellValue(index, 4, '')
 
                 self.SetRowSize(index, WBS_ROW_HEIGHT)
-                print(task.start_day)
 
                 index += 1
 

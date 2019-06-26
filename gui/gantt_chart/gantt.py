@@ -69,7 +69,6 @@ class GanttChart(wx.ScrolledCanvas):
                 # Get the task start coordinate
                 task_x = task.start_day * BAR_SCALE
                 task_y = WBS_HEADER_HEIGHT + (index * WBS_ROW_HEIGHT) + WBS_ROW_HEIGHT / 2
-                print('- - - - - -')
 
                 for p in task.predecessors:
                     p_end = p.start_day + p.get_virtual_duration()
@@ -80,7 +79,6 @@ class GanttChart(wx.ScrolledCanvas):
                     mid_x = (task_x + p_x) / 2
 
                     points = [(task_x, task_y), (mid_x, task_y), (mid_x, p_y), (p_x, p_y)]
-                    print(points)
                     dc.DrawLines(points)
 
     def draw_hor_grids(self, length, num, vert_distance):
