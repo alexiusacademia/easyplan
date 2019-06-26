@@ -101,12 +101,12 @@ class GanttChart(wx.ScrolledCanvas):
                               (m_x, task_y),
                               (task_x, task_y)])'''
                 # Get the task start coordinate
-                task_x = (task.start_day - 1) * BAR_SCALE
+                task_x = (task.start_day) * BAR_SCALE
                 task_y = WBS_HEADER_HEIGHT + (index * WBS_ROW_HEIGHT) + WBS_ROW_HEIGHT / 2
                 print('- - - - - -')
 
                 for p in task.predecessors:
-                    p_end = (p.start_day - 1) + p.get_virtual_duration()
+                    p_end = p.start_day + p.get_virtual_duration()
                     p_x = p_end * BAR_SCALE
                     p_index = tasks.index(p)
                     p_y = WBS_HEADER_HEIGHT + (p_index * WBS_ROW_HEIGHT) + WBS_ROW_HEIGHT/2
