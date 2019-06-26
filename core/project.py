@@ -6,6 +6,7 @@ from pubsub import pub
 # Import project modules
 from . import task as tsk
 from constants import *
+from core.task import Task
 
 
 class TimeBasis(Enum):
@@ -120,3 +121,26 @@ class Project:
 
         pub.sendMessage(EVENT_BAR_SEGMENT_MOVING, task=task, task_segment=task_segment, task_start=task_start)
         pub.sendMessage(EVENT_UPDATE_PREDECESSOR_LINES)
+
+    def set_task_predecessors(self, task, task_indices_list):
+        task.set_predecessors(task_indices_list)
+        pub.sendMessage(EVENT_TASK_PREDECESSORS_UPDATED)
+
+    def update_start_days(self):
+        tasks = self.tasks
+
+        for i, task in enumerate(tasks):
+            num_predecessors = len(task.predecessors)
+            if num_predecessors > 0:
+                first_predecessor: Task = task.predecessors[0]
+                max_end = first_predecessor.start_day + first_predecessor.get_virtual_duration()
+
+                for pred in task.predecessors:
+                    end = pred.start_day + pred.get_virtual_duration()
+                    if end > max_end:
+                        max_end = end
+
+                if task.start_day < max_end:
+                    task.set_start_day(max_end)
+
+                    pub.sendMessage(EVENT_TASK_START_UPDATED, index=i, start=max_end)

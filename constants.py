@@ -16,9 +16,12 @@ ID_OK = 1
 
 # Event Messages
 EVENT_PROJECT_UPDATED = 'project_updated'
+
 EVENT_TASK_START_UPDATED = 'task_start_updated'
 EVENT_TASK_DURATION_UPDATED = 'task_duration_updated'
-EVENT_TASK_PREDECESSOR_UPDATED = 'task_predecessor_updated'
+EVENT_TASK_PREDECESSORS_UPDATED = 'task_predecessors_updated'
+
 EVENT_UPDATE_PREDECESSOR_LINES = 'update_predecessor_lines'
+
 EVENT_BAR_SEGMENT_MOVING = 'bar_segment_moving'
 EVENT_BAR_SEGMENT_STOPPED = 'bar_segment_stopped'

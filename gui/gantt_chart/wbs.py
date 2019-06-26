@@ -10,7 +10,8 @@ class Cols(enumerate):
     TASK_NAME = 0
     START_DAY = 1
     DURATION = 2
-    PREDECESSOR = 3
+    PREDECESSORS = 3
+    RESOURCES = 4
 
 
 class WBS(gridlib.Grid):
@@ -31,14 +32,14 @@ class WBS(gridlib.Grid):
         for i in range(100):
             self.SetRowLabelValue(i, str(i + 1))
 
-        self.SetColLabelValue(0, 'Task Name')
-        self.SetColLabelValue(1, 'Start Day')
-        self.SetColLabelValue(2, 'Duration')
-        self.SetColLabelValue(3, 'Predecessor')
-        self.SetColLabelValue(4, 'Resources')
+        self.SetColLabelValue(Cols.TASK_NAME, 'Task Name')
+        self.SetColLabelValue(Cols.START_DAY, 'Start Day')
+        self.SetColLabelValue(Cols.DURATION, 'Duration')
+        self.SetColLabelValue(Cols.PREDECESSORS, 'Predecessors')
+        self.SetColLabelValue(Cols.RESOURCES, 'Resources')
 
         # self.AutoSizeColumns(True)
-        self.SetColSize(0, 200)
+        self.SetColSize(Cols.TASK_NAME, 200)
         self.Layout()
 
         self.create_bindings()
@@ -49,11 +50,12 @@ class WBS(gridlib.Grid):
 
         pub.subscribe(self.on_project_updated, EVENT_PROJECT_UPDATED)
         pub.subscribe(self.on_task_moving, EVENT_BAR_SEGMENT_MOVING)
+        pub.subscribe(self.on_task_start_updated, EVENT_TASK_START_UPDATED)
 
     def on_task_moving(self, task, task_segment, task_start):
         index = self.project.tasks.index(task)
         if task_start is not None:
-            self.SetCellValue(index, 1, str(task_start))
+            self.SetCellValue(index, Cols.START_DAY, str(task_start))
 
     def on_hide(self, event):
         print('Hide')
@@ -73,10 +75,21 @@ class WBS(gridlib.Grid):
                 self.SetCellValue(index, 0, str(task.task_name))
                 self.SetCellValue(index, 1, str(task.start_day))
                 self.SetCellValue(index, 2, str(task.get_duration()))
-                if task.predecessor == '':
-                    self.SetCellValue(index, 3, task.predecessor)
-                else:
-                    self.SetCellValue(index, 3, str(int(task.predecessor) + 1))
+
+                task_predecessors_temp = task.predecessors
+
+                # Convert to indices
+                task_list = []
+                for tpt in task_predecessors_temp:
+                    task_list.append(self.project.tasks.index(tpt) + 1)
+
+                # Convert list to comma delimited string
+                task_predecessors_str = str(task_list)
+                task_predecessors_str = task_predecessors_str.replace('[', '')
+                task_predecessors_str = task_predecessors_str.replace(']', '')
+
+                self.SetCellValue(index, 3, task_predecessors_str)
+
                 self.SetCellValue(index, 4, '')
 
                 self.SetRowSize(index, WBS_ROW_HEIGHT)
@@ -124,95 +137,52 @@ class WBS(gridlib.Grid):
         cell = index, col
         value = self.GetCellValue(cell)
         # Task name
-        if col == 0:
+        if col == Cols.TASK_NAME:
             task.task_name = value
         # Task start day
-        elif col == 1:
+        elif col == Cols.START_DAY:
             if value.isdigit():
-                # Now check if this is the first task,
-                # if it is, make sure that it starts at first day (e.g. day 1)
-                if index == 0 and int(value) != 1:
-                    self.SetCellValue(cell, old)
-                else:
-                    # Check if this task has predecessor
-                    predecessor_index = str(self.project.tasks[index].predecessor)
-                    if predecessor_index.isdigit():
-                        predecessor = self.project.tasks[int(predecessor_index)]
-                        predecessor_end = predecessor.start_day + predecessor.get_virtual_duration()
-
-                        if int(value) < int(predecessor_end):
-                            task.set_start_day(int(predecessor_end))
-                            self.SetCellValue(cell, old)
-                        else:
-                            task.set_start_day(int(value))
-                    else:
-                        task.set_start_day(int(value))
-
-                    # Update tasks start days if necessary
-                    self.update_start_days()
-
-                    pub.sendMessage(EVENT_TASK_START_UPDATED)
-
+                task.set_start_day(int(value))
+                self.project.update_start_days()
+                pub.sendMessage(EVENT_TASK_START_UPDATED, index=index, start=int(value))
             else:
                 self.SetCellValue(cell, old)
 
         # Task duration
-        elif col == 2:
+        elif col == Cols.DURATION:
             if value.isdigit():
                 duration = int(value)
                 task.set_duration(duration)
 
-                # Move the start days of successor tasks if necessary
-                for i, tsk in enumerate(tasks):
-                    if tsk.predecessor != '' and int(tsk.predecessor) == index:
-                        pred_start = task.start_day
-                        pred_duration = task.get_virtual_duration()
-                        pred_end = pred_start + pred_duration
-                        if tsk.start_day < pred_end:
-                            tsk.set_start_day(pred_end)
-                            self.SetCellValue((i, 1), str(tsk.start_day))
-                self.update_start_days()
+                self.project.update_start_days()
 
                 pub.sendMessage(EVENT_TASK_DURATION_UPDATED)
 
         # Predecessor
-        elif col == 3:
-            if value.isdigit():
-                if int(value) == index + 1:
+        elif col == Cols.PREDECESSORS:
+            # Value must be a single integer or a list of integers
+
+            temp = value.replace(' ', '')
+            temp = temp.split(',')
+            predecessors = []
+            if value == '':
+                self.project.set_task_predecessors(task, predecessors)
+                self.project.update_start_days()
+                return
+
+            for t in temp:
+                if not t.isdigit():
                     self.SetCellValue(cell, old)
-                elif int(value) > len(self.project.tasks):
-                    self.SetCellValue(cell, old)
+                    return
                 else:
-                    task.predecessor = int(value) - 1
+                    predecessors.append(self.project.tasks[int(t) - 1])
 
-                    predecessor = self.project.tasks[task.predecessor]
-                    # Now get the start and virtual duration of it
-                    predecessor_start = predecessor.start_day
-                    predecessor_duration = predecessor.get_virtual_duration()
-                    predecessor_end = predecessor_start + predecessor_duration
-                    if task.start_day < predecessor_end:
-                        task.set_start_day(predecessor_end)
-                        self.SetCellValue((index, 1), str(predecessor_end))
-            else:
-                if value == '':
-                    self.project.tasks[index].predecessor = ''
-                else:
-                    self.SetCellValue(cell, old)
+            self.project.set_task_predecessors(task, predecessors)
 
-            self.update_start_days()
+        self.project.update_start_days()
 
-            pub.sendMessage(EVENT_TASK_PREDECESSOR_UPDATED)
-
-    def update_start_days(self):
-        tasks = self.project.tasks
-        for i, tsk in enumerate(tasks):
-            if tsk.predecessor != '':
-                pred_start: Task = tasks[int(tsk.predecessor)]
-                pred_duration = pred_start.get_virtual_duration()
-                pred_end = pred_start.start_day + pred_duration
-                if tsk.start_day < pred_end:
-                    tsk.set_start_day(pred_end)
-                    self.SetCellValue((i, 1), str(tsk.start_day))
+    def on_task_start_updated(self, index, start):
+        self.SetCellValue((index, Cols.START_DAY), str(start))
 
     def on_project_updated(self):
         self.populate()

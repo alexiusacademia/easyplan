@@ -1,5 +1,6 @@
 import wx
 from pubsub import pub
+from wx.lib.ogl.lines import LineShape
 
 from .bar import BarSegment
 from constants import *
@@ -26,10 +27,11 @@ class GanttChart(wx.ScrolledCanvas):
         self.SetBackgroundColour((255, 255, 255))
 
         self.Bind(wx.EVT_PAINT, self.on_paint)
+
         pub.subscribe(self.on_project_updated, EVENT_PROJECT_UPDATED)
-        pub.subscribe(self.redraw, EVENT_TASK_START_UPDATED)
+        pub.subscribe(self.on_task_start_updated, EVENT_TASK_START_UPDATED)
         pub.subscribe(self.redraw, EVENT_TASK_DURATION_UPDATED)
-        pub.subscribe(self.redraw, EVENT_TASK_PREDECESSOR_UPDATED)
+        pub.subscribe(self.redraw, EVENT_TASK_PREDECESSORS_UPDATED)
 
         # self.SetScrollbars(1, 1, 1000, 1000, 0, 0)
 
@@ -46,15 +48,26 @@ class GanttChart(wx.ScrolledCanvas):
         :return:
         """
         self.draw_task_bars()
+        self.draw_predecessor_lines()
+
+    def on_task_start_updated(self, index, start):
+        y = index * WBS_ROW_HEIGHT + WBS_HEADER_HEIGHT
+        for bar in self.bars:
+            if bar.GetPosition()[1] == y:
+                bar_x = bar.GetPosition()[0]
+                bar.SetPosition((start * BAR_SCALE - bar_x), y)
+        self.redraw()
 
     def draw_predecessor_lines(self):
         dc = wx.ClientDC(self)
+        pen = wx.Pen(wx.RED, 2)
+        dc.SetPen(pen)
 
         tasks = self.project.tasks
         for index, task in enumerate(tasks):
-            # Get the predecessor of the task
-            if task.predecessor != '':
-                # Now get the predecessor of the task
+            # Get the predecessors of the task
+            if len(task.predecessors) > 0:
+                '''# Now get the predecessor of the task
                 predecessor = self.project.tasks[int(task.predecessor)]
 
                 # Now get the start and virtual duration of it
@@ -86,7 +99,23 @@ class GanttChart(wx.ScrolledCanvas):
                 dc.DrawLines([(pred_x, pred_y),
                               (m_x, pred_y),
                               (m_x, task_y),
-                              (task_x, task_y)])
+                              (task_x, task_y)])'''
+                # Get the task start coordinate
+                task_x = (task.start_day - 1) * BAR_SCALE
+                task_y = WBS_HEADER_HEIGHT + (index * WBS_ROW_HEIGHT) + WBS_ROW_HEIGHT / 2
+                print('- - - - - -')
+
+                for p in task.predecessors:
+                    p_end = (p.start_day - 1) + p.get_virtual_duration()
+                    p_x = p_end * BAR_SCALE
+                    p_index = tasks.index(p)
+                    p_y = WBS_HEADER_HEIGHT + (p_index * WBS_ROW_HEIGHT) + WBS_ROW_HEIGHT/2
+
+                    mid_x = (task_x + p_x) / 2
+
+                    points = [(task_x, task_y), (mid_x, task_y), (mid_x, p_y), (p_x, p_y)]
+                    print(points)
+                    dc.DrawLines(points)
 
     def draw_hor_grids(self, length, num, vert_distance):
         """
