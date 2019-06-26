@@ -60,9 +60,21 @@ class BarSegment(wx.Panel):
 
         new_x = starting_point + dx
 
+        # Set the left limit
+        left_limit = 0
+        if len(self.task.predecessors) > 0:
+            for pred in self.task.predecessors:
+                pred_end = pred.start_day + pred.get_virtual_duration()
+                if pred_end > left_limit:
+                    left_limit = pred_end * BAR_SCALE
+
         if new_x >= 0:
-            self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
-            self.Move(self.task_segment.start * BAR_SCALE, self.GetPosition()[1])
+            if self.task.task_segments.index(self.task_segment) == 0:
+                if new_x <= left_limit:
+                    pass
+                else:
+                    self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
+                    self.Move(self.task_segment.start * BAR_SCALE, self.GetPosition()[1])
 
         # TODO Check for update
 
