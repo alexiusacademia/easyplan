@@ -110,7 +110,10 @@ class GanttChart(wx.ScrolledCanvas):
                     p_x = p_end * BAR_SCALE
                     p_index = tasks.index(p)
                     p_y = WBS_HEADER_HEIGHT + (p_index * WBS_ROW_HEIGHT) + WBS_ROW_HEIGHT/2
-                    points = [(task_x, task_y), (p_x, p_y)]
+
+                    mid_x = (task_x + p_x) / 2
+
+                    points = [(task_x, task_y), (mid_x, task_y), (mid_x, p_y), (p_x, p_y)]
                     print(points)
                     dc.DrawLines(points)
 
