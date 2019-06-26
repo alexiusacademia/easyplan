@@ -87,11 +87,11 @@ class Project:
         # Update all successors recursively
         for i in range(len(self.tasks)):
             for index, task in enumerate(self.tasks):
-                if task.predecessor != '':
-                    pred = self.tasks[int(task.predecessor)]
-                    pred_end = pred.start_day + pred.get_virtual_duration()
-                    if task.start_day < pred_end:
-                        task.set_start_day(pred_end)
+                if len(task.predecessors) > 0:
+                    for pred in task.predecessors:
+                        pred_end = pred.start_day + pred.get_virtual_duration()
+                        if pred_end > task.start_day:
+                            task.set_start_day(pred_end)
 
         pub.sendMessage(EVENT_PROJECT_UPDATED)
 
