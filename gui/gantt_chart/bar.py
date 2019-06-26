@@ -75,6 +75,17 @@ class BarSegment(wx.Panel):
                 else:
                     self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
                     self.Move(self.task_segment.start * BAR_SCALE, self.GetPosition()[1])
+            else:
+                # Get the task segment on the left
+                ts_index = self.task.task_segments.index(self.task_segment)
+                left_ts_index = ts_index - 1
+                left_ts: TaskSegment = self.task.task_segments[left_ts_index]
+                left_limit = (left_ts.start + left_ts.duration) * BAR_SCALE
+
+                # Move only to the left if it doesn't overlap
+                if new_x > left_limit:
+                    self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
+                    self.Move(self.task_segment.start * BAR_SCALE, self.GetPosition()[1])
 
         # TODO Check for update
 
