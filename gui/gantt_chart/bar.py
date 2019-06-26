@@ -67,7 +67,6 @@ class BarSegment(wx.Panel):
         # TODO Check for update
 
     def on_hover(self, event):
-        # print('Hovered')
         pass
 
     def on_left_up(self, event):
@@ -109,6 +108,3 @@ class BarSegment(wx.Panel):
         res = dlg.ShowModal()
         if res == ID_OK:
             dlg.Destroy()
-
-    def on_dragging_stopped(self, x_pos):
-        print(x_pos)
