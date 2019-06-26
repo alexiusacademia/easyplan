@@ -154,7 +154,7 @@ class GanttChart(wx.ScrolledCanvas):
         for index, task in enumerate(tasks):
             for ts in task.task_segments:
                 bar = BarSegment(self,
-                                 (ts.start - 1) * self.BAR_SCALE,
+                                 (ts.start) * self.BAR_SCALE,
                                  index * WBS_ROW_HEIGHT + WBS_HEADER_HEIGHT,
                                  ts.duration * self.BAR_SCALE,
                                  self.BAR_THICKNESS,
