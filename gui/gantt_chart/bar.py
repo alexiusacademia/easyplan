@@ -62,7 +62,7 @@ class BarSegment(wx.Panel):
 
         if new_x >= 0:
             self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
-            self.Move(new_x, self.GetPosition()[1])
+            self.Move(self.task_segment.start * BAR_SCALE, self.GetPosition()[1])
 
         # TODO Check for update
 
