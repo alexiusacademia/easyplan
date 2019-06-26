@@ -1,6 +1,5 @@
 import wx
 from pubsub import pub
-from wx.lib.ogl.lines import LineShape
 
 from .bar import BarSegment
 from constants import *
@@ -67,41 +66,8 @@ class GanttChart(wx.ScrolledCanvas):
         for index, task in enumerate(tasks):
             # Get the predecessors of the task
             if len(task.predecessors) > 0:
-                '''# Now get the predecessor of the task
-                predecessor = self.project.tasks[int(task.predecessor)]
-
-                # Now get the start and virtual duration of it
-                predecessor_start = predecessor.start_day
-                predecessor_duration = predecessor.get_virtual_duration()
-
-                # This end property is the earliest possible that the successor task
-                # can start but the actual end is the day before it.
-                # For example: If a task starts at day 1 and has a duration of 1 day,
-                # It ends on day 1 also, but the earliest possible that the next task can
-                # start is the day 2.
-                predecessor_end = predecessor_start + predecessor_duration
-
-                # Convert the predecessor end to coordinate
-                pred_index = int(task.predecessor)
-                pred_y = WBS_ROW_HEIGHT * pred_index + WBS_ROW_HEIGHT/2 + WBS_HEADER_HEIGHT
-                pred_x = BAR_SCALE * (predecessor_end - 1)
-
-                # Now get the coordinate of the start of the task
-                task_y = WBS_ROW_HEIGHT * index + WBS_ROW_HEIGHT/2 + WBS_HEADER_HEIGHT
-                task_x = (task.start_day - 1) * BAR_SCALE
-
-                # Get the middle of between these two task bars
-                m_x = abs(pred_x - task_x) / 2 + min(pred_x, task_x)
-
-                pen = wx.Pen(wx.RED, 2)
-                dc.SetPen(pen)
-                # dc.DrawLine(pred_x, pred_y, task_x, task_y)
-                dc.DrawLines([(pred_x, pred_y),
-                              (m_x, pred_y),
-                              (m_x, task_y),
-                              (task_x, task_y)])'''
                 # Get the task start coordinate
-                task_x = (task.start_day) * BAR_SCALE
+                task_x = task.start_day * BAR_SCALE
                 task_y = WBS_HEADER_HEIGHT + (index * WBS_ROW_HEIGHT) + WBS_ROW_HEIGHT / 2
                 print('- - - - - -')
 
@@ -160,11 +126,8 @@ class GanttChart(wx.ScrolledCanvas):
                                  self.BAR_THICKNESS,
                                  task,
                                  ts)
-                # bar.Bind(wx.EVT_LEFT_DCLICK, lambda event, t=task, ts=ts: self.on_double_clicked(event, t, ts))
 
                 self.bars.append(bar)
-                # print(ts.start, ' - ', ts.duration, end=', ')
-            # print('\n= = = = =')
 
     def on_double_clicked(self, event, task, task_segment):
         if isinstance(event, wx.MouseEvent):
