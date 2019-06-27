@@ -25,7 +25,3 @@ EVENT_UPDATE_PREDECESSOR_LINES = 'update_predecessor_lines'
 
 EVENT_BAR_SEGMENT_MOVING = 'bar_segment_moving'
 EVENT_BAR_SEGMENT_STOPPED = 'bar_segment_stopped'
-
-# Gantt Chart
-# -------------------------
-INTERVAL_MAJOR_VERTICAL_LINES = 7 # days

@@ -154,16 +154,17 @@ class GanttChart(wx.ScrolledCanvas):
                 self.bars.append(bs1)
 
     def draw_vertical_major_grid_lines(self):
+        major_interval = self.project.interval_major_axis
         gantt_width, gantt_height = self.GetSize()
-        number_of_lines = int(gantt_width / BAR_SCALE / INTERVAL_MAJOR_VERTICAL_LINES)
+        number_of_lines = int(gantt_width / BAR_SCALE / major_interval)
 
         dc = wx.ClientDC(self)
         pen = wx.Pen(wx.LIGHT_GREY, 1)
         dc.SetPen(pen)
 
         for i in range(number_of_lines):
-            dc.DrawLine(i * INTERVAL_MAJOR_VERTICAL_LINES * BAR_SCALE, 0,
-                        i * INTERVAL_MAJOR_VERTICAL_LINES * BAR_SCALE, gantt_height)
+            dc.DrawLine(i * major_interval * BAR_SCALE, 0,
+                        i * major_interval * BAR_SCALE, gantt_height)
 
     def on_project_updated(self):
         self.redraw()

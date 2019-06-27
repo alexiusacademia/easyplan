@@ -39,6 +39,10 @@ class Project:
     selected_task_segment = None
     start_date = datetime.date.today()
 
+    # Gantt Chart
+    # -------------------------
+    interval_major_axis = 7  # days
+
     def __init__(self):
         self._initialized = True
 
