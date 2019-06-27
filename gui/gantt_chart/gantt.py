@@ -38,6 +38,7 @@ class GanttChart(wx.ScrolledCanvas):
         if self.project is not None:
             self.ClearBackground()
             self.draw_hor_grids(self.GetSize()[0], len(self.project.tasks), WBS_ROW_HEIGHT)
+            self.draw_vertical_major_grid_lines()
             self.draw_predecessor_lines()
 
     def redraw(self):
@@ -151,6 +152,19 @@ class GanttChart(wx.ScrolledCanvas):
                                  ts.duration * BAR_SCALE,
                                  BAR_HEIGHT, task, ts)
                 self.bars.append(bs1)
+
+    def draw_vertical_major_grid_lines(self):
+        major_interval = self.project.interval_major_axis
+        gantt_width, gantt_height = self.GetSize()
+        number_of_lines = int(gantt_width / BAR_SCALE / major_interval)
+
+        dc = wx.ClientDC(self)
+        pen = wx.Pen(wx.LIGHT_GREY, 1)
+        dc.SetPen(pen)
+
+        for i in range(number_of_lines):
+            dc.DrawLine(i * major_interval * BAR_SCALE, 0,
+                        i * major_interval * BAR_SCALE, gantt_height)
 
     def on_project_updated(self):
         self.redraw()
