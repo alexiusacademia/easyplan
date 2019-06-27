@@ -15,13 +15,13 @@ class Task:
     task_name = ''
     task_id = 0
     task_segments = []
-    start_day = 1
+    start_day = 0
     predecessors = []
 
     def __init__(self):
         self.task_name = 'Unnamed Task'
         self.task_id = id_generator()
-        ts1 = TaskSegment(1, 1)
+        ts1 = TaskSegment(self.start_day, 1)
         self.task_segments = [ts1]
 
     def rename(self, new_name):
