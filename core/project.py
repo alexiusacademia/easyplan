@@ -99,11 +99,6 @@ class Project:
         new_index = index + direction
         self.tasks.insert(new_index, self.tasks.pop(index))
 
-        for i in range(len(self.tasks)):
-            for task in self.tasks:
-                if task.predecessor != '' and int(task.predecessor) == index:
-                    task.predecessor = new_index
-
         pub.sendMessage(EVENT_PROJECT_UPDATED)
 
     def move_task_segment(self, task, task_segment, start):
