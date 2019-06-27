@@ -88,12 +88,10 @@ class BarSegment(wx.Panel):
                     pass
                 else:
                     if nearest_successor_start == 0:
-                        self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
-                        self.Move(self.task_segment.start * BAR_SCALE, self.GetPosition()[1])
+                        self.move_task_segment(new_x)
                     else:
                         if not new_task_end_x >= nearest_successor_x:
-                            self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
-                            self.Move(self.task_segment.start * BAR_SCALE, self.GetPosition()[1])
+                            self.move_task_segment(new_x)
             else:
                 # Get the task segment on the left
                 ts_index = self.task.task_segments.index(self.task_segment)
@@ -103,10 +101,13 @@ class BarSegment(wx.Panel):
 
                 # Move only to the left if it doesn't overlap
                 if new_x > left_limit:
-                    self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
-                    self.Move(self.task_segment.start * BAR_SCALE, self.GetPosition()[1])
+                    self.move_task_segment(new_x)
 
         # TODO Check for update
+
+    def move_task_segment(self, new_x: int):
+        self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
+        self.Move(self.task_segment.start * BAR_SCALE, self.GetPosition()[1])
 
     def on_hover(self, event):
         pass
