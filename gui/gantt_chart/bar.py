@@ -81,7 +81,7 @@ class BarSegment(wx.Panel):
 
             nearest_successor_x = nearest_successor_start * BAR_SCALE
 
-            new_task_end_x = new_x + self.task.get_virtual_duration() * BAR_SCALE
+            new_task_end_x = (int(new_x/BAR_SCALE) + self.task.get_virtual_duration() - 1) * BAR_SCALE
 
             if self.task.task_segments.index(self.task_segment) == 0:
                 if new_x <= left_limit:
