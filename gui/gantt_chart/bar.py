@@ -69,12 +69,31 @@ class BarSegment(wx.Panel):
                     left_limit = pred_end * BAR_SCALE
 
         if new_x >= 0:
+            # Get the nearest successor
+            nearest_successor_start = 0
+            for task in self.project.tasks:
+                if len(task.predecessors) > 0:
+                    for task_pred in task.predecessors:
+                        if task_pred == self.task:
+                            successor_start = task.start_day
+                            if successor_start > nearest_successor_start:
+                                nearest_successor_start = successor_start
+
+            nearest_successor_x = nearest_successor_start * BAR_SCALE
+
+            new_task_end_x = new_x + self.task.get_virtual_duration() * BAR_SCALE
+
             if self.task.task_segments.index(self.task_segment) == 0:
                 if new_x <= left_limit:
                     pass
                 else:
-                    self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
-                    self.Move(self.task_segment.start * BAR_SCALE, self.GetPosition()[1])
+                    if nearest_successor_start == 0:
+                        self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
+                        self.Move(self.task_segment.start * BAR_SCALE, self.GetPosition()[1])
+                    else:
+                        if not new_task_end_x >= nearest_successor_x:
+                            self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
+                            self.Move(self.task_segment.start * BAR_SCALE, self.GetPosition()[1])
             else:
                 # Get the task segment on the left
                 ts_index = self.task.task_segments.index(self.task_segment)
