@@ -285,8 +285,13 @@ class Ribbon(wx.ribbon.RibbonBar):
             project.project_name = project_dict['project_name']
         project.tasks = project_dict['tasks']
 
+        if 'interval_major_grid' in project_dict:
+            project.interval_major_axis = project_dict['interval_major_grid']
+
         self.parent.project = project
+
         self.project = project
+
         self.parent.left_pane.project = project
         self.parent.right_pane.project = project
 
@@ -295,7 +300,8 @@ class Ribbon(wx.ribbon.RibbonBar):
 
     def on_save_project(self, event):
         p = {'path': self.parent.project_file,
-             'tasks': self.project.tasks}
+             'tasks': self.project.tasks,
+             'interval_major_grid': self.project.interval_major_axis}
 
         if self.parent.project_file != '':
             path = self.parent.project_file
