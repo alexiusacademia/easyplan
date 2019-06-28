@@ -7,6 +7,8 @@ import sys
 
 # useNotifyByWriteFile(sys.stdout)
 
+from wx.lib.docview import CommandProcessor, Command
+
 # Import project modules
 from .gantt_chart.wbs import WBS
 from .gantt_chart.gantt import GanttChart
@@ -21,9 +23,11 @@ class MainFrame(wx.Frame):
     right_pane = None
     project_file = ''
     status_bar = None
+    command_processor = None
 
     def __init__(self):
         super().__init__(parent=None, title='EasyPlan')
+        self.command_processor = CommandProcessor()
         self.initialize_project()
         self.init_ui()
         self.Show()

@@ -3,6 +3,9 @@ import wx
 import wx.ribbon
 import os
 import pickle
+import copy
+
+from wx.lib.docview import CommandProcessor
 
 # Import project modules
 from .dialogs.dlg_split_task import SplitTaskDialog
@@ -11,30 +14,34 @@ from core.task import Task
 from core.project import Project
 from constants import *
 from .gantt_chart.status import *
+from .commands import *
 
 
 class Ribbon(wx.ribbon.RibbonBar):
     ribbon_buttons = []
     project = None
     task_index = None
+    command_processor = None
 
     class IDS:
         # -----------
-        ADD_TASK = 10
-        DELETE_TASK = 20
-        INDENT_TASK = 30
-        OUTDENT_TASK = 40
+        ADD_TASK = 100
+        DELETE_TASK = 101
+        INDENT_TASK = 102
+        OUTDENT_TASK = 103
         # -----------
-        SPLIT_TASK = 50
-        RENAME_TASK = 60
-        MOVE_SEGMENT = 70
-        MOVE_UP = 80
-        MOVE_DOWN = 90
+        SPLIT_TASK = 200
+        RENAME_TASK = 201
+        MOVE_SEGMENT = 202
+        MOVE_UP = 203
+        MOVE_DOWN = 204
+        UNDO = 205
+        REDO = 206
         # -----------
-        NEW_PROJECT = 100
-        OPEN_PROJECT = 110
-        SAVE_PROJECT = 120
-        SAVE_AS_PROJECT = 130
+        NEW_PROJECT = 300
+        OPEN_PROJECT = 301
+        SAVE_PROJECT = 302
+        SAVE_AS_PROJECT = 303
 
     RIBBON_BUTTON_SIZE = (22, 22)
 
@@ -44,6 +51,8 @@ class Ribbon(wx.ribbon.RibbonBar):
         self.set_button_cursors()
 
         self.parent = parent
+
+        self.command_processor: CommandProcessor = self.parent.command_processor
 
         self.project = project
 
@@ -193,8 +202,33 @@ class Ribbon(wx.ribbon.RibbonBar):
                    'Move a task down by one row.', wx.ITEM_NORMAL)
         self.Bind(wx.EVT_TOOL, self.on_task_move_down, id=self.IDS.MOVE_DOWN)
 
+        icon_undo = wx.ArtProvider.GetBitmap(wx.ART_UNDO)
+        tb.AddTool(self.IDS.UNDO, 'Undo', icon_undo,
+                   'Undo task action.', wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_undo, id=self.IDS.UNDO)
+
+        icon_redo = wx.ArtProvider.GetBitmap(wx.ART_REDO)
+        tb.AddTool(self.IDS.REDO, 'Redo', icon_redo,
+                   'Redo previous undo action.', wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_redo, id=self.IDS.REDO)
+
         panel.SetSizer(sizer)
         tb.Realize()
+
+    def is_initialized(self):
+        if self.project is None:
+            return False
+        return True
+
+    def on_undo(self, event):
+        if not self.is_initialized():
+            return
+        self.command_processor.Undo()
+
+    def on_redo(self, event):
+        if not self.is_initialized():
+            return
+        self.command_processor.Redo()
 
     def get_stock_bitmap(self, art_id, size):
         return wx.ArtProvider.GetBitmap(art_id, size=size)
@@ -204,28 +238,16 @@ class Ribbon(wx.ribbon.RibbonBar):
             button.SetCursor(wx.Cursor(wx.CURSOR_HAND))
 
     def on_task_move_down(self, event):
-        if self.project.selected_task_index is None:
-            wx.MessageBox('A task shall be selected from the WBS before moving.', 'No Task Selected',
-                          style=wx.OK_DEFAULT)
-        else:
-            index = self.project.selected_task_index
-
-            if index == len(self.project.tasks) - 1:
-                pass
-            else:
-                self.project.change_task_index(index, direction=1)
+        command = MoveTaskDownCommand(True, 'Move Task Down',
+                                      self.project.selected_task_index,
+                                      self.project)
+        self.command_processor.Submit(command)
 
     def on_task_move_up(self, event):
-        if self.project.selected_task_index is None:
-            wx.MessageBox('A task shall be selected from the WBS before moving.', 'No Task Selected',
-                          style=wx.OK_DEFAULT)
-        else:
-            index = self.project.selected_task_index
-
-            if index == 0:
-                pass
-            else:
-                self.project.change_task_index(index, direction=-1)
+        command = MoveTaskUpCommand(True, 'Move Task Up',
+                                    self.project.selected_task_index,
+                                    self.project)
+        self.command_processor.Submit(command)
 
     def on_new_project(self, event):
         dlg = wx.MessageDialog(self, 'Create new project?',
@@ -316,12 +338,13 @@ class Ribbon(wx.ribbon.RibbonBar):
         print('Save project as')
 
     def on_add_task(self, event):
-        if self.project.selected_task_index is not None:
-            index = self.project.selected_task_index
-            self.project.insert_task(index, Task())
-        else:
-            self.project.add_task(Task())
-        self.project.selected_task_index = None
+        task = Task()
+
+        selected_index = self.project.selected_task_index
+
+        command = AddTaskCommand(True, 'Add Task', task, selected_index, self.project)
+
+        self.command_processor.Submit(command)
 
     def on_delete_task(self, event):
         """
@@ -329,19 +352,12 @@ class Ribbon(wx.ribbon.RibbonBar):
         :param event: A toolbar click event.
         :return:
         """
-        if self.project.selected_task_index is None:
-            wx.MessageBox('A task shall be selected from the WBS before deleting.', 'No Task Selected',
-                          style=wx.OK_DEFAULT)
-        else:
-            # Ask user for confirmation
-            # TODO Do some necessary checking before deleting. This can also be implemented on the core API.
-            index = self.project.selected_task_index
+        command = DeleteTaskCommand(True, 'Delete Task',
+                                    self.project.tasks[self.project.selected_task_index],
+                                    self.project.selected_task_index,
+                                    self.project)
 
-            if index <= len(self.project.tasks) - 1:
-                dlg = wx.MessageBox('Delete the selected task?', 'Delete Task', style=wx.YES_NO | wx.CANCEL)
-                if dlg == wx.YES:
-                    self.project.remove_task(self.project.tasks[index])
-                    self.project.selected_task_index = None
+        self.command_processor.Submit(command)
 
     def on_outdent_task(self, event):
         print('Outdent Task')
