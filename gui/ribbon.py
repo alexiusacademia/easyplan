@@ -14,7 +14,7 @@ from core.task import Task
 from core.project import Project
 from constants import *
 from .gantt_chart.status import *
-from .commands import *
+from .commands.add_task import AddTaskCommand
 
 
 class Ribbon(wx.ribbon.RibbonBar):
