@@ -3,8 +3,9 @@ import wx
 import wx.ribbon
 import os
 import pickle
+import copy
 
-from wx.lib.docview import Command, CommandProcessor
+from wx.lib.docview import CommandProcessor
 
 # Import project modules
 from .dialogs.dlg_split_task import SplitTaskDialog
@@ -13,6 +14,7 @@ from core.task import Task
 from core.project import Project
 from constants import *
 from .gantt_chart.status import *
+from .commands import *
 
 
 class Ribbon(wx.ribbon.RibbonBar):
@@ -222,6 +224,7 @@ class Ribbon(wx.ribbon.RibbonBar):
         if not self.is_initialized():
             return
         self.command_processor.Undo()
+        print(self.command_processor.GetCommands())
 
     def on_redo(self, event):
         if not self.is_initialized():
@@ -349,14 +352,12 @@ class Ribbon(wx.ribbon.RibbonBar):
 
     def on_add_task(self, event):
         task = Task()
-        if self.project.selected_task_index is not None:
-            index = self.project.selected_task_index
-            self.project.insert_task(index, task)
-        else:
-            self.project.add_task(task)
-        self.project.selected_task_index = None
 
-        self.command_processor.Submit(Command(True, 'Add Task'))
+        selected_index = self.project.selected_task_index
+
+        command = AddTaskCommand(True, 'Add Task', task, selected_index, self.project)
+
+        self.command_processor.Submit(command)
 
     def on_delete_task(self, event):
         """
