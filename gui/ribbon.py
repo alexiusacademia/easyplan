@@ -196,10 +196,32 @@ class Ribbon(wx.ribbon.RibbonBar):
         self.Bind(wx.EVT_TOOL, self.on_task_move_down, id=self.IDS.MOVE_DOWN)
 
         icon_undo = wx.ArtProvider.GetBitmap(wx.ART_UNDO)
-        tb.AddTool()
+        tb.AddTool(self.IDS.UNDO, 'Undo', icon_undo,
+                   'Undo task action.', wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_undo, id=self.IDS.UNDO)
+
+        icon_redo = wx.ArtProvider.GetBitmap(wx.ART_REDO)
+        tb.AddTool(self.IDS.REDO, 'Redo', icon_redo,
+                   'Redo previous undo action.', wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_redo, id=self.IDS.REDO)
 
         panel.SetSizer(sizer)
         tb.Realize()
+
+    def is_initialized(self):
+        if self.project is None:
+            return False
+        return True
+
+    def on_undo(self, event):
+        if not self.is_initialized():
+            return
+        print('Undo')
+
+    def on_redo(self, event):
+        if not self.is_initialized():
+            return
+        print('Redo')
 
     def get_stock_bitmap(self, art_id, size):
         return wx.ArtProvider.GetBitmap(art_id, size=size)
