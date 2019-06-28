@@ -6,9 +6,9 @@ Yet another project scheduling and management software.
 - [ ] Graphical User Interface
   - [ ] Ribbon
     - [ ] Project page
-      - [ ] New Project
-      - [ ] Open Project
-      - [ ] Save Project
+      - [x] New Project
+      - [x] Open Project
+      - [x] Save Project
       - [ ] Save Project As
         - Save project as new file
       - [ ] Export Project
@@ -34,13 +34,16 @@ Yet another project scheduling and management software.
       - [x] Display bars
       - [x] Show splitted task
       - [ ] Draw imaginary line between splitted tasks
-      - [ ] Drag to move start day
+      - [x] Drag to move start day
       - [ ] Drag to split segment
-      - [ ] Drag to move segment
-      - [ ] Pop-up properties/informations
+      - [x] Drag to move segment
+      - [ ] Pop-up properties/information
     - [x] Predecessor Lines
 - [ ] Core API
   - [ ] Project Class
   - [x] Task Class
   - [x] Task Segment Class
   - [ ] Resources
+  
+ ### Screenshot (06/28/2019)
+![Screenshot 1](readme_files/ss1.png)
