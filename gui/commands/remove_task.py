@@ -2,7 +2,7 @@ from wx.lib.docview import Command
 import wx
 
 
-class DeleteTaskCommand(Command):
+class RemoveTaskCommand(Command):
     task = None
     selected_task_index = None
     project = None
