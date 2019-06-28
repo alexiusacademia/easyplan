@@ -224,7 +224,6 @@ class Ribbon(wx.ribbon.RibbonBar):
         if not self.is_initialized():
             return
         self.command_processor.Undo()
-        print(self.command_processor.GetCommands())
 
     def on_redo(self, event):
         if not self.is_initialized():
@@ -365,19 +364,12 @@ class Ribbon(wx.ribbon.RibbonBar):
         :param event: A toolbar click event.
         :return:
         """
-        if self.project.selected_task_index is None:
-            wx.MessageBox('A task shall be selected from the WBS before deleting.', 'No Task Selected',
-                          style=wx.OK_DEFAULT)
-        else:
-            # Ask user for confirmation
-            # TODO Do some necessary checking before deleting. This can also be implemented on the core API.
-            index = self.project.selected_task_index
+        command = DeleteTaskCommand(True, 'Delete Task',
+                                    self.project.tasks[self.project.selected_task_index],
+                                    self.project.selected_task_index,
+                                    self.project)
 
-            if index <= len(self.project.tasks) - 1:
-                dlg = wx.MessageBox('Delete the selected task?', 'Delete Task', style=wx.YES_NO | wx.CANCEL)
-                if dlg == wx.YES:
-                    self.project.remove_task(self.project.tasks[index])
-                    self.project.selected_task_index = None
+        self.command_processor.Submit(command)
 
     def on_outdent_task(self, event):
         print('Outdent Task')
