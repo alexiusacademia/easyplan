@@ -16,6 +16,7 @@ from constants import *
 from .gantt_chart.status import *
 from .commands.add_task import AddTaskCommand
 from .commands.remove_task import RemoveTaskCommand
+from .commands.move_task_up import MoveTaskUpCommand
 
 
 class Ribbon(wx.ribbon.RibbonBar):
