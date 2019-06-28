@@ -20,21 +20,23 @@ class Ribbon(wx.ribbon.RibbonBar):
 
     class IDS:
         # -----------
-        ADD_TASK = 10
-        DELETE_TASK = 20
-        INDENT_TASK = 30
-        OUTDENT_TASK = 40
+        ADD_TASK = 100
+        DELETE_TASK = 101
+        INDENT_TASK = 102
+        OUTDENT_TASK = 103
         # -----------
-        SPLIT_TASK = 50
-        RENAME_TASK = 60
-        MOVE_SEGMENT = 70
-        MOVE_UP = 80
-        MOVE_DOWN = 90
+        SPLIT_TASK = 200
+        RENAME_TASK = 201
+        MOVE_SEGMENT = 202
+        MOVE_UP = 203
+        MOVE_DOWN = 204
+        UNDO = 205
+        REDO = 206
         # -----------
-        NEW_PROJECT = 100
-        OPEN_PROJECT = 110
-        SAVE_PROJECT = 120
-        SAVE_AS_PROJECT = 130
+        NEW_PROJECT = 300
+        OPEN_PROJECT = 301
+        SAVE_PROJECT = 302
+        SAVE_AS_PROJECT = 303
 
     RIBBON_BUTTON_SIZE = (22, 22)
 
@@ -192,6 +194,9 @@ class Ribbon(wx.ribbon.RibbonBar):
         tb.AddTool(self.IDS.MOVE_DOWN, 'Move Down', icon_move_down,
                    'Move a task down by one row.', wx.ITEM_NORMAL)
         self.Bind(wx.EVT_TOOL, self.on_task_move_down, id=self.IDS.MOVE_DOWN)
+
+        icon_undo = wx.ArtProvider.GetBitmap(wx.ART_UNDO)
+        tb.AddTool()
 
         panel.SetSizer(sizer)
         tb.Realize()
