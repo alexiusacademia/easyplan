@@ -4,6 +4,8 @@ import wx.ribbon
 import os
 import pickle
 
+from wx.lib.docview import Command, CommandProcessor
+
 # Import project modules
 from .dialogs.dlg_split_task import SplitTaskDialog
 from .dialogs.dlg_move_task_segment import MoveTaskSegmentDialog
@@ -17,6 +19,7 @@ class Ribbon(wx.ribbon.RibbonBar):
     ribbon_buttons = []
     project = None
     task_index = None
+    command_processor = None
 
     class IDS:
         # -----------
@@ -46,6 +49,8 @@ class Ribbon(wx.ribbon.RibbonBar):
         self.set_button_cursors()
 
         self.parent = parent
+
+        self.command_processor: CommandProcessor = self.parent.command_processor
 
         self.project = project
 
@@ -216,12 +221,12 @@ class Ribbon(wx.ribbon.RibbonBar):
     def on_undo(self, event):
         if not self.is_initialized():
             return
-        print('Undo')
+        self.command_processor.Undo()
 
     def on_redo(self, event):
         if not self.is_initialized():
             return
-        print('Redo')
+        self.command_processor.Redo()
 
     def get_stock_bitmap(self, art_id, size):
         return wx.ArtProvider.GetBitmap(art_id, size=size)
@@ -343,12 +348,15 @@ class Ribbon(wx.ribbon.RibbonBar):
         print('Save project as')
 
     def on_add_task(self, event):
+        task = Task()
         if self.project.selected_task_index is not None:
             index = self.project.selected_task_index
-            self.project.insert_task(index, Task())
+            self.project.insert_task(index, task)
         else:
-            self.project.add_task(Task())
+            self.project.add_task(task)
         self.project.selected_task_index = None
+
+        self.command_processor.Submit(Command(True, 'Add Task'))
 
     def on_delete_task(self, event):
         """
