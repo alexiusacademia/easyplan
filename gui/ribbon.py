@@ -15,6 +15,7 @@ from core.project import Project
 from constants import *
 from .gantt_chart.status import *
 from .commands.add_task import AddTaskCommand
+from .commands.remove_task import RemoveTaskCommand
 
 
 class Ribbon(wx.ribbon.RibbonBar):
@@ -352,7 +353,7 @@ class Ribbon(wx.ribbon.RibbonBar):
         :param event: A toolbar click event.
         :return:
         """
-        command = DeleteTaskCommand(True, 'Delete Task',
+        command = RemoveTaskCommand(True, 'Delete Task',
                                     self.project.tasks[self.project.selected_task_index],
                                     self.project.selected_task_index,
                                     self.project)
