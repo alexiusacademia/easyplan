@@ -250,16 +250,10 @@ class Ribbon(wx.ribbon.RibbonBar):
                 self.project.change_task_index(index, direction=1)
 
     def on_task_move_up(self, event):
-        if self.project.selected_task_index is None:
-            wx.MessageBox('A task shall be selected from the WBS before moving.', 'No Task Selected',
-                          style=wx.OK_DEFAULT)
-        else:
-            index = self.project.selected_task_index
-
-            if index == 0:
-                pass
-            else:
-                self.project.change_task_index(index, direction=-1)
+        command = MoveTaskUpCommand(True, 'Move Task Up',
+                                    self.project.selected_task_index,
+                                    self.project)
+        self.command_processor.Submit(command)
 
     def on_new_project(self, event):
         dlg = wx.MessageDialog(self, 'Create new project?',
