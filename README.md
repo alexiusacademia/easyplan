@@ -44,3 +44,6 @@ Yet another project scheduling and management software.
   - [x] Task Class
   - [x] Task Segment Class
   - [ ] Resources
+  
+ ### Screenshot (06/28/2019)
+![Screenshot 1](readme_files/ss1.png)
