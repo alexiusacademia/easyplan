@@ -71,6 +71,7 @@ class Ribbon(wx.ribbon.RibbonBar):
         self.Bind(wx.EVT_MENU, self.on_open_project, id=AcceleratorIds.CTRL_O)
         self.Bind(wx.EVT_MENU, self.on_new_project, id=AcceleratorIds.CTRL_N)
         self.Bind(wx.EVT_MENU, self.on_split_task, id=AcceleratorIds.CTRL_T)
+        self.Bind(wx.EVT_MENU, self.on_move_segment, id=AcceleratorIds.CTRL_SHIFT_S)
 
         self.SetAcceleratorTable(accelerator_table)
 
