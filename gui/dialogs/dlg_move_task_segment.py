@@ -1,6 +1,8 @@
 import wx
+from wx.lib.docview import CommandProcessor
 
 from constants import *
+from ..commands.move_task_segment import MoveTaskSegmentCommand
 
 
 class MoveTaskSegmentDialog(wx.Dialog):
@@ -11,6 +13,7 @@ class MoveTaskSegmentDialog(wx.Dialog):
     selected_task = None
     selected_task_segment = None
     parent = None
+    command_processor = None
 
     def __init__(self, parent):
         wx.Dialog.__init__(self, parent)
@@ -21,6 +24,7 @@ class MoveTaskSegmentDialog(wx.Dialog):
         self.selected_task = self.project.selected_task
         self.selected_task_segment = self.project.selected_task_segment
         self.parent = parent
+        self.command_processor: CommandProcessor = parent.command_processor
 
         self.init_ui()
 
@@ -32,7 +36,7 @@ class MoveTaskSegmentDialog(wx.Dialog):
         self.add_title(main_sizer)
 
         main_sizer.AddSpacer(30)
-        self.add_input('Left Task Duration', main_sizer, str(self.selected_task_segment.start))
+        self.add_input('Start of Task Segment', main_sizer, str(self.selected_task_segment.start))
         main_sizer.AddSpacer(30)
 
         split_button = wx.Button(self, ID_OK, label='Move Segment')
@@ -93,9 +97,14 @@ class MoveTaskSegmentDialog(wx.Dialog):
                 new_start = new_start_text.GetLineText(0)
                 if new_start.isdigit():
                     new_start = int(new_start)
-                    self.selected_task_segment.move(new_start)
 
-                    self.project.update_successors()
+                    command = MoveTaskSegmentCommand(True, 'Move Task Segment',
+                                                     new_start,
+                                                     self.selected_task,
+                                                     self.selected_task_segment,
+                                                     self.project)
+
+                    self.command_processor.Submit(command)
 
                     # Stop the modal state
                     self.EndModal(event.GetEventObject().GetId())
