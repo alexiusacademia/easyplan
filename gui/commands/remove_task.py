@@ -8,7 +8,7 @@ class RemoveTaskCommand(Command):
     task = None
     selected_task_index = None
     project = None
-    successors = []
+    successors = None
 
     def __init__(self, *args, **kw):
         super().__init__()
@@ -16,14 +16,7 @@ class RemoveTaskCommand(Command):
         self.task = args[2]
         self.selected_task_index = args[3]
         self.project = args[4]
-
-        self.get_successors()
-
-    def get_successors(self):
-        for task in self.project.tasks:
-            for predecessor in task.predecessors:
-                if predecessor == self.task:
-                    self.successors.append(task)
+        self.successors = args[5]
 
     def Do(self):
         if self.project.selected_task_index is None:

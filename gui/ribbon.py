@@ -355,10 +355,16 @@ class Ribbon(wx.ribbon.RibbonBar):
         :param event: A toolbar click event.
         :return:
         """
+        successors = []
+        for task in self.project.tasks:
+            for predecessor in task.predecessors:
+                if predecessor == self.project.tasks[self.project.selected_task_index]:
+                    successors.append(task)
         command = RemoveTaskCommand(True, 'Delete Task',
                                     self.project.tasks[self.project.selected_task_index],
                                     self.project.selected_task_index,
-                                    self.project)
+                                    self.project,
+                                    successors)
 
         self.command_processor.Submit(command)
 
