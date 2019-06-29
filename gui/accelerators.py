@@ -10,5 +10,5 @@ class AcceleratorIds:
 accelerator_table = wx.AcceleratorTable([
     (wx.ACCEL_CTRL, ord('Z'), AcceleratorIds.CTRL_Z),
     (wx.ACCEL_CTRL, ord('Y'), AcceleratorIds.CTRL_Y),
-    (wx.ACCEL_NORMAL, wx.WXK_DELETE, AcceleratorIds.DEL)
+    (wx.ACCEL_CTRL|wx.ACCEL_SHIFT, ord('-'), AcceleratorIds.DEL)
 ])
