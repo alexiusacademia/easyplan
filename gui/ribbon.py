@@ -65,7 +65,8 @@ class Ribbon(wx.ribbon.RibbonBar):
         # Bindings
         self.Bind(wx.EVT_MENU, self.on_undo, id=AcceleratorIds.CTRL_Z)
         self.Bind(wx.EVT_MENU, self.on_redo, id=AcceleratorIds.CTRL_Y)
-        self.Bind(wx.EVT_MENU, self.on_delete_task, id=AcceleratorIds.DEL)
+        self.Bind(wx.EVT_MENU, self.on_delete_task, id=AcceleratorIds.CTRL_SHIFT_DEL)
+        self.Bind(wx.EVT_MENU, self.on_add_task, id=AcceleratorIds.CTRL_SHIFT_PLUS)
 
         self.SetAcceleratorTable(accelerator_table)
 
