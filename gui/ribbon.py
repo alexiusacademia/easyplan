@@ -63,8 +63,9 @@ class Ribbon(wx.ribbon.RibbonBar):
         self.wbs = wbs
 
         # Bindings
-        self.Bind(wx.EVT_MENU, self.on_ctrl_z, id=AcceleratorIds.CTRL_Z)
-        self.Bind(wx.EVT_MENU, self.on_ctrl_y, id=AcceleratorIds.CTRL_Y)
+        self.Bind(wx.EVT_MENU, self.on_undo, id=AcceleratorIds.CTRL_Z)
+        self.Bind(wx.EVT_MENU, self.on_redo, id=AcceleratorIds.CTRL_Y)
+        self.Bind(wx.EVT_MENU, self.on_delete_task, id=AcceleratorIds.DEL)
 
         self.SetAcceleratorTable(accelerator_table)
 
@@ -433,10 +434,3 @@ class Ribbon(wx.ribbon.RibbonBar):
             wx.MessageBox('A task segment must be selected first.',
                           'Error',
                           wx.OK | wx.ICON_ERROR)
-
-    # Accelerators
-    def on_ctrl_z(self, event):
-        self.on_undo(event)
-
-    def on_ctrl_y(self, event):
-        self.on_redo(event)
