@@ -18,6 +18,7 @@ from .commands.add_task import AddTaskCommand
 from .commands.remove_task import RemoveTaskCommand
 from .commands.move_task_up import MoveTaskUpCommand
 from .commands.move_task_down import MoveTaskDownCommand
+from gui.accelerators import *
 
 
 class Ribbon(wx.ribbon.RibbonBar):
@@ -60,6 +61,12 @@ class Ribbon(wx.ribbon.RibbonBar):
         self.project = project
 
         self.wbs = wbs
+
+        # Bindings
+        self.Bind(wx.EVT_MENU, self.on_ctrl_z, id=AcceleratorIds.CTRL_Z)
+        self.Bind(wx.EVT_MENU, self.on_ctrl_y, id=AcceleratorIds.CTRL_Y)
+
+        self.SetAcceleratorTable(accelerator_table)
 
     def create_pages(self):
         self.page_project()
@@ -426,3 +433,10 @@ class Ribbon(wx.ribbon.RibbonBar):
             wx.MessageBox('A task segment must be selected first.',
                           'Error',
                           wx.OK | wx.ICON_ERROR)
+
+    # Accelerators
+    def on_ctrl_z(self, event):
+        self.on_undo(event)
+
+    def on_ctrl_y(self, event):
+        self.on_redo(event)
