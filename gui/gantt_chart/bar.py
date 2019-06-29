@@ -73,7 +73,7 @@ class BarSegment(wx.Panel):
                 if pred_end > left_limit:
                     left_limit = pred_end * BAR_SCALE
 
-        if new_x >= 0:
+        if new_x >= 0 and abs(dx) >= BAR_SCALE:
             # Get the nearest successor
             nearest_successor_start = 0
             for task in self.project.tasks:
