@@ -145,3 +145,10 @@ class Project:
                     task.set_start_day(max_end)
 
                     pub.sendMessage(EVENT_TASK_START_UPDATED, index=i, start=max_end)
+
+    def get_project_duration(self):
+        total_duration = 0
+        for task in self.tasks:
+            total_duration += task.get_virtual_duration()
+
+        return total_duration
