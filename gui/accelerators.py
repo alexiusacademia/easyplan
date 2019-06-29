@@ -12,6 +12,8 @@ class AcceleratorIds:
     CTRL_O = 1005
     CTRL_N = 1006
 
+    CTRL_T = 1009
+
 
 accelerator_table = wx.AcceleratorTable([
     (wx.ACCEL_CTRL, ord('Z'), AcceleratorIds.CTRL_Z),
@@ -22,5 +24,7 @@ accelerator_table = wx.AcceleratorTable([
 
     (wx.ACCEL_CTRL, ord('S'), AcceleratorIds.CTRL_S),
     (wx.ACCEL_CTRL, ord('O'), AcceleratorIds.CTRL_O),
-    (wx.ACCEL_CTRL, ord('N'), AcceleratorIds.CTRL_N)
+    (wx.ACCEL_CTRL, ord('N'), AcceleratorIds.CTRL_N),
+
+    (wx.ACCEL_CTRL, ord('T'), AcceleratorIds.CTRL_T)
 ])
