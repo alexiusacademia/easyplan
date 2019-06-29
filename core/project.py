@@ -120,9 +120,8 @@ class Project:
         else:
             task_start = None
 
-        pub.sendMessage(EVENT_BAR_SEGMENT_MOVING, task=task, task_segment=task_segment, task_start=task_start)
+        # pub.sendMessage(EVENT_BAR_SEGMENT_MOVING, task=task, task_segment=task_segment, task_start=task_start)
         pub.sendMessage(EVENT_UPDATE_PREDECESSOR_LINES)
-        pub.sendMessage(EVENT_PROJECT_UPDATED)
 
     def set_task_predecessors(self, task, task_indices_list):
         task.set_predecessors(task_indices_list)
