@@ -139,3 +139,10 @@ class Task:
         location = self.task_segments.index(task_segment)
         self.task_segments[location:location+1] = ts1, ts2
         return True, (ts1, ts2)
+
+    def undo_split_task(self, ts, ts1, ts2):
+        insert_index = self.task_segments.index(ts1)
+        self.task_segments.insert(insert_index, ts)
+        self.task_segments.remove(ts1)
+        self.task_segments.remove(ts2)
+        return True, ts

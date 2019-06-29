@@ -1,7 +1,9 @@
 import wx
 from pubsub import pub
+from wx.lib.docview import CommandProcessor
 
 from constants import *
+from ..commands.split_task import SplitTaskCommand
 
 
 class SplitTaskDialog(wx.Dialog):
@@ -9,6 +11,7 @@ class SplitTaskDialog(wx.Dialog):
     selected_task = None
     selected_task_segment = None
     parent = None
+    command_processor = None
 
     def __init__(self, parent):
         wx.Dialog.__init__(self, parent)
@@ -19,6 +22,7 @@ class SplitTaskDialog(wx.Dialog):
         self.selected_task = self.project.selected_task
         self.selected_task_segment = self.project.selected_task_segment
         self.parent = parent
+        self.command_processor: CommandProcessor = parent.command_processor
 
         self.init_ui()
 
@@ -84,9 +88,15 @@ class SplitTaskDialog(wx.Dialog):
             if isinstance(input_left, wx.TextCtrl):
                 left_duration = input_left.GetLineText(0)
                 if left_duration.isdigit():
-                    left_duration = int(left_duration)
-                    self.selected_task.split_task(self.selected_task_segment, left_duration)
-                    self.project.update_successors()
+                    # left_duration = int(left_duration)
+                    # self.selected_task.split_task(self.selected_task_segment, left_duration)
+                    # self.project.update_successors()
+                    command = SplitTaskCommand(True, 'Split Task',
+                                               left_duration,
+                                               self.selected_task,
+                                               self.selected_task_segment,
+                                               self.project)
+                    self.command_processor.Submit(command)
                 else:
                     wx.MessageBox('Left duration should be an integer.', 'Error', wx.OK | wx.ICON_INFORMATION)
 

@@ -14,7 +14,10 @@ from core.task import Task
 from core.project import Project
 from constants import *
 from .gantt_chart.status import *
-from .commands import *
+from .commands.add_task import AddTaskCommand
+from .commands.remove_task import RemoveTaskCommand
+from .commands.move_task_up import MoveTaskUpCommand
+from .commands.move_task_down import MoveTaskDownCommand
 
 
 class Ribbon(wx.ribbon.RibbonBar):
@@ -238,16 +241,34 @@ class Ribbon(wx.ribbon.RibbonBar):
             button.SetCursor(wx.Cursor(wx.CURSOR_HAND))
 
     def on_task_move_down(self, event):
-        command = MoveTaskDownCommand(True, 'Move Task Down',
-                                      self.project.selected_task_index,
-                                      self.project)
-        self.command_processor.Submit(command)
+        if self.project.selected_task_index is None:
+            wx.MessageBox('A task shall be selected from the WBS before moving.', 'No Task Selected',
+                          style=wx.OK_DEFAULT)
+        else:
+            index = self.project.selected_task_index
+
+            if index == len(self.project.tasks) - 1:
+                pass
+            else:
+                command = MoveTaskDownCommand(True, 'Move Task Down',
+                                              self.project.selected_task_index,
+                                              self.project)
+                self.command_processor.Submit(command)
 
     def on_task_move_up(self, event):
-        command = MoveTaskUpCommand(True, 'Move Task Up',
-                                    self.project.selected_task_index,
-                                    self.project)
-        self.command_processor.Submit(command)
+        if self.project.selected_task_index is None:
+            wx.MessageBox('A task shall be selected from the WBS before moving.', 'No Task Selected',
+                          style=wx.OK_DEFAULT)
+        else:
+            index = self.project.selected_task_index
+
+            if index == 0:
+                pass
+            else:
+                command = MoveTaskUpCommand(True, 'Move Task Up',
+                                            self.project.selected_task_index,
+                                            self.project)
+                self.command_processor.Submit(command)
 
     def on_new_project(self, event):
         dlg = wx.MessageDialog(self, 'Create new project?',
@@ -352,12 +373,29 @@ class Ribbon(wx.ribbon.RibbonBar):
         :param event: A toolbar click event.
         :return:
         """
-        command = DeleteTaskCommand(True, 'Delete Task',
-                                    self.project.tasks[self.project.selected_task_index],
-                                    self.project.selected_task_index,
-                                    self.project)
+        successors = []
+        for task in self.project.tasks:
+            for predecessor in task.predecessors:
+                if predecessor == self.project.tasks[self.project.selected_task_index]:
+                    successors.append(task)
 
-        self.command_processor.Submit(command)
+        if self.project.selected_task_index is None:
+            wx.MessageBox('A task shall be selected from the WBS before deleting.', 'No Task Selected',
+                          style=wx.OK_DEFAULT)
+        else:
+            # Ask user for confirmation
+            index = self.project.selected_task_index
+
+            if index <= len(self.project.tasks) - 1:
+                dlg = wx.MessageBox('Delete the selected task?', 'Delete Task', style=wx.YES_NO | wx.CANCEL)
+                if dlg == wx.YES:
+                    command = RemoveTaskCommand(True, 'Delete Task',
+                                                self.project.tasks[self.project.selected_task_index],
+                                                self.project.selected_task_index,
+                                                self.project,
+                                                successors)
+
+                    self.command_processor.Submit(command)
 
     def on_outdent_task(self, event):
         print('Outdent Task')

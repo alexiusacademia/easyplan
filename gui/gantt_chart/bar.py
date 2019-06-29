@@ -1,9 +1,12 @@
 import wx
+from wx.lib.docview import CommandProcessor
 
 from constants import *
 from ..dialogs.dlg_split_task import SplitTaskDialog
 from core.task_segment import TaskSegment
 from core.project import Project
+
+from ..commands.move_task_segment_by_dragging import MoveTaskSegmentCommand
 
 BG_RECEIVED_FOCUS = wx.Colour(0, 0, 0)
 BG_DEFAULT = wx.Colour(0, 0, 255)
@@ -15,6 +18,7 @@ class BarSegment(wx.Panel):
     task = None
     parent = None
     project = None
+    command_processor = None
 
     def __init__(self, parent, x, y, l, h, task, task_segment):
         wx.Panel.__init__(self, parent, style=wx.BORDER_SUNKEN)
@@ -22,6 +26,7 @@ class BarSegment(wx.Panel):
         self.task_segment: TaskSegment = task_segment
         self.task = task
         self.parent = parent
+        self.command_processor: CommandProcessor = parent.parent.command_processor
         self.project: Project = self.parent.project
 
         y_adjustment = (WBS_ROW_HEIGHT - BAR_HEIGHT) / 2
@@ -68,7 +73,7 @@ class BarSegment(wx.Panel):
                 if pred_end > left_limit:
                     left_limit = pred_end * BAR_SCALE
 
-        if new_x >= 0:
+        if new_x >= 0 and abs(dx) >= BAR_SCALE:
             # Get the nearest successor
             nearest_successor_start = 0
             for task in self.project.tasks:
@@ -118,8 +123,15 @@ class BarSegment(wx.Panel):
                             self.move_task_segment(new_x)
 
     def move_task_segment(self, new_x: int):
-        self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
-        self.Move(self.task_segment.start * BAR_SCALE, self.GetPosition()[1])
+        # self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
+        command = MoveTaskSegmentCommand(True, 'Move Task Segment',
+                                         int(new_x / BAR_SCALE),
+                                         self.task,
+                                         self.task_segment,
+                                         self.project,
+                                         self)
+        self.command_processor.Submit(command)
+        # self.Move(self.task_segment.start * BAR_SCALE, self.GetPosition()[1])
 
     def on_hover(self, event):
         pass
