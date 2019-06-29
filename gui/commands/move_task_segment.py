@@ -1,8 +1,10 @@
 from wx.lib.docview import Command
+from pubsub import pub
 
 from core.task_segment import TaskSegment
 from core.project import Project
 from core.task import Task
+from constants import *
 
 
 class MoveTaskSegmentCommand(Command):
@@ -25,9 +27,12 @@ class MoveTaskSegmentCommand(Command):
     def Do(self):
         # self.selected_task_segment.move(self.new_start)
         self.project.move_task_segment(self.task, self.selected_task_segment, self.new_start)
-        # self.project.update_successors()
+        self.project.update_successors()
+        pub.sendMessage(EVENT_PROJECT_UPDATED)
         return True
 
     def Undo(self):
         self.project.move_task_segment(self.task, self.selected_task_segment, self.old_start)
+        self.project.update_successors()
+        pub.sendMessage(EVENT_PROJECT_UPDATED)
         return True
