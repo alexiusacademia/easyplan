@@ -36,7 +36,7 @@ class MoveTaskSegmentDialog(wx.Dialog):
         self.add_title(main_sizer)
 
         main_sizer.AddSpacer(30)
-        self.add_input('Start of Task Segment', main_sizer, str(self.selected_task_segment.start))
+        self.add_input('Start of Task Segment', main_sizer, str(self.selected_task_segment.start + 1))
         main_sizer.AddSpacer(30)
 
         split_button = wx.Button(self, ID_OK, label='Move Segment')
@@ -96,7 +96,7 @@ class MoveTaskSegmentDialog(wx.Dialog):
             if isinstance(new_start_text, wx.TextCtrl):
                 new_start = new_start_text.GetLineText(0)
                 if new_start.isdigit():
-                    new_start = int(new_start)
+                    new_start = int(new_start) - 1
 
                     command = MoveTaskSegmentCommand(True, 'Move Task Segment',
                                                      new_start,
