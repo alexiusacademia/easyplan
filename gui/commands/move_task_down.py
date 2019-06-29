@@ -14,17 +14,8 @@ class MoveTaskDownCommand(Command):
         self.project = args[3]
 
     def Do(self):
-        if self.project.selected_task_index is None:
-            wx.MessageBox('A task shall be selected from the WBS before moving.', 'No Task Selected',
-                          style=wx.OK_DEFAULT)
-        else:
-            index = self.project.selected_task_index
-
-            if index == len(self.project.tasks) - 1:
-                pass
-            else:
-                self.index = index + 1
-                self.project.change_task_index(index, direction=1)
+        self.index = self.project.selected_task_index + 1
+        self.project.change_task_index(self.project.selected_task_index, direction=1)
 
         return True
 
