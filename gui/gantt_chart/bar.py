@@ -149,6 +149,7 @@ class BarSegment(wx.Panel):
         res = self.SetBackgroundColour(BG_RECEIVED_FOCUS)
         self.project.selected_task_segment = self.task_segment
         self.project.selected_task = self.task
+        self.project.selected_task_index = self.project.tasks.index(self.task)
         self.Refresh()
 
     def on_lost_focus(self, event):
