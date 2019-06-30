@@ -54,7 +54,8 @@ class WBS(gridlib.Grid):
 
     def on_task_moving(self, task, task_segment, task_start):
         index = self.project.tasks.index(task)
-        if task_start is not None:
+        index_of_ts = task.task_segments.index(task_segment)
+        if task_start is not None and index_of_ts == 0:
             self.SetCellValue(index, Cols.START_DAY, str(task_start + 1))
 
     def on_hide(self, event):
