@@ -146,3 +146,15 @@ class Task:
         self.task_segments.remove(ts1)
         self.task_segments.remove(ts2)
         return True, ts
+
+    def merge_task_segments(self):
+        if len(self.task_segments) == 1:
+            # Nothing to merge
+            return
+
+        # Get the total duration
+        segment = TaskSegment(self.start_day, self.get_duration())
+        for ts in self.task_segments:
+            self.task_segments.remove(ts)
+
+        self.task_segments.append(segment)

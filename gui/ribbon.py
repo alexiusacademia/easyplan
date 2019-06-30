@@ -35,12 +35,13 @@ class Ribbon(wx.ribbon.RibbonBar):
         OUTDENT_TASK = 103
         # -----------
         SPLIT_TASK = 200
-        RENAME_TASK = 201
-        MOVE_SEGMENT = 202
-        MOVE_UP = 203
-        MOVE_DOWN = 204
-        UNDO = 205
-        REDO = 206
+        MERGE_SEGMENTS = 201
+        RENAME_TASK = 202
+        MOVE_SEGMENT = 203
+        MOVE_UP = 204
+        MOVE_DOWN = 205
+        UNDO = 206
+        REDO = 207
         # -----------
         NEW_PROJECT = 300
         OPEN_PROJECT = 301
@@ -65,7 +66,14 @@ class Ribbon(wx.ribbon.RibbonBar):
         # Bindings
         self.Bind(wx.EVT_MENU, self.on_undo, id=AcceleratorIds.CTRL_Z)
         self.Bind(wx.EVT_MENU, self.on_redo, id=AcceleratorIds.CTRL_Y)
-        self.Bind(wx.EVT_MENU, self.on_delete_task, id=AcceleratorIds.DEL)
+        self.Bind(wx.EVT_MENU, self.on_delete_task, id=AcceleratorIds.CTRL_SHIFT_DEL)
+        self.Bind(wx.EVT_MENU, self.on_add_task, id=AcceleratorIds.CTRL_SHIFT_PLUS)
+        self.Bind(wx.EVT_MENU, self.on_save_project, id=AcceleratorIds.CTRL_S)
+        self.Bind(wx.EVT_MENU, self.on_open_project, id=AcceleratorIds.CTRL_O)
+        self.Bind(wx.EVT_MENU, self.on_new_project, id=AcceleratorIds.CTRL_N)
+        self.Bind(wx.EVT_MENU, self.on_split_task, id=AcceleratorIds.CTRL_T)
+        self.Bind(wx.EVT_MENU, self.on_move_segment, id=AcceleratorIds.CTRL_SHIFT_S)
+        self.Bind(wx.EVT_MENU, self.on_merge_segments, id=AcceleratorIds.CTRL_M)
 
         self.SetAcceleratorTable(accelerator_table)
 
@@ -196,6 +204,12 @@ class Ribbon(wx.ribbon.RibbonBar):
                                              'ribbon', 'gantt', 'split.png'))
         tb.AddTool(self.IDS.SPLIT_TASK, 'Split Task', icon_split, 'Split a task segment.', wx.ITEM_NORMAL)
         self.Bind(wx.EVT_TOOL, self.on_split_task, id=self.IDS.SPLIT_TASK)
+
+        icon_merge = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
+                                            'ribbon', 'gantt', 'merge.png'))
+        tb.AddTool(self.IDS.MERGE_SEGMENTS, 'Merge Task Segments', icon_merge, 'Merge all task segments.',
+                   wx.ITEM_NORMAL)
+        self.Bind(wx.EVT_TOOL, self.on_merge_segments, id=self.IDS.MERGE_SEGMENTS)
 
         icon_edit_start = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
                                                  'ribbon', 'gantt', 'edit_start.png'))
@@ -419,6 +433,9 @@ class Ribbon(wx.ribbon.RibbonBar):
                 dlg.Destroy()
         else:
             wx.MessageBox('A task segment must be selected before splitting.')
+
+    def on_merge_segments(self, event):
+        print('Merge')
 
     def on_rename(self, event):
         print(self.project.selected_task_index)
