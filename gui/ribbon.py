@@ -438,7 +438,7 @@ class Ribbon(wx.ribbon.RibbonBar):
     def on_merge_segments(self, event):
         if self.project.selected_task_index is None:
             return
-        task = self.project.tasks[self.project.selected_task_index]
+        task = self.project.selected_task
         command = MergeTaskSegments(True, 'Merge Task Segments',
                                     task)
         self.command_processor.Submit(command)
