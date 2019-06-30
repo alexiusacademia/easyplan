@@ -118,6 +118,8 @@ class Task:
         :param left: The duration of the left part of the split.
         :return:
         """
+        if not task_segment in self.task_segments:
+            return
         total_duration = task_segment.duration
         start = task_segment.start
 
@@ -141,6 +143,10 @@ class Task:
         return True, (ts1, ts2)
 
     def undo_split_task(self, ts, ts1, ts2):
+        if not ts1 in self.task_segments:
+            return
+        if not ts2 in self.task_segments:
+            return
         insert_index = self.task_segments.index(ts1)
         self.task_segments.insert(insert_index, ts)
         self.task_segments.remove(ts1)
@@ -152,7 +158,6 @@ class Task:
             # Nothing to merge
             return
 
-        # Get the total duration
         segment = TaskSegment(self.start_day, self.get_duration())
         for ts in self.task_segments:
             self.task_segments.remove(ts)
