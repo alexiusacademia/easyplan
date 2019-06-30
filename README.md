@@ -17,9 +17,12 @@ Yet another project scheduling and management software.
       - [ ] Basic operations panel
       - [ ] Edit panel
         - [x] Split task
+        - [x] Merge task segments
         - [x] Move task start
         - [x] Move task up
         - [x] Move task down
+        - [x] Undo
+        - [x] Redo
     - [ ] Report Page
       - [ ] Printing
   - [ ] WBS
@@ -42,6 +45,7 @@ Yet another project scheduling and management software.
 - [ ] Core API
   - [ ] Project Class
   - [x] Task Class
+    - [x] Moving of segment
   - [x] Task Segment Class
   - [ ] Resources
   
