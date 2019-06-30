@@ -115,7 +115,7 @@ class BarSegment(wx.Panel):
                 left_limit = (left_ts.start + left_ts.duration) * BAR_SCALE
 
                 # Move only to the left or right if it doesn't overlap
-                if new_x > left_limit:
+                if new_x >= left_limit:
                     if nearest_successor_start == 0:
                         self.move_task_segment(new_x)
                     else:
