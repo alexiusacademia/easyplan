@@ -17,6 +17,7 @@ class Task:
     task_segments = []
     start_day = 0
     predecessors = []
+    last_unmerged_segments = []
 
     def __init__(self):
         self.task_name = 'Unnamed Task'
@@ -118,6 +119,8 @@ class Task:
         :param left: The duration of the left part of the split.
         :return:
         """
+        if not task_segment in self.task_segments:
+            return
         total_duration = task_segment.duration
         start = task_segment.start
 
@@ -141,6 +144,10 @@ class Task:
         return True, (ts1, ts2)
 
     def undo_split_task(self, ts, ts1, ts2):
+        if not ts1 in self.task_segments:
+            return
+        if not ts2 in self.task_segments:
+            return
         insert_index = self.task_segments.index(ts1)
         self.task_segments.insert(insert_index, ts)
         self.task_segments.remove(ts1)
@@ -148,13 +155,32 @@ class Task:
         return True, ts
 
     def merge_task_segments(self):
+        import copy
+
         if len(self.task_segments) == 1:
             # Nothing to merge
-            return
+            return False, 'Nothing to merge.'
 
-        # Get the total duration
-        segment = TaskSegment(self.start_day, self.get_duration())
+        duration = self.get_duration()
+
+        if len(self.last_unmerged_segments) == 0:
+            for segment in self.task_segments:
+                self.last_unmerged_segments.append(copy.copy(segment))
+
+        for index, ts in enumerate(self.task_segments):
+            if index != 0:
+                self.task_segments.remove(ts)
+                del ts
+
+        self.task_segments[0].duration = duration
+
+        return [True]
+
+    def un_merge_task_segments(self):
+        import copy
+
         for ts in self.task_segments:
             self.task_segments.remove(ts)
-
-        self.task_segments.append(segment)
+            del ts
+        for segment in self.last_unmerged_segments:
+            self.task_segments.append(copy.copy(segment))

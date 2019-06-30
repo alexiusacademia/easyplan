@@ -18,6 +18,7 @@ from .commands.add_task import AddTaskCommand
 from .commands.remove_task import RemoveTaskCommand
 from .commands.move_task_up import MoveTaskUpCommand
 from .commands.move_task_down import MoveTaskDownCommand
+from .commands.merge_task_segments import MergeTaskSegments
 from gui.accelerators import *
 
 
@@ -435,7 +436,12 @@ class Ribbon(wx.ribbon.RibbonBar):
             wx.MessageBox('A task segment must be selected before splitting.')
 
     def on_merge_segments(self, event):
-        print('Merge')
+        if self.project.selected_task_index is None:
+            return
+        task = self.project.selected_task
+        command = MergeTaskSegments(True, 'Merge Task Segments',
+                                    task)
+        self.command_processor.Submit(command)
 
     def on_rename(self, event):
         print(self.project.selected_task_index)

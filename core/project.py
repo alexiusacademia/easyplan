@@ -110,6 +110,9 @@ class Project:
     def move_task_segment(self, task, task_segment, start):
         task_segment.start = start
 
+        if not task_segment in task.task_segments:
+            return
+
         # Get the task segment index from the task
         index_of_ts = task.task_segments.index(task_segment)
 
