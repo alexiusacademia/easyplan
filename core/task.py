@@ -17,6 +17,7 @@ class Task:
     task_segments = []
     start_day = 0
     predecessors = []
+    last_unmerged_segments = []
 
     def __init__(self):
         self.task_name = 'Unnamed Task'
@@ -154,16 +155,32 @@ class Task:
         return True, ts
 
     def merge_task_segments(self):
+        import copy
+
         if len(self.task_segments) == 1:
             # Nothing to merge
             return False, 'Nothing to merge.'
 
         duration = self.get_duration()
 
+        if len(self.last_unmerged_segments) == 0:
+            for segment in self.task_segments:
+                self.last_unmerged_segments.append(copy.copy(segment))
+
         for index, ts in enumerate(self.task_segments):
             if index != 0:
                 self.task_segments.remove(ts)
+                del ts
 
         self.task_segments[0].duration = duration
 
         return [True]
+
+    def un_merge_task_segments(self):
+        import copy
+
+        for ts in self.task_segments:
+            self.task_segments.remove(ts)
+            del ts
+        for segment in self.last_unmerged_segments:
+            self.task_segments.append(copy.copy(segment))

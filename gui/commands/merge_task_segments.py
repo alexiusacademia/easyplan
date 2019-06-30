@@ -37,11 +37,7 @@ class MergeTaskSegments(Command):
         return True
 
     def Undo(self):
-        self.task.task_segments.clear()
-
-        for task_segment in self.old_task_segments:
-            self.task.task_segments.append(copy.copy(task_segment))
-
+        self.task.un_merge_task_segments()
         pub.sendMessage(EVENT_PROJECT_UPDATED)
 
         return True
