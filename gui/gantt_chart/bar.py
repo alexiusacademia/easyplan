@@ -51,6 +51,10 @@ class BarSegment(wx.Panel):
         self.SetFocus()
         self.mouse_start_position = event.GetPosition().x
 
+    def get_limits(self):
+
+        return 0, 0
+
     def on_mouse_move(self, event):
         if not event.Dragging or not event.LeftIsDown():
             return
