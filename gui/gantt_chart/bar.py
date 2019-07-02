@@ -20,6 +20,9 @@ class BarSegment(wx.Panel):
     project = None
     command_processor = None
 
+    left_limit = 0
+    right_limit = 1000000
+
     def __init__(self, parent, x, y, l, h, task, task_segment):
         wx.Panel.__init__(self, parent, style=wx.BORDER_SUNKEN)
 
@@ -51,6 +54,46 @@ class BarSegment(wx.Panel):
         self.SetFocus()
         self.mouse_start_position = event.GetPosition().x
 
+        # Get the left limit for predecessor
+        if len(self.task.predecessors) > 0:
+            for pred in self.task.predecessors:
+                pred_end = pred.get_finish() * BAR_SCALE
+                if pred_end > self.left_limit:
+                    self.left_limit = pred_end
+
+        # Get the left limit for split tasks
+        ts_index = self.task.task_segments.index(self.task_segment)
+        if ts_index != 0:
+            # Get the task segment on the left
+            left_ts_index = ts_index - 1
+            left_ts: TaskSegment = self.task.task_segments[left_ts_index]
+            left_limit = left_ts.get_finish() * BAR_SCALE
+            if left_limit > self.left_limit:
+                self.left_limit = left_limit
+        print('Left limit:', str(self.left_limit))
+
+        # Get right limit for successors
+        # Get the nearest successor
+        nearest_successor_start = 1000000
+        for task in self.project.tasks:
+            if len(task.predecessors) > 0:
+                for task_pred in task.predecessors:
+                    if task_pred == self.task:
+                        successor_start = task.start_day
+                        if successor_start < nearest_successor_start:
+                            nearest_successor_start = successor_start
+        nearest_successor_location = nearest_successor_start * BAR_SCALE
+        if nearest_successor_location < self.right_limit:
+            self.right_limit = nearest_successor_location
+
+        # Get the right limit for splitted task
+        if ts_index < (len(self.task.task_segments) - 1):
+            # There is a segment to the right
+            right_ts: TaskSegment = self.task.task_segments[ts_index + 1]
+            right_limit = right_ts.start * BAR_SCALE
+            if right_limit < self.right_limit:
+                self.right_limit = right_limit
+
     def on_mouse_move(self, event):
         if not event.Dragging or not event.LeftIsDown():
             return
@@ -65,62 +108,13 @@ class BarSegment(wx.Panel):
 
         new_x = starting_point + dx
 
-        # Set the left limit
-        left_limit = 0
-        if len(self.task.predecessors) > 0:
-            for pred in self.task.predecessors:
-                pred_end = pred.start_day + pred.get_virtual_duration()
-                if pred_end > left_limit:
-                    left_limit = pred_end * BAR_SCALE
-
         if new_x >= 0 and abs(dx) >= BAR_SCALE:
-            # Get the nearest successor
-            nearest_successor_start = 0
-            for task in self.project.tasks:
-                if len(task.predecessors) > 0:
-                    for task_pred in task.predecessors:
-                        if task_pred == self.task:
-                            successor_start = task.start_day
-                            if successor_start > nearest_successor_start:
-                                nearest_successor_start = successor_start
-
-            # This will be the right limit of the bar.
-            # Either it's a successor or a segment of the same task located at the right.
-            nearest_successor_x = nearest_successor_start * BAR_SCALE
-
             # The calculated/predicted location of the tip of this task segment bar.
             new_task_end_x = (int(new_x/BAR_SCALE) + self.task_segment.duration - 1) * BAR_SCALE
 
-            # Position of this task segment from the list of task segment.
-            ts_index = self.task.task_segments.index(self.task_segment)
-
-            if ts_index < (len(self.task.task_segments) - 1):
-                # There is a segment to the right
-                right_ts: TaskSegment = self.task.task_segments[ts_index + 1]
-                right_limit = right_ts.start * BAR_SCALE
-                nearest_successor_start = right_ts.start
-                nearest_successor_x = right_limit
-
-            if self.task.task_segments.index(self.task_segment) == 0:
-                if new_x <= left_limit:
-                    pass
-                elif new_task_end_x >= nearest_successor_x and nearest_successor_start != 0:
-                    pass
-                else:
-                    self.move_task_segment(new_x)
-            else:
-                # Get the task segment on the left
-                left_ts_index = ts_index - 1
-                left_ts: TaskSegment = self.task.task_segments[left_ts_index]
-                left_limit = (left_ts.start + left_ts.duration) * BAR_SCALE
-
-                # Move only to the left or right if it doesn't overlap
-                if new_x >= left_limit:
-                    if nearest_successor_start == 0:
-                        self.move_task_segment(new_x)
-                    else:
-                        if not new_task_end_x >= nearest_successor_x:
-                            self.move_task_segment(new_x)
+            if (new_x + BAR_SCALE) > self.left_limit and \
+                    (new_task_end_x + BAR_SCALE) < self.right_limit:
+                self.move_task_segment(new_x)
 
     def move_task_segment(self, new_x: int):
         # self.project.move_task_segment(self.task, self.task_segment, int(new_x / BAR_SCALE))
@@ -138,7 +132,7 @@ class BarSegment(wx.Panel):
 
     def on_left_up(self, event):
         # Get the task start
-        start_x = self.task_segment.start
+        start_x = self.task_segment.start - 1
         self.SetPosition((start_x * BAR_SCALE, self.GetPosition()[1]))
 
     def on_received_focus(self, event):
