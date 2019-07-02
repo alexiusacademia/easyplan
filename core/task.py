@@ -15,7 +15,7 @@ class Task:
     task_name = ''
     task_id = 0
     task_segments = []
-    start_day = 0
+    start_day = 1
     predecessors = []
     last_unmerged_segments = []
 
