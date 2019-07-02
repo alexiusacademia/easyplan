@@ -49,10 +49,12 @@ class WBS(gridlib.Grid):
     def create_bindings(self):
         self.Bind(gridlib.EVT_GRID_LABEL_LEFT_CLICK, self.on_row_selected)
         self.Bind(gridlib.EVT_GRID_CELL_CHANGED, self.on_cell_edit_complete)
+        self.Bind(gridlib.EVT_GRID_CELL_CHANGING, self.on_cell_selected)
 
         pub.subscribe(self.on_project_updated, EVENT_PROJECT_UPDATED)
         pub.subscribe(self.on_task_moving, EVENT_BAR_SEGMENT_MOVING)
         pub.subscribe(self.on_task_start_updated, EVENT_TASK_START_UPDATED)
+        pub.subscribe(self.on_duration_updated, EVENT_TASK_DURATION_UPDATED)
 
     def on_task_moving(self, task, task_segment, task_start):
         index = self.project.tasks.index(task)
@@ -184,8 +186,22 @@ class WBS(gridlib.Grid):
 
         self.project.update_start_days()
 
+    def on_cell_selected(self, event):
+        row_index = event.GetRow()
+        task = self.project.tasks[row_index]
+        self.project.selected_task = task
+        self.project.selected_task_index = row_index
+
     def on_task_start_updated(self, index, start):
         self.SetCellValue((index, Cols.START_DAY), str(start))
+
+        task: Task = self.project.tasks[index]
+        self.SetCellValue((index, Cols.FINISH_DAY), str(task.get_finish()))
+
+    def on_duration_updated(self):
+        task: Task = self.project.selected_task
+        index = self.project.tasks.index(task)
+        self.SetCellValue((index, Cols.FINISH_DAY), str(task.get_finish()))
 
     def on_project_updated(self):
         self.populate()
