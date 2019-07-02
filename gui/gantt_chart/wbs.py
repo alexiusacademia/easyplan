@@ -187,6 +187,9 @@ class WBS(gridlib.Grid):
     def on_task_start_updated(self, index, start):
         self.SetCellValue((index, Cols.START_DAY), str(start))
 
+        task: Task = self.project.tasks[index]
+        self.SetCellValue((index, Cols.FINISH_DAY), str(task.get_finish()))
+
     def on_project_updated(self):
         self.populate()
 
