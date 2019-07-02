@@ -58,8 +58,8 @@ class WBS(gridlib.Grid):
         index = self.project.tasks.index(task)
         index_of_ts = task.task_segments.index(task_segment)
         if task_start is not None and index_of_ts == 0:
-            self.SetCellValue(index, Cols.START_DAY, str(task_start))
-            self.SetCellValue(index, Cols.FINISH_DAY, str(task.get_finish()))
+            # self.SetCellValue(index, Cols.START_DAY, str(task_start))
+            self.populate()
 
     def on_hide(self, event):
         print('Hide')
@@ -158,8 +158,6 @@ class WBS(gridlib.Grid):
             if value.isdigit():
                 duration = int(value)
                 task.set_duration(duration)
-
-                self.project.update_start_days()
 
                 pub.sendMessage(EVENT_TASK_DURATION_UPDATED)
 
