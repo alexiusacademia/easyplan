@@ -8,3 +8,6 @@ class TaskSegment:
 
     def move(self, start):
         self.start = start
+
+    def get_finish(self):
+        return self.start + self.duration - 1
