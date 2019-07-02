@@ -59,6 +59,7 @@ class WBS(gridlib.Grid):
         index_of_ts = task.task_segments.index(task_segment)
         if task_start is not None and index_of_ts == 0:
             self.SetCellValue(index, Cols.START_DAY, str(task_start))
+            self.SetCellValue(index, Cols.FINISH_DAY, str(task.get_finish()))
 
     def on_hide(self, event):
         print('Hide')
