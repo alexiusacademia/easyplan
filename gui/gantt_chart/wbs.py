@@ -73,9 +73,6 @@ class WBS(gridlib.Grid):
             num_rows = self.GetNumberRows()
             index = 0
             for task in self.project.tasks:
-                print('Task:', task.task_name,
-                      '| Start:', str(task.start_day),
-                      '| Finish:', str(task.get_finish()))
                 if num_rows < index+1:
                     self.AppendRows()
                 self.SetCellValue(index, Cols.TASK_NAME, str(task.task_name))
