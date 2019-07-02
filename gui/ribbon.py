@@ -204,13 +204,11 @@ class Ribbon(wx.ribbon.RibbonBar):
 
         icon_split = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
                                              'ribbon', 'gantt', 'split.png'))
-        print('Icon Split:', icon_split.GetSize())
         tb.AddTool(self.IDS.SPLIT_TASK, 'Split Task', icon_split, 'Split a task segment.', wx.ITEM_NORMAL)
         self.Bind(wx.EVT_TOOL, self.on_split_task, id=self.IDS.SPLIT_TASK)
 
         icon_merge = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
                                             'ribbon', 'gantt', 'merge.png'))
-        print('Icon Merge:', icon_merge.GetSize())
         tb.AddTool(self.IDS.MERGE_SEGMENTS, 'Merge Task Segments', icon_merge, 'Merge all task segments.',
                    wx.ITEM_NORMAL)
         self.Bind(wx.EVT_TOOL, self.on_merge_segments, id=self.IDS.MERGE_SEGMENTS)
