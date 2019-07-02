@@ -28,7 +28,6 @@ class MoveTaskSegmentCommand(Command):
 
     def Do(self):
         start = self.new_start + 1
-        print('New Start:', str(start))
         self.project.move_task_segment(self.task, self.selected_task_segment, start)
         self.bar_segment.Move(self.new_start * BAR_SCALE, self.bar_segment.GetPosition()[1])
         pub.sendMessage(EVENT_BAR_SEGMENT_MOVING,
@@ -38,8 +37,9 @@ class MoveTaskSegmentCommand(Command):
         return True
 
     def Undo(self):
-        self.project.move_task_segment(self.task, self.selected_task_segment, self.old_start)
-        self.bar_segment.Move(self.selected_task_segment.start * BAR_SCALE, self.bar_segment.GetPosition()[1])
+        start = self.old_start
+        self.project.move_task_segment(self.task, self.selected_task_segment, start)
+        self.bar_segment.Move((self.selected_task_segment.start - 1) * BAR_SCALE, self.bar_segment.GetPosition()[1])
         pub.sendMessage(EVENT_BAR_SEGMENT_MOVING,
                         task=self.task,
                         task_segment=self.selected_task_segment,

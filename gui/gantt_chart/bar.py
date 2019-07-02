@@ -70,7 +70,6 @@ class BarSegment(wx.Panel):
             left_limit = left_ts.get_finish() * BAR_SCALE
             if left_limit > self.left_limit:
                 self.left_limit = left_limit
-        print('Left limit:', str(self.left_limit))
 
         # Get right limit for successors
         # Get the nearest successor
