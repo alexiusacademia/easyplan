@@ -107,6 +107,9 @@ class BarSegment(wx.Panel):
 
         new_x = starting_point + dx
 
+        if (new_x) < self.left_limit:
+            return
+
         if new_x >= 0 and abs(dx) >= BAR_SCALE:
             # The calculated/predicted location of the tip of this task segment bar.
             new_task_end_x = (int(new_x/BAR_SCALE) + self.task_segment.duration - 1) * BAR_SCALE
