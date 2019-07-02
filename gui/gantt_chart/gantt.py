@@ -9,9 +9,6 @@ class GanttChart(wx.ScrolledCanvas):
     wbs = None
     project = None
 
-    BAR_SCALE = 10
-    BAR_THICKNESS = 20
-
     bars = []
 
     parent = None
@@ -119,10 +116,10 @@ class GanttChart(wx.ScrolledCanvas):
         for index, task in enumerate(tasks):
             for ts in task.task_segments:
                 bar = BarSegment(self,
-                                 (ts.start) * self.BAR_SCALE,
+                                 (ts.start - 1) * BAR_SCALE,
                                  index * WBS_ROW_HEIGHT + WBS_HEADER_HEIGHT,
-                                 ts.duration * self.BAR_SCALE,
-                                 self.BAR_THICKNESS,
+                                 ts.duration * BAR_SCALE,
+                                 BAR_HEIGHT,
                                  task,
                                  ts)
 
