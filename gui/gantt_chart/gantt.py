@@ -57,7 +57,7 @@ class GanttChart(wx.ScrolledCanvas):
 
     def draw_predecessor_lines(self):
         dc = wx.ClientDC(self)
-        pen = wx.Pen(wx.RED, 2)
+        pen = wx.Pen(wx.BLACK, 1)
         dc.SetPen(pen)
 
         tasks = self.project.tasks
@@ -65,12 +65,12 @@ class GanttChart(wx.ScrolledCanvas):
             # Get the predecessors of the task
             if len(task.predecessors) > 0:
                 # Get the task start coordinate
-                task_x = task.start_day * BAR_SCALE
+                task_x = (task.start_day - 1) * BAR_SCALE
                 task_y = WBS_HEADER_HEIGHT + (index * WBS_ROW_HEIGHT) + WBS_ROW_HEIGHT / 2
 
                 for p in task.predecessors:
                     p_end = p.start_day + p.get_virtual_duration()
-                    p_x = p_end * BAR_SCALE
+                    p_x = (p_end - 1) * BAR_SCALE
                     p_index = tasks.index(p)
                     p_y = WBS_HEADER_HEIGHT + (p_index * WBS_ROW_HEIGHT) + WBS_ROW_HEIGHT/2
 
