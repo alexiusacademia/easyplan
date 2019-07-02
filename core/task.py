@@ -39,6 +39,9 @@ class Task:
                 total_duration += ts.duration
         return total_duration
 
+    def get_finish(self):
+        return self.start_day + self.get_virtual_duration() - 1
+
     def get_virtual_duration(self):
         """
         Virtual duration is the total duration of a task.
