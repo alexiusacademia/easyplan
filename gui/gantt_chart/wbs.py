@@ -58,7 +58,8 @@ class WBS(gridlib.Grid):
         index = self.project.tasks.index(task)
         index_of_ts = task.task_segments.index(task_segment)
         if task_start is not None and index_of_ts == 0:
-            self.SetCellValue(index, Cols.START_DAY, str(task_start))
+            # self.SetCellValue(index, Cols.START_DAY, str(task_start))
+            self.populate()
 
     def on_hide(self, event):
         print('Hide')
@@ -73,9 +74,6 @@ class WBS(gridlib.Grid):
             num_rows = self.GetNumberRows()
             index = 0
             for task in self.project.tasks:
-                print('Task:', task.task_name,
-                      '| Start:', str(task.start_day),
-                      '| Finish:', str(task.get_finish()))
                 if num_rows < index+1:
                     self.AppendRows()
                 self.SetCellValue(index, Cols.TASK_NAME, str(task.task_name))
@@ -160,8 +158,6 @@ class WBS(gridlib.Grid):
             if value.isdigit():
                 duration = int(value)
                 task.set_duration(duration)
-
-                self.project.update_start_days()
 
                 pub.sendMessage(EVENT_TASK_DURATION_UPDATED)
 
