@@ -15,6 +15,7 @@ from .gantt_chart.gantt import GanttChart
 from .ribbon import Ribbon
 from core.project import Project
 from constants import *
+from .accelerators import *
 
 
 class MainFrame(wx.Frame):
@@ -24,6 +25,7 @@ class MainFrame(wx.Frame):
     project_file = ''
     status_bar = None
     command_processor = None
+    ribbon = None
 
     def __init__(self):
         super().__init__(parent=None, title='EasyPlan')
@@ -52,6 +54,7 @@ class MainFrame(wx.Frame):
 
         ribbon = Ribbon(self, self.project, self.left_pane)
         sizer.Add(ribbon, pos=(0, 0), flag=wx.EXPAND | wx.TOP | wx.LEFT | wx.RIGHT)
+        self.ribbon = ribbon
 
         sizer.Add(splitter, pos=(1, 0),
                   flag=wx.EXPAND | wx.TOP | wx.BOTTOM)
@@ -64,6 +67,21 @@ class MainFrame(wx.Frame):
         sizer.AddGrowableCol(0)
 
         self.SetSizer(sizer)
+
+        self.set_bindings()
+
+    def set_bindings(self):
+        self.Bind(wx.EVT_MENU, self.ribbon.on_undo, id=AcceleratorIds.CTRL_Z)
+        self.Bind(wx.EVT_MENU, self.ribbon.on_redo, id=AcceleratorIds.CTRL_Y)
+        self.Bind(wx.EVT_MENU, self.ribbon.on_delete_task, id=AcceleratorIds.CTRL_SHIFT_DEL)
+        self.Bind(wx.EVT_MENU, self.ribbon.on_add_task, id=AcceleratorIds.CTRL_SHIFT_PLUS)
+        self.Bind(wx.EVT_MENU, self.ribbon.on_save_project, id=AcceleratorIds.CTRL_S)
+        self.Bind(wx.EVT_MENU, self.ribbon.on_open_project, id=AcceleratorIds.CTRL_O)
+        self.Bind(wx.EVT_MENU, self.ribbon.on_new_project, id=AcceleratorIds.CTRL_N)
+        self.Bind(wx.EVT_MENU, self.ribbon.on_split_task, id=AcceleratorIds.CTRL_T)
+        self.Bind(wx.EVT_MENU, self.ribbon.on_move_segment, id=AcceleratorIds.CTRL_SHIFT_S)
+        self.Bind(wx.EVT_MENU, self.ribbon.on_merge_segments, id=AcceleratorIds.CTRL_M)
+        self.SetAcceleratorTable(accelerator_table)
 
     def on_sash_dbl_clicked(self, event):
         print('Splitter has been double clicked.')
