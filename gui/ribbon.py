@@ -51,6 +51,7 @@ class Ribbon(wx.ribbon.RibbonBar):
         SAVE_AS_PROJECT = 303
         # -----------
         PROJECT_INFORMATION = 401
+        PROJECT_SETTINGS = 402
 
     RIBBON_BUTTON_SIZE = (24, 24)
 
@@ -124,10 +125,16 @@ class Ribbon(wx.ribbon.RibbonBar):
         project_properties_sizer = wx.BoxSizer(wx.VERTICAL)
 
         tb = RibbonButtonBar(project_properties_panel)
+        tb.SetCursor(wx.Cursor(wx.CURSOR_HAND))
         project_properties_sizer.Add(tb, 0, wx.EXPAND)
 
-        icon_information = wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddButton(self.IDS.PROJECT_INFORMATION, 'Information', icon_information, 'Project basic information.')
+        icon_information = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
+                                            'ribbon', 'gantt', 'project_information.png'))
+        tb.AddButton(self.IDS.PROJECT_INFORMATION, 'Project Information', icon_information, 'Project basic information.')
+
+        icon_settings = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
+                                            'ribbon', 'gantt', 'project_settings.png'))
+        tb.AddButton(self.IDS.PROJECT_SETTINGS, 'Settings', icon_settings, 'Project Settings')
 
         self.Bind(wx.EVT_TOOL, self.on_project_information_clicked, id=self.IDS.PROJECT_INFORMATION)
 
@@ -141,30 +148,30 @@ class Ribbon(wx.ribbon.RibbonBar):
                                                       style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
         project_general_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        tb = wx.ToolBar(project_file_panel, style=wx.TB_HORIZONTAL | wx.TB_FLAT | wx.NO_BORDER | wx.TB_DOCKABLE)
+        tb = RibbonButtonBar(project_file_panel)
         tb.SetCursor(wx.Cursor(wx.CURSOR_HAND))
 
         project_general_sizer.Add(tb, 0, wx.EXPAND)
 
         # New project
         icon_new_project = wx.ArtProvider.GetBitmap(wx.ART_NEW, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.NEW_PROJECT, 'New Project', icon_new_project, 'Create new project.', wx.ITEM_NORMAL)
+        tb.AddButton(self.IDS.NEW_PROJECT, 'New Project', icon_new_project, 'Create new project.')
         self.Bind(wx.EVT_TOOL, self.on_new_project, id=self.IDS.NEW_PROJECT)
 
         # Open project
         icon_open_project = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.OPEN_PROJECT, 'Open Project', icon_open_project, 'Open a project file.', wx.ITEM_NORMAL)
+        tb.AddButton(self.IDS.OPEN_PROJECT, 'Open Project', icon_open_project, 'Open a project file.')
         self.Bind(wx.EVT_TOOL, self.on_open_project, id=self.IDS.OPEN_PROJECT)
 
         # Save project
         icon_save_project = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.SAVE_PROJECT, 'Save Project', icon_save_project, 'Save project file.', wx.ITEM_NORMAL)
+        tb.AddButton(self.IDS.SAVE_PROJECT, 'Save Project', icon_save_project, 'Save project file.')
         self.Bind(wx.EVT_TOOL, self.on_save_project, id=self.IDS.SAVE_PROJECT)
 
         # Save as project
         icon_save_project_as = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.SAVE_AS_PROJECT, 'Save Project as',
-                   icon_save_project_as, 'Save project as new file.', wx.ITEM_NORMAL)
+        tb.AddButton(self.IDS.SAVE_AS_PROJECT, 'Save Project as',
+                   icon_save_project_as, 'Save project as new file.')
         self.Bind(wx.EVT_TOOL, self.on_save_project_as, id=self.IDS.SAVE_AS_PROJECT)
 
         tb.Realize()
