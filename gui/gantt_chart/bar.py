@@ -156,8 +156,8 @@ class BarSegment(wx.Panel):
         :return:
         """
         res = self.SetBackgroundColour(BG_DEFAULT)
-        self.project.selected_task_segment = None
-        self.project.selected_task = None
+        # self.project.selected_task_segment = None
+        # self.project.selected_task = None
         self.Refresh()
 
     def on_double_clicked(self, event):
