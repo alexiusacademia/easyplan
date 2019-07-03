@@ -1,6 +1,7 @@
 # Import built-in modules
 import wx
 import wx.ribbon
+from wx.ribbon import RibbonButtonBar
 import os
 import pickle
 import copy
@@ -48,6 +49,8 @@ class Ribbon(wx.ribbon.RibbonBar):
         OPEN_PROJECT = 301
         SAVE_PROJECT = 302
         SAVE_AS_PROJECT = 303
+        # -----------
+        PROJECT_INFORMATION = 401
 
     RIBBON_BUTTON_SIZE = (24, 24)
 
@@ -90,6 +93,7 @@ class Ribbon(wx.ribbon.RibbonBar):
     def page_project(self):
         project_page = wx.ribbon.RibbonPage(self, label='Project')
         self.panel_project_file(project_page)
+        self.panel_project_properties(project_page)
 
     def page_gantt_chart(self):
         # ---------------- GANTT CHART PAGE ---------------- #
@@ -113,6 +117,24 @@ class Ribbon(wx.ribbon.RibbonBar):
     # --------------
     # Ribbon Panels
     # --------------
+    def panel_project_properties(self, page):
+        project_properties_panel = wx.ribbon.RibbonPanel(parent=page,
+                                                         label='PROJECT PROPERTIES',
+                                                         style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
+        project_properties_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        tb = RibbonButtonBar(project_properties_panel)
+        project_properties_sizer.Add(tb, 0, wx.EXPAND)
+
+        icon_information = wx.ArtProvider.GetBitmap(wx.ART_INFORMATION, size=self.RIBBON_BUTTON_SIZE)
+        tb.AddButton(self.IDS.PROJECT_INFORMATION, 'Information', icon_information, 'Project basic information.')
+
+        self.Bind(wx.EVT_TOOL, self.on_project_information_clicked, id=self.IDS.PROJECT_INFORMATION)
+
+        tb.Realize()
+
+        project_properties_panel.SetSizer(project_properties_sizer)
+
     def panel_project_file(self, page):
         # -- File Panel -- #
         project_file_panel = wx.ribbon.RibbonPanel(parent=page, label='FILE',
@@ -458,3 +480,6 @@ class Ribbon(wx.ribbon.RibbonBar):
             wx.MessageBox('A task segment must be selected first.',
                           'Error',
                           wx.OK | wx.ICON_ERROR)
+
+    def on_project_information_clicked(self, event):
+        print('Open project information dialog.')
