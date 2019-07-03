@@ -185,34 +185,32 @@ class Ribbon(wx.ribbon.RibbonBar):
 
         gantt_page_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        tb = wx.ToolBar(gantt_task_panel, style=wx.TB_HORIZONTAL | wx.TB_FLAT | wx.NO_BORDER | wx.TB_DOCKABLE)
+        tb = RibbonButtonBar(gantt_task_panel)
         tb.SetCursor(wx.Cursor(wx.CURSOR_HAND))
 
         gantt_page_sizer.Add(tb, 0, wx.EXPAND)
 
         # Add task button
         icon_add_task = wx.ArtProvider.GetBitmap(wx.ART_PLUS, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.ADD_TASK, 'Add New Task', icon_add_task, 'Add new task to the project.', wx.ITEM_NORMAL)
+        tb.AddButton(self.IDS.ADD_TASK, 'Add New Task', icon_add_task, 'Add new task to the project.')
         self.Bind(wx.EVT_TOOL, self.on_add_task, id=self.IDS.ADD_TASK)
 
         # Delete task button
         icon_delete_task = self.get_stock_bitmap(wx.ART_MINUS, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.DELETE_TASK, 'Delete Task', icon_delete_task, 'Remove the selected task from project.',
-                   wx.ITEM_NORMAL)
+        tb.AddButton(self.IDS.DELETE_TASK, 'Delete Task', icon_delete_task, 'Remove the selected task from project.')
         self.Bind(wx.EVT_TOOL, self.on_delete_task, id=self.IDS.DELETE_TASK)
 
-        tb.AddSeparator()
+        # tb.Add()
 
         # Outdent task button
         icon_outdent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_BACK, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.OUTDENT_TASK, 'Outdent Task', icon_outdent_task,
-                   'Remove the task from the immediate parent.', wx.ITEM_NORMAL)
+        tb.AddButton(self.IDS.OUTDENT_TASK, 'Outdent Task', icon_outdent_task,
+                   'Remove the task from the immediate parent.')
         self.Bind(wx.EVT_TOOL, self.on_outdent_task, id=self.IDS.OUTDENT_TASK)
 
         # Indent task button
         icon_indent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_FORWARD, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.INDENT_TASK, 'Indent Task', icon_indent_task, 'Set the above task as parent.',
-                   wx.ITEM_NORMAL)
+        tb.AddButton(self.IDS.INDENT_TASK, 'Indent Task', icon_indent_task, 'Set the above task as parent.')
         self.Bind(wx.EVT_TOOL, self.on_indent_task, id=self.IDS.INDENT_TASK)
 
         tb.Realize()
@@ -224,48 +222,46 @@ class Ribbon(wx.ribbon.RibbonBar):
         panel = wx.ribbon.RibbonPanel(parent=page, label='EDIT',
                                       style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
 
-        tb = wx.ToolBar(panel, style=wx.TB_HORIZONTAL | wx.TB_FLAT | wx.NO_BORDER | wx.TB_DOCKABLE)
+        tb = RibbonButtonBar(panel)
         tb.SetCursor(wx.Cursor(wx.CURSOR_HAND))
-        tb.SetToolBitmapSize(self.RIBBON_BUTTON_SIZE)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(tb, 0, wx.EXPAND)
 
         icon_split = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
                                              'ribbon', 'gantt', 'split.png'))
-        tb.AddTool(self.IDS.SPLIT_TASK, 'Split Task', icon_split, 'Split a task segment.', wx.ITEM_NORMAL)
+        tb.AddButton(self.IDS.SPLIT_TASK, 'Split Task', icon_split, 'Split a task segment.')
         self.Bind(wx.EVT_TOOL, self.on_split_task, id=self.IDS.SPLIT_TASK)
 
         icon_merge = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
                                             'ribbon', 'gantt', 'merge.png'))
-        tb.AddTool(self.IDS.MERGE_SEGMENTS, 'Merge Task Segments', icon_merge, 'Merge all task segments.',
-                   wx.ITEM_NORMAL)
+        tb.AddButton(self.IDS.MERGE_SEGMENTS, 'Merge Task Segments', icon_merge, 'Merge all task segments.')
         self.Bind(wx.EVT_TOOL, self.on_merge_segments, id=self.IDS.MERGE_SEGMENTS)
 
         icon_edit_start = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
                                                  'ribbon', 'gantt', 'edit_start.png'))
-        tb.AddTool(self.IDS.MOVE_SEGMENT, 'Move Task Segment', icon_edit_start,
-                   'Move the task segment start.', wx.ITEM_NORMAL)
+        tb.AddButton(self.IDS.MOVE_SEGMENT, 'Move Task Segment', icon_edit_start,
+                   'Move the task segment start.')
         self.Bind(wx.EVT_TOOL, self.on_move_segment, id=self.IDS.MOVE_SEGMENT)
 
         icon_move_up = wx.ArtProvider.GetBitmap(wx.ART_GO_UP)
-        tb.AddTool(self.IDS.MOVE_UP, 'Move Up', icon_move_up,
-                   'Move a task up by one row.', wx.ITEM_NORMAL)
+        tb.AddButton(self.IDS.MOVE_UP, 'Move Up', icon_move_up,
+                   'Move a task up by one row.')
         self.Bind(wx.EVT_TOOL, self.on_task_move_up, id=self.IDS.MOVE_UP)
 
         icon_move_down = wx.ArtProvider.GetBitmap(wx.ART_GO_DOWN)
-        tb.AddTool(self.IDS.MOVE_DOWN, 'Move Down', icon_move_down,
-                   'Move a task down by one row.', wx.ITEM_NORMAL)
+        tb.AddButton(self.IDS.MOVE_DOWN, 'Move Down', icon_move_down,
+                   'Move a task down by one row.')
         self.Bind(wx.EVT_TOOL, self.on_task_move_down, id=self.IDS.MOVE_DOWN)
 
         icon_undo = wx.ArtProvider.GetBitmap(wx.ART_UNDO)
-        tb.AddTool(self.IDS.UNDO, 'Undo', icon_undo,
-                   'Undo task action.', wx.ITEM_NORMAL)
+        tb.AddButton(self.IDS.UNDO, 'Undo', icon_undo,
+                   'Undo task action.')
         self.Bind(wx.EVT_TOOL, self.on_undo, id=self.IDS.UNDO)
 
         icon_redo = wx.ArtProvider.GetBitmap(wx.ART_REDO)
-        tb.AddTool(self.IDS.REDO, 'Redo', icon_redo,
-                   'Redo previous undo action.', wx.ITEM_NORMAL)
+        tb.AddButton(self.IDS.REDO, 'Redo', icon_redo,
+                   'Redo previous undo action.')
         self.Bind(wx.EVT_TOOL, self.on_redo, id=self.IDS.REDO)
 
         panel.SetSizer(sizer)
