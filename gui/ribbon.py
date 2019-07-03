@@ -59,7 +59,8 @@ class Ribbon(RB.RibbonBar):
     RIBBON_BUTTON_SIZE = (24, 24)
 
     def __init__(self, parent, project, wbs):
-        super().__init__(parent=parent, agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
+        super().__init__(parent=parent,
+                         agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
         self.create_pages()
         self.set_button_cursors()
 
@@ -293,6 +294,9 @@ class Ribbon(RB.RibbonBar):
             button.SetCursor(wx.Cursor(wx.CURSOR_HAND))
 
     def on_task_move_down(self, event):
+        if self.project is None:
+            return
+
         if self.project.selected_task_index is None:
             wx.MessageBox('A task shall be selected from the WBS before moving.', 'No Task Selected',
                           style=wx.OK_DEFAULT)
@@ -308,6 +312,9 @@ class Ribbon(RB.RibbonBar):
                 self.command_processor.Submit(command)
 
     def on_task_move_up(self, event):
+        if self.project is None:
+            return
+
         if self.project.selected_task_index is None:
             wx.MessageBox('A task shall be selected from the WBS before moving.', 'No Task Selected',
                           style=wx.OK_DEFAULT)
@@ -411,6 +418,8 @@ class Ribbon(RB.RibbonBar):
         print('Save project as')
 
     def on_add_task(self, event):
+        if self.project is None:
+            return
         task = Task()
 
         selected_index = self.project.selected_task_index
@@ -425,6 +434,9 @@ class Ribbon(RB.RibbonBar):
         :param event: A toolbar click event.
         :return:
         """
+        if self.project is None:
+            return
+
         successors = []
         for task in self.project.tasks:
             for predecessor in task.predecessors:
@@ -456,6 +468,9 @@ class Ribbon(RB.RibbonBar):
         print('Indent task')
 
     def on_split_task(self, event):
+        if self.project is None:
+            return
+
         if self.project.selected_task_segment is not None:
             dlg = SplitTaskDialog(self.parent)
             res = dlg.ShowModal()
@@ -465,6 +480,9 @@ class Ribbon(RB.RibbonBar):
             wx.MessageBox('A task segment must be selected before splitting.')
 
     def on_merge_segments(self, event):
+        if self.project is None:
+            return
+
         if self.project.selected_task_index is None:
             return
         task = self.project.selected_task
@@ -476,6 +494,9 @@ class Ribbon(RB.RibbonBar):
         print(self.project.selected_task_index)
 
     def on_move_segment(self, event):
+        if self.project is None:
+            return
+
         if self.project.selected_task_segment is not None:
             # Open dialog
             dlg = MoveTaskSegmentDialog(self.parent)
