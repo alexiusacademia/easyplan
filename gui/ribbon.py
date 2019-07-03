@@ -28,6 +28,7 @@ class Ribbon(wx.ribbon.RibbonBar):
     project = None
     task_index = None
     command_processor = None
+    ribbon_button_bar_event = wx.ribbon.EVT_RIBBONBUTTONBAR_CLICKED
 
     class IDS:
         # -----------
@@ -129,14 +130,15 @@ class Ribbon(wx.ribbon.RibbonBar):
         project_properties_sizer.Add(tb, 0, wx.EXPAND)
 
         icon_information = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
-                                            'ribbon', 'gantt', 'project_information.png'))
-        tb.AddButton(self.IDS.PROJECT_INFORMATION, 'Project Information', icon_information, 'Project basic information.')
+                                                  'ribbon', 'gantt', 'project_information.png'))
+        tb.AddButton(self.IDS.PROJECT_INFORMATION, 'Project Information', icon_information,
+                     'Project basic information.')
 
         icon_settings = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
-                                            'ribbon', 'gantt', 'project_settings.png'))
+                                               'ribbon', 'gantt', 'project_settings.png'))
         tb.AddButton(self.IDS.PROJECT_SETTINGS, 'Settings', icon_settings, 'Project Settings')
 
-        self.Bind(wx.EVT_TOOL, self.on_project_information_clicked, id=self.IDS.PROJECT_INFORMATION)
+        self.Bind(self.ribbon_button_bar_event, self.on_project_information_clicked, id=self.IDS.PROJECT_INFORMATION)
 
         tb.Realize()
 
@@ -145,7 +147,7 @@ class Ribbon(wx.ribbon.RibbonBar):
     def panel_project_file(self, page):
         # -- File Panel -- #
         project_file_panel = wx.ribbon.RibbonPanel(parent=page, label='FILE',
-                                                      style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
+                                                   style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
         project_general_sizer = wx.BoxSizer(wx.VERTICAL)
 
         tb = RibbonButtonBar(project_file_panel)
@@ -156,23 +158,23 @@ class Ribbon(wx.ribbon.RibbonBar):
         # New project
         icon_new_project = wx.ArtProvider.GetBitmap(wx.ART_NEW, size=self.RIBBON_BUTTON_SIZE)
         tb.AddButton(self.IDS.NEW_PROJECT, 'New Project', icon_new_project, 'Create new project.')
-        self.Bind(wx.EVT_TOOL, self.on_new_project, id=self.IDS.NEW_PROJECT)
+        self.Bind(self.ribbon_button_bar_event, self.on_new_project, id=self.IDS.NEW_PROJECT)
 
         # Open project
         icon_open_project = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, size=self.RIBBON_BUTTON_SIZE)
         tb.AddButton(self.IDS.OPEN_PROJECT, 'Open Project', icon_open_project, 'Open a project file.')
-        self.Bind(wx.EVT_TOOL, self.on_open_project, id=self.IDS.OPEN_PROJECT)
+        self.Bind(self.ribbon_button_bar_event, self.on_open_project, id=self.IDS.OPEN_PROJECT)
 
         # Save project
         icon_save_project = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, size=self.RIBBON_BUTTON_SIZE)
         tb.AddButton(self.IDS.SAVE_PROJECT, 'Save Project', icon_save_project, 'Save project file.')
-        self.Bind(wx.EVT_TOOL, self.on_save_project, id=self.IDS.SAVE_PROJECT)
+        self.Bind(self.ribbon_button_bar_event, self.on_save_project, id=self.IDS.SAVE_PROJECT)
 
         # Save as project
         icon_save_project_as = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, size=self.RIBBON_BUTTON_SIZE)
         tb.AddButton(self.IDS.SAVE_AS_PROJECT, 'Save Project as',
-                   icon_save_project_as, 'Save project as new file.')
-        self.Bind(wx.EVT_TOOL, self.on_save_project_as, id=self.IDS.SAVE_AS_PROJECT)
+                     icon_save_project_as, 'Save project as new file.')
+        self.Bind(self.ribbon_button_bar_event, self.on_save_project_as, id=self.IDS.SAVE_AS_PROJECT)
 
         tb.Realize()
 
@@ -193,25 +195,25 @@ class Ribbon(wx.ribbon.RibbonBar):
         # Add task button
         icon_add_task = wx.ArtProvider.GetBitmap(wx.ART_PLUS, size=self.RIBBON_BUTTON_SIZE)
         tb.AddButton(self.IDS.ADD_TASK, 'Add New Task', icon_add_task, 'Add new task to the project.')
-        self.Bind(wx.EVT_TOOL, self.on_add_task, id=self.IDS.ADD_TASK)
+        self.Bind(self.ribbon_button_bar_event, self.on_add_task, id=self.IDS.ADD_TASK)
 
         # Delete task button
         icon_delete_task = self.get_stock_bitmap(wx.ART_MINUS, size=self.RIBBON_BUTTON_SIZE)
         tb.AddButton(self.IDS.DELETE_TASK, 'Delete Task', icon_delete_task, 'Remove the selected task from project.')
-        self.Bind(wx.EVT_TOOL, self.on_delete_task, id=self.IDS.DELETE_TASK)
+        self.Bind(self.ribbon_button_bar_event, self.on_delete_task, id=self.IDS.DELETE_TASK)
 
         # tb.Add()
 
         # Outdent task button
         icon_outdent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_BACK, size=self.RIBBON_BUTTON_SIZE)
         tb.AddButton(self.IDS.OUTDENT_TASK, 'Outdent Task', icon_outdent_task,
-                   'Remove the task from the immediate parent.')
-        self.Bind(wx.EVT_TOOL, self.on_outdent_task, id=self.IDS.OUTDENT_TASK)
+                     'Remove the task from the immediate parent.')
+        self.Bind(self.ribbon_button_bar_event, self.on_outdent_task, id=self.IDS.OUTDENT_TASK)
 
         # Indent task button
         icon_indent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_FORWARD, size=self.RIBBON_BUTTON_SIZE)
         tb.AddButton(self.IDS.INDENT_TASK, 'Indent Task', icon_indent_task, 'Set the above task as parent.')
-        self.Bind(wx.EVT_TOOL, self.on_indent_task, id=self.IDS.INDENT_TASK)
+        self.Bind(self.ribbon_button_bar_event, self.on_indent_task, id=self.IDS.INDENT_TASK)
 
         tb.Realize()
 
@@ -229,40 +231,40 @@ class Ribbon(wx.ribbon.RibbonBar):
         sizer.Add(tb, 0, wx.EXPAND)
 
         icon_split = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
-                                             'ribbon', 'gantt', 'split.png'))
+                                            'ribbon', 'gantt', 'split.png'))
         tb.AddButton(self.IDS.SPLIT_TASK, 'Split Task', icon_split, 'Split a task segment.')
-        self.Bind(wx.EVT_TOOL, self.on_split_task, id=self.IDS.SPLIT_TASK)
+        self.Bind(self.ribbon_button_bar_event, self.on_split_task, id=self.IDS.SPLIT_TASK)
 
         icon_merge = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
                                             'ribbon', 'gantt', 'merge.png'))
         tb.AddButton(self.IDS.MERGE_SEGMENTS, 'Merge Task Segments', icon_merge, 'Merge all task segments.')
-        self.Bind(wx.EVT_TOOL, self.on_merge_segments, id=self.IDS.MERGE_SEGMENTS)
+        self.Bind(self.ribbon_button_bar_event, self.on_merge_segments, id=self.IDS.MERGE_SEGMENTS)
 
         icon_edit_start = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
                                                  'ribbon', 'gantt', 'edit_start.png'))
         tb.AddButton(self.IDS.MOVE_SEGMENT, 'Move Task Segment', icon_edit_start,
-                   'Move the task segment start.')
-        self.Bind(wx.EVT_TOOL, self.on_move_segment, id=self.IDS.MOVE_SEGMENT)
+                     'Move the task segment start.')
+        self.Bind(self.ribbon_button_bar_event, self.on_move_segment, id=self.IDS.MOVE_SEGMENT)
 
         icon_move_up = wx.ArtProvider.GetBitmap(wx.ART_GO_UP)
         tb.AddButton(self.IDS.MOVE_UP, 'Move Up', icon_move_up,
-                   'Move a task up by one row.')
-        self.Bind(wx.EVT_TOOL, self.on_task_move_up, id=self.IDS.MOVE_UP)
+                     'Move a task up by one row.')
+        self.Bind(self.ribbon_button_bar_event, self.on_task_move_up, id=self.IDS.MOVE_UP)
 
         icon_move_down = wx.ArtProvider.GetBitmap(wx.ART_GO_DOWN)
         tb.AddButton(self.IDS.MOVE_DOWN, 'Move Down', icon_move_down,
-                   'Move a task down by one row.')
-        self.Bind(wx.EVT_TOOL, self.on_task_move_down, id=self.IDS.MOVE_DOWN)
+                     'Move a task down by one row.')
+        self.Bind(self.ribbon_button_bar_event, self.on_task_move_down, id=self.IDS.MOVE_DOWN)
 
         icon_undo = wx.ArtProvider.GetBitmap(wx.ART_UNDO)
         tb.AddButton(self.IDS.UNDO, 'Undo', icon_undo,
-                   'Undo task action.')
-        self.Bind(wx.EVT_TOOL, self.on_undo, id=self.IDS.UNDO)
+                     'Undo task action.')
+        self.Bind(self.ribbon_button_bar_event, self.on_undo, id=self.IDS.UNDO)
 
         icon_redo = wx.ArtProvider.GetBitmap(wx.ART_REDO)
         tb.AddButton(self.IDS.REDO, 'Redo', icon_redo,
-                   'Redo previous undo action.')
-        self.Bind(wx.EVT_TOOL, self.on_redo, id=self.IDS.REDO)
+                     'Redo previous undo action.')
+        self.Bind(self.ribbon_button_bar_event, self.on_redo, id=self.IDS.REDO)
 
         panel.SetSizer(sizer)
         tb.Realize()
