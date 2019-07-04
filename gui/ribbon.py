@@ -1,6 +1,9 @@
 # Import built-in modules
 import wx
 import wx.ribbon
+from wx.ribbon import RibbonButtonBar
+import wx.lib.agw.ribbon as RB
+
 import os
 import pickle
 import copy
@@ -22,11 +25,12 @@ from .commands.merge_task_segments import MergeTaskSegments
 from gui.accelerators import *
 
 
-class Ribbon(wx.ribbon.RibbonBar):
+class Ribbon(RB.RibbonBar):
     ribbon_buttons = []
     project = None
     task_index = None
     command_processor = None
+    ribbon_button_bar_event = RB.EVT_RIBBONBUTTONBAR_CLICKED
 
     class IDS:
         # -----------
@@ -48,11 +52,15 @@ class Ribbon(wx.ribbon.RibbonBar):
         OPEN_PROJECT = 301
         SAVE_PROJECT = 302
         SAVE_AS_PROJECT = 303
+        # -----------
+        PROJECT_INFORMATION = 401
+        PROJECT_SETTINGS = 402
 
     RIBBON_BUTTON_SIZE = (24, 24)
 
     def __init__(self, parent, project, wbs):
-        super().__init__(parent=parent)
+        super().__init__(parent=parent,
+                         agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
         self.create_pages()
         self.set_button_cursors()
 
@@ -77,30 +85,36 @@ class Ribbon(wx.ribbon.RibbonBar):
         self.Bind(wx.EVT_MENU, self.on_merge_segments, id=AcceleratorIds.CTRL_M)
 
         self.SetAcceleratorTable(accelerator_table)
+        art_provider: wx.lib.agw.ribbon.art_msw.RibbonMSWArtProvider = self.GetArtProvider()
+        primary = wx.Colour(132, 172, 200, 255)
+        secondary = wx.Colour(128, 222, 234, 255)
+        tertiary = wx.Colour(128, 222, 234, 125)
+        art_provider.SetColourScheme(primary, secondary, tertiary)
 
     def create_pages(self):
         self.page_project()
         self.page_gantt_chart()
-        self.page_scurve()
-        self.Realize()
+        # self.page_scurve()
+        # self.Realize()
 
     # --------------
     # Pages
     # --------------
     def page_project(self):
-        project_page = wx.ribbon.RibbonPage(self, label='Project')
+        project_page = RB.RibbonPage(self, wx.ID_ANY, 'Project')
         self.panel_project_file(project_page)
+        self.panel_project_properties(project_page)
 
     def page_gantt_chart(self):
         # ---------------- GANTT CHART PAGE ---------------- #
-        gantt_page = wx.ribbon.RibbonPage(self, label='Gantt Chart')
+        gantt_page = RB.RibbonPage(self, label='Gantt Chart')
         self.panel_gantt_basic(gantt_page)
         self.panel_gantt_edit(gantt_page)
 
     def page_scurve(self):
         # ---------------- GANTT CHART PAGE ---------------- #
 
-        scurve_page = wx.ribbon.RibbonPage(self, label='S-Curve')
+        scurve_page = RB.RibbonPage(self, label='S-Curve')
 
         scurve_panel = wx.Panel(parent=scurve_page)
         scurve_page_sizer = wx.GridBagSizer(vgap=0, hgap=0)
@@ -113,37 +127,61 @@ class Ribbon(wx.ribbon.RibbonBar):
     # --------------
     # Ribbon Panels
     # --------------
+    def panel_project_properties(self, page):
+        project_properties_panel = RB.RibbonPanel(page, wx.ID_ANY, 'PROPERTIES', wx.NullBitmap, wx.DefaultPosition,
+                                       wx.DefaultSize, agwStyle=RB.RIBBON_PANEL_NO_AUTO_MINIMISE)
+        project_properties_sizer = wx.BoxSizer(wx.VERTICAL)
+
+        tb = RB.RibbonButtonBar(project_properties_panel, wx.ID_ANY)
+        tb.SetCursor(wx.Cursor(wx.CURSOR_HAND))
+        project_properties_sizer.Add(tb, 0, wx.EXPAND)
+
+        icon_information = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
+                                                  'ribbon', 'gantt', 'project_information.png'))
+        tb.AddSimpleButton(self.IDS.PROJECT_INFORMATION, 'Project Information', icon_information,
+                     'Project basic information.')
+
+        icon_settings = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
+                                               'ribbon', 'gantt', 'project_settings.png'))
+        tb.AddSimpleButton(self.IDS.PROJECT_SETTINGS, 'Settings', icon_settings, 'Project Settings')
+
+        self.Bind(self.ribbon_button_bar_event, self.on_project_information_clicked, id=self.IDS.PROJECT_INFORMATION)
+
+        tb.Realize()
+
+        project_properties_panel.SetSizer(project_properties_sizer)
+
     def panel_project_file(self, page):
         # -- File Panel -- #
-        project_file_panel = wx.ribbon.RibbonPanel(parent=page, label='FILE',
-                                                      style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
+        project_file_panel = RB.RibbonPanel(page, wx.ID_ANY, 'FILE', wx.NullBitmap, wx.DefaultPosition,
+                                       wx.DefaultSize, agwStyle=RB.RIBBON_PANEL_NO_AUTO_MINIMISE)
         project_general_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        tb = wx.ToolBar(project_file_panel, style=wx.TB_HORIZONTAL | wx.TB_FLAT | wx.NO_BORDER | wx.TB_DOCKABLE)
+        tb = RB.RibbonButtonBar(project_file_panel)
         tb.SetCursor(wx.Cursor(wx.CURSOR_HAND))
 
         project_general_sizer.Add(tb, 0, wx.EXPAND)
 
         # New project
         icon_new_project = wx.ArtProvider.GetBitmap(wx.ART_NEW, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.NEW_PROJECT, 'New Project', icon_new_project, 'Create new project.', wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_new_project, id=self.IDS.NEW_PROJECT)
+        tb.AddSimpleButton(self.IDS.NEW_PROJECT, 'New Project', icon_new_project, 'Create new project.')
+        self.Bind(self.ribbon_button_bar_event, self.on_new_project, id=self.IDS.NEW_PROJECT)
 
         # Open project
         icon_open_project = wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.OPEN_PROJECT, 'Open Project', icon_open_project, 'Open a project file.', wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_open_project, id=self.IDS.OPEN_PROJECT)
+        tb.AddSimpleButton(self.IDS.OPEN_PROJECT, 'Open Project', icon_open_project, 'Open a project file.')
+        self.Bind(self.ribbon_button_bar_event, self.on_open_project, id=self.IDS.OPEN_PROJECT)
 
         # Save project
         icon_save_project = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.SAVE_PROJECT, 'Save Project', icon_save_project, 'Save project file.', wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_save_project, id=self.IDS.SAVE_PROJECT)
+        tb.AddSimpleButton(self.IDS.SAVE_PROJECT, 'Save Project', icon_save_project, 'Save project file.')
+        self.Bind(self.ribbon_button_bar_event, self.on_save_project, id=self.IDS.SAVE_PROJECT)
 
         # Save as project
         icon_save_project_as = wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.SAVE_AS_PROJECT, 'Save Project as',
-                   icon_save_project_as, 'Save project as new file.', wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_save_project_as, id=self.IDS.SAVE_AS_PROJECT)
+        tb.AddSimpleButton(self.IDS.SAVE_AS_PROJECT, 'Save Project as',
+                     icon_save_project_as, 'Save project as new file.')
+        self.Bind(self.ribbon_button_bar_event, self.on_save_project_as, id=self.IDS.SAVE_AS_PROJECT)
 
         tb.Realize()
 
@@ -151,40 +189,38 @@ class Ribbon(wx.ribbon.RibbonBar):
 
     def panel_gantt_basic(self, page):
         # -- Task Panel -- #
-        gantt_task_panel = wx.ribbon.RibbonPanel(parent=page, label='BASIC',
-                                                 style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
+        gantt_task_panel = RB.RibbonPanel(page, wx.ID_ANY, 'BASIC', wx.NullBitmap, wx.DefaultPosition,
+                                       wx.DefaultSize, agwStyle=RB.RIBBON_PANEL_NO_AUTO_MINIMISE)
 
         gantt_page_sizer = wx.BoxSizer(wx.VERTICAL)
 
-        tb = wx.ToolBar(gantt_task_panel, style=wx.TB_HORIZONTAL | wx.TB_FLAT | wx.NO_BORDER | wx.TB_DOCKABLE)
+        tb = RB.RibbonButtonBar(gantt_task_panel)
         tb.SetCursor(wx.Cursor(wx.CURSOR_HAND))
 
         gantt_page_sizer.Add(tb, 0, wx.EXPAND)
 
         # Add task button
         icon_add_task = wx.ArtProvider.GetBitmap(wx.ART_PLUS, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.ADD_TASK, 'Add New Task', icon_add_task, 'Add new task to the project.', wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_add_task, id=self.IDS.ADD_TASK)
+        tb.AddSimpleButton(self.IDS.ADD_TASK, 'Add New Task', icon_add_task, 'Add new task to the project.')
+        self.Bind(self.ribbon_button_bar_event, self.on_add_task, id=self.IDS.ADD_TASK)
 
         # Delete task button
         icon_delete_task = self.get_stock_bitmap(wx.ART_MINUS, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.DELETE_TASK, 'Delete Task', icon_delete_task, 'Remove the selected task from project.',
-                   wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_delete_task, id=self.IDS.DELETE_TASK)
+        tb.AddSimpleButton(self.IDS.DELETE_TASK, 'Delete Task', icon_delete_task, 'Remove the selected task from project.')
+        self.Bind(self.ribbon_button_bar_event, self.on_delete_task, id=self.IDS.DELETE_TASK)
 
-        tb.AddSeparator()
+        # tb.Add()
 
         # Outdent task button
         icon_outdent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_BACK, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.OUTDENT_TASK, 'Outdent Task', icon_outdent_task,
-                   'Remove the task from the immediate parent.', wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_outdent_task, id=self.IDS.OUTDENT_TASK)
+        tb.AddSimpleButton(self.IDS.OUTDENT_TASK, 'Outdent Task', icon_outdent_task,
+                     'Remove the task from the immediate parent.')
+        self.Bind(self.ribbon_button_bar_event, self.on_outdent_task, id=self.IDS.OUTDENT_TASK)
 
         # Indent task button
         icon_indent_task = wx.ArtProvider.GetBitmap(wx.ART_GO_FORWARD, size=self.RIBBON_BUTTON_SIZE)
-        tb.AddTool(self.IDS.INDENT_TASK, 'Indent Task', icon_indent_task, 'Set the above task as parent.',
-                   wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_indent_task, id=self.IDS.INDENT_TASK)
+        tb.AddSimpleButton(self.IDS.INDENT_TASK, 'Indent Task', icon_indent_task, 'Set the above task as parent.')
+        self.Bind(self.ribbon_button_bar_event, self.on_indent_task, id=self.IDS.INDENT_TASK)
 
         tb.Realize()
 
@@ -192,52 +228,50 @@ class Ribbon(wx.ribbon.RibbonBar):
         # -- End Task Panel -- #
 
     def panel_gantt_edit(self, page):
-        panel = wx.ribbon.RibbonPanel(parent=page, label='EDIT',
-                                      style=wx.ribbon.RIBBON_PANEL_DEFAULT_STYLE)
+        panel = RB.RibbonPanel(page, wx.ID_ANY, 'EDIT', wx.NullBitmap, wx.DefaultPosition,
+                                       wx.DefaultSize, agwStyle=RB.RIBBON_PANEL_NO_AUTO_MINIMISE)
 
-        tb = wx.ToolBar(panel, style=wx.TB_HORIZONTAL | wx.TB_FLAT | wx.NO_BORDER | wx.TB_DOCKABLE)
+        tb = RB.RibbonButtonBar(panel)
         tb.SetCursor(wx.Cursor(wx.CURSOR_HAND))
-        tb.SetToolBitmapSize(self.RIBBON_BUTTON_SIZE)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(tb, 0, wx.EXPAND)
 
         icon_split = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
-                                             'ribbon', 'gantt', 'split.png'))
-        tb.AddTool(self.IDS.SPLIT_TASK, 'Split Task', icon_split, 'Split a task segment.', wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_split_task, id=self.IDS.SPLIT_TASK)
+                                            'ribbon', 'gantt', 'split.png'))
+        tb.AddSimpleButton(self.IDS.SPLIT_TASK, 'Split Task', icon_split, 'Split a task segment.')
+        self.Bind(self.ribbon_button_bar_event, self.on_split_task, id=self.IDS.SPLIT_TASK)
 
         icon_merge = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
                                             'ribbon', 'gantt', 'merge.png'))
-        tb.AddTool(self.IDS.MERGE_SEGMENTS, 'Merge Task Segments', icon_merge, 'Merge all task segments.',
-                   wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_merge_segments, id=self.IDS.MERGE_SEGMENTS)
+        tb.AddSimpleButton(self.IDS.MERGE_SEGMENTS, 'Merge Task Segments', icon_merge, 'Merge all task segments.')
+        self.Bind(self.ribbon_button_bar_event, self.on_merge_segments, id=self.IDS.MERGE_SEGMENTS)
 
         icon_edit_start = wx.Bitmap(os.path.join(os.getcwd(), 'gui', 'assets', 'icons',
                                                  'ribbon', 'gantt', 'edit_start.png'))
-        tb.AddTool(self.IDS.MOVE_SEGMENT, 'Move Task Segment', icon_edit_start,
-                   'Move the task segment start.', wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_move_segment, id=self.IDS.MOVE_SEGMENT)
+        tb.AddSimpleButton(self.IDS.MOVE_SEGMENT, 'Move Task Segment', icon_edit_start,
+                     'Move the task segment start.')
+        self.Bind(self.ribbon_button_bar_event, self.on_move_segment, id=self.IDS.MOVE_SEGMENT)
 
         icon_move_up = wx.ArtProvider.GetBitmap(wx.ART_GO_UP)
-        tb.AddTool(self.IDS.MOVE_UP, 'Move Up', icon_move_up,
-                   'Move a task up by one row.', wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_task_move_up, id=self.IDS.MOVE_UP)
+        tb.AddSimpleButton(self.IDS.MOVE_UP, 'Move Up', icon_move_up,
+                     'Move a task up by one row.')
+        self.Bind(self.ribbon_button_bar_event, self.on_task_move_up, id=self.IDS.MOVE_UP)
 
         icon_move_down = wx.ArtProvider.GetBitmap(wx.ART_GO_DOWN)
-        tb.AddTool(self.IDS.MOVE_DOWN, 'Move Down', icon_move_down,
-                   'Move a task down by one row.', wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_task_move_down, id=self.IDS.MOVE_DOWN)
+        tb.AddSimpleButton(self.IDS.MOVE_DOWN, 'Move Down', icon_move_down,
+                     'Move a task down by one row.')
+        self.Bind(self.ribbon_button_bar_event, self.on_task_move_down, id=self.IDS.MOVE_DOWN)
 
         icon_undo = wx.ArtProvider.GetBitmap(wx.ART_UNDO)
-        tb.AddTool(self.IDS.UNDO, 'Undo', icon_undo,
-                   'Undo task action.', wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_undo, id=self.IDS.UNDO)
+        tb.AddSimpleButton(self.IDS.UNDO, 'Undo', icon_undo,
+                     'Undo task action.')
+        self.Bind(self.ribbon_button_bar_event, self.on_undo, id=self.IDS.UNDO)
 
         icon_redo = wx.ArtProvider.GetBitmap(wx.ART_REDO)
-        tb.AddTool(self.IDS.REDO, 'Redo', icon_redo,
-                   'Redo previous undo action.', wx.ITEM_NORMAL)
-        self.Bind(wx.EVT_TOOL, self.on_redo, id=self.IDS.REDO)
+        tb.AddSimpleButton(self.IDS.REDO, 'Redo', icon_redo,
+                     'Redo previous undo action.')
+        self.Bind(self.ribbon_button_bar_event, self.on_redo, id=self.IDS.REDO)
 
         panel.SetSizer(sizer)
         tb.Realize()
@@ -265,6 +299,9 @@ class Ribbon(wx.ribbon.RibbonBar):
             button.SetCursor(wx.Cursor(wx.CURSOR_HAND))
 
     def on_task_move_down(self, event):
+        if self.project is None:
+            return
+
         if self.project.selected_task_index is None:
             wx.MessageBox('A task shall be selected from the WBS before moving.', 'No Task Selected',
                           style=wx.OK_DEFAULT)
@@ -280,6 +317,9 @@ class Ribbon(wx.ribbon.RibbonBar):
                 self.command_processor.Submit(command)
 
     def on_task_move_up(self, event):
+        if self.project is None:
+            return
+
         if self.project.selected_task_index is None:
             wx.MessageBox('A task shall be selected from the WBS before moving.', 'No Task Selected',
                           style=wx.OK_DEFAULT)
@@ -383,6 +423,8 @@ class Ribbon(wx.ribbon.RibbonBar):
         print('Save project as')
 
     def on_add_task(self, event):
+        if self.project is None:
+            return
         task = Task()
 
         selected_index = self.project.selected_task_index
@@ -397,6 +439,9 @@ class Ribbon(wx.ribbon.RibbonBar):
         :param event: A toolbar click event.
         :return:
         """
+        if self.project is None:
+            return
+
         successors = []
         for task in self.project.tasks:
             for predecessor in task.predecessors:
@@ -428,6 +473,9 @@ class Ribbon(wx.ribbon.RibbonBar):
         print('Indent task')
 
     def on_split_task(self, event):
+        if self.project is None:
+            return
+
         if self.project.selected_task_segment is not None:
             dlg = SplitTaskDialog(self.parent)
             res = dlg.ShowModal()
@@ -437,6 +485,9 @@ class Ribbon(wx.ribbon.RibbonBar):
             wx.MessageBox('A task segment must be selected before splitting.')
 
     def on_merge_segments(self, event):
+        if self.project is None:
+            return
+
         if self.project.selected_task_index is None:
             return
         task = self.project.selected_task
@@ -448,6 +499,9 @@ class Ribbon(wx.ribbon.RibbonBar):
         print(self.project.selected_task_index)
 
     def on_move_segment(self, event):
+        if self.project is None:
+            return
+
         if self.project.selected_task_segment is not None:
             # Open dialog
             dlg = MoveTaskSegmentDialog(self.parent)
@@ -458,3 +512,6 @@ class Ribbon(wx.ribbon.RibbonBar):
             wx.MessageBox('A task segment must be selected first.',
                           'Error',
                           wx.OK | wx.ICON_ERROR)
+
+    def on_project_information_clicked(self, event):
+        print('Open project information dialog.')

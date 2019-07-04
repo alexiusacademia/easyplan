@@ -154,4 +154,12 @@ class Project:
         for task in self.tasks:
             total_duration += task.get_virtual_duration()
 
-        return total_duration
+        start = 1
+        finish = 1
+        for task in self.tasks:
+            if task.start_day < start:
+                start = task.start_day
+            if task.get_finish() > finish:
+                finish = task.get_finish()
+
+        return finish - start + 1
