@@ -7,6 +7,8 @@ class ProjectInformationDialog(wx.Dialog):
 
         self.SetTitle('Project Basic Information')
 
+        self.init_ui()
+
     def init_ui(self):
         pass
 

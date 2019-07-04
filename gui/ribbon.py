@@ -13,6 +13,7 @@ from wx.lib.docview import CommandProcessor
 # Import project modules
 from .dialogs.dlg_split_task import SplitTaskDialog
 from .dialogs.dlg_move_task_segment import MoveTaskSegmentDialog
+from .dialogs.dlg_project_information import ProjectInformationDialog
 from core.task import Task
 from core.project import Project
 from constants import *
@@ -514,4 +515,5 @@ class Ribbon(RB.RibbonBar):
                           wx.OK | wx.ICON_ERROR)
 
     def on_project_information_clicked(self, event):
-        print('Open project information dialog.')
+        dlg = ProjectInformationDialog(self)
+        dlg.ShowModal()
