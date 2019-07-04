@@ -85,6 +85,11 @@ class Ribbon(RB.RibbonBar):
         self.Bind(wx.EVT_MENU, self.on_merge_segments, id=AcceleratorIds.CTRL_M)
 
         self.SetAcceleratorTable(accelerator_table)
+        art_provider: wx.lib.agw.ribbon.art_msw.RibbonMSWArtProvider = self.GetArtProvider()
+        primary = wx.Colour(132, 172, 200, 255)
+        secondary = wx.Colour(128, 222, 234, 255)
+        tertiary = wx.Colour(128, 222, 234, 125)
+        art_provider.SetColourScheme(primary, secondary, tertiary)
 
     def create_pages(self):
         self.page_project()
