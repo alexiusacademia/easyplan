@@ -396,6 +396,13 @@ class Ribbon(RB.RibbonBar):
         if 'interval_major_grid' in project_dict:
             project.interval_major_axis = project_dict['interval_major_grid']
 
+        if 'start_date' in project_dict:
+            sd = project_dict['start_date']
+            start_date = wx.DateTime(sd[0], sd[1], sd[2])
+            project.start_date = start_date
+        else:
+            project.start_date = wx.DateTime(25, 5, 2018)
+
         self.parent.project = project
 
         self.project = project
@@ -407,9 +414,18 @@ class Ribbon(RB.RibbonBar):
         self.parent.right_pane.redraw()
 
     def on_save_project(self, event):
+        # Convert the date time to tuple
+        sd: wx.DateTime = self.project.start_date
+        day = sd.GetDay()
+        month = sd.GetMonth()
+        year = sd.GetYear()
+
+        start_date = day, month, year
+
         p = {'path': self.parent.project_file,
              'tasks': self.project.tasks,
-             'interval_major_grid': self.project.interval_major_axis}
+             'interval_major_grid': self.project.interval_major_axis,
+             'start_date': start_date}
 
         if self.parent.project_file != '':
             path = self.parent.project_file
