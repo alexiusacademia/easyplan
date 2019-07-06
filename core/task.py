@@ -102,6 +102,11 @@ class Task:
         :return:
         """
         s = int(s)
+        old = self.start_day
+
+        delta = s - old
+        self.start_date = self.start_date + datetime.timedelta(days=delta)
+
         self.start_day = s
 
         # Adjust all start of task segments
