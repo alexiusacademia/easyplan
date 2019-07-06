@@ -1,6 +1,7 @@
 import wx.grid as gridlib
 import wx
 from pubsub import pub
+import datetime
 
 from constants import *
 from core.task import Task
@@ -13,6 +14,22 @@ class Cols(enumerate):
     FINISH_DAY = 3
     PREDECESSORS = 4
     RESOURCES = 5
+
+
+def py_date_to_wx_datetime(date):
+    assert isinstance(date, (datetime.datetime, datetime.date))
+    tt = date.timetuple()
+    dmy = (tt[2], tt[1]-1, tt[0])
+    return wx.DateTime.FromDMY(*dmy)
+
+
+def get_finish_short_date_str(task: Task):
+    date_finish = py_date_to_wx_datetime(task.start_date)
+    span = wx.DateSpan(0, 0, 0, int(task.get_virtual_duration()) - 1)
+    date_finish.Add(span)
+    date_finish_string = date_finish.Format('%B/%d/%G')
+
+    return date_finish_string
 
 
 class WBS(gridlib.Grid):
@@ -44,6 +61,8 @@ class WBS(gridlib.Grid):
 
         # self.AutoSizeColumns(True)
         self.SetColSize(Cols.TASK_NAME, 200)
+        self.SetColSize(Cols.DURATION, 60)
+        self.SetColSize(Cols.FINISH_DAY, 100)
         self.Layout()
 
         self.create_bindings()
@@ -87,12 +106,7 @@ class WBS(gridlib.Grid):
                 self.SetCellValue(index, Cols.START_DAY, str(task.start_day))
                 self.SetCellValue(index, Cols.DURATION, str(task.get_duration()))
 
-                date_finish = wx.DateTime(self.project.start_date)
-                span = wx.DateSpan(0, 0, 0, int(task.get_virtual_duration()) - 1)
-                date_finish.Add(span)
-                date_finish_string = date_finish.Format('%m/%d/%G')
-
-                self.SetCellValue(index, Cols.FINISH_DAY, date_finish_string)
+                self.SetCellValue(index, Cols.FINISH_DAY, get_finish_short_date_str(task))
 
                 self.SetReadOnly(index, Cols.FINISH_DAY, True)
 
@@ -209,6 +223,7 @@ class WBS(gridlib.Grid):
         self.SetCellValue((index, Cols.START_DAY), str(start))
 
         task: Task = self.project.tasks[index]
+
         self.SetCellValue((index, Cols.FINISH_DAY), str(task.get_finish()))
 
     def on_duration_updated(self):
