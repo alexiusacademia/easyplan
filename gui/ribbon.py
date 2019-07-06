@@ -552,5 +552,8 @@ class Ribbon(RB.RibbonBar):
             self.project.project_manager = project_manager
             self.project.start_date = start_date
 
+            # Update status message
+            self.parent.status_bar.SetStatusText('Project information updated.')
+
             dlg.Destroy()
 
