@@ -451,7 +451,7 @@ class Ribbon(RB.RibbonBar):
     def on_add_task(self, event):
         if self.project is None:
             return
-        task = Task()
+        task = Task(project=self.project)
 
         selected_index = self.project.selected_task_index
 

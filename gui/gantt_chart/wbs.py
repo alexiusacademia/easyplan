@@ -1,6 +1,7 @@
 import wx.grid as gridlib
 import wx
 from pubsub import pub
+import datetime
 
 from constants import *
 from core.task import Task
@@ -9,10 +10,42 @@ from core.task import Task
 class Cols(enumerate):
     TASK_NAME = 0
     START_DAY = 1
-    DURATION = 2
-    FINISH_DAY = 3
-    PREDECESSORS = 4
-    RESOURCES = 5
+    START_DATE = 2
+    DURATION = 3
+    FINISH_DAY = 4
+    PREDECESSORS = 5
+    RESOURCES = 6
+
+
+class ColNames(enumerate):
+    TASK_NAME = 'Task Name'
+    START_DAY = 'Start Day'
+    START_DATE = 'Start Date'
+    DURATION = 'Duration'
+    FINISH_DATE = 'Finish Date'
+    PREDECESSORS = 'Predecessors'
+    RESOURCES = 'Resources'
+
+
+def py_date_to_wx_datetime(date):
+    assert isinstance(date, (datetime.datetime, datetime.date))
+    tt = date.timetuple()
+    dmy = (tt[2], tt[1]-1, tt[0])
+    return wx.DateTime.FromDMY(*dmy)
+
+
+def get_finish_short_date_str(task: Task):
+    date_finish = py_date_to_wx_datetime(task.start_date)
+    span = wx.DateSpan(0, 0, 0, int(task.get_virtual_duration()) - 1)
+    date_finish.Add(span)
+    date_finish_string = date_finish.Format('%B %d, %G')
+
+    return date_finish_string
+
+
+def get_start_short_date_str(task: Task):
+    date_start = py_date_to_wx_datetime(task.start_date)
+    return date_start.Format('%B %d, %G')
 
 
 class WBS(gridlib.Grid):
@@ -24,7 +57,7 @@ class WBS(gridlib.Grid):
         self.project = project
         self.controller = controller
 
-        self.CreateGrid(0, 6)
+        self.CreateGrid(0, 7)
 
         self.SetDefaultCellAlignment(wx.ALIGN_CENTER, wx.ALIGN_CENTER)
 
@@ -35,15 +68,19 @@ class WBS(gridlib.Grid):
         for i in range(100):
             self.SetRowLabelValue(i, str(i + 1))
 
-        self.SetColLabelValue(Cols.TASK_NAME, 'Task Name')
-        self.SetColLabelValue(Cols.START_DAY, 'Start')
-        self.SetColLabelValue(Cols.DURATION, 'Duration')
-        self.SetColLabelValue(Cols.FINISH_DAY, 'Finish')
-        self.SetColLabelValue(Cols.PREDECESSORS, 'Predecessors')
-        self.SetColLabelValue(Cols.RESOURCES, 'Resources')
+        self.SetColLabelValue(Cols.TASK_NAME, ColNames.TASK_NAME)
+        self.SetColLabelValue(Cols.START_DAY, ColNames.START_DAY)
+        self.SetColLabelValue(Cols.START_DATE, ColNames.START_DATE)
+        self.SetColLabelValue(Cols.DURATION, ColNames.DURATION)
+        self.SetColLabelValue(Cols.FINISH_DAY, ColNames.FINISH_DATE)
+        self.SetColLabelValue(Cols.PREDECESSORS, ColNames.PREDECESSORS)
+        self.SetColLabelValue(Cols.RESOURCES, ColNames.RESOURCES)
 
         # self.AutoSizeColumns(True)
         self.SetColSize(Cols.TASK_NAME, 200)
+        self.SetColSize(Cols.START_DATE, 100)
+        self.SetColSize(Cols.DURATION, 60)
+        self.SetColSize(Cols.FINISH_DAY, 100)
         self.Layout()
 
         self.create_bindings()
@@ -82,17 +119,11 @@ class WBS(gridlib.Grid):
                     self.AppendRows()
                 self.SetCellValue(index, Cols.TASK_NAME, str(task.task_name))
 
-                self.SetCellAlignment(index, Cols.TASK_NAME, wx.ALIGN_LEFT, wx.ALIGN_CENTER)
-
                 self.SetCellValue(index, Cols.START_DAY, str(task.start_day))
+                self.SetCellValue(index, Cols.START_DATE, get_start_short_date_str(task))
                 self.SetCellValue(index, Cols.DURATION, str(task.get_duration()))
 
-                date_finish = wx.DateTime(self.project.start_date)
-                span = wx.DateSpan(0, 0, 0, int(task.get_virtual_duration()) - 1)
-                date_finish.Add(span)
-                date_finish_string = date_finish.Format('%m/%d/%G')
-
-                self.SetCellValue(index, Cols.FINISH_DAY, date_finish_string)
+                self.SetCellValue(index, Cols.FINISH_DAY, get_finish_short_date_str(task))
 
                 self.SetReadOnly(index, Cols.FINISH_DAY, True)
 
@@ -209,12 +240,14 @@ class WBS(gridlib.Grid):
         self.SetCellValue((index, Cols.START_DAY), str(start))
 
         task: Task = self.project.tasks[index]
-        self.SetCellValue((index, Cols.FINISH_DAY), str(task.get_finish()))
+
+        self.SetCellValue((index, Cols.FINISH_DAY), get_finish_short_date_str(task))
+        self.SetCellValue((index, Cols.START_DATE), get_start_short_date_str(task))
 
     def on_duration_updated(self):
         task: Task = self.project.selected_task
         index = self.project.tasks.index(task)
-        self.SetCellValue((index, Cols.FINISH_DAY), str(task.get_finish()))
+        self.SetCellValue((index, Cols.FINISH_DAY), get_finish_short_date_str(task))
 
     def on_project_updated(self):
         self.populate()

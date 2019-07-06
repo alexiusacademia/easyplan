@@ -1,6 +1,7 @@
 # Import built-in modules
 import uuid
 from pubsub import pub
+import datetime
 
 # Import project modules
 from core.task_segment import TaskSegment
@@ -16,14 +17,19 @@ class Task:
     task_id = 0
     task_segments = []
     start_day = 1
+    start_date: datetime.date = None
     predecessors = []
     last_unmerged_segments = []
 
-    def __init__(self):
+    def __init__(self, project=None):
         self.task_name = 'Unnamed Task'
         self.task_id = id_generator()
         ts1 = TaskSegment(self.start_day, 1)
         self.task_segments = [ts1]
+
+        if project is not None:
+            ymd = map(int, project.start_date.FormatISODate().split('-'))
+            self.start_date = datetime.date(*ymd)
 
     def rename(self, new_name):
         self.task_name = new_name
@@ -96,6 +102,11 @@ class Task:
         :return:
         """
         s = int(s)
+        old = self.start_day
+
+        delta = s - old
+        self.start_date = self.start_date + datetime.timedelta(days=delta)
+
         self.start_day = s
 
         # Adjust all start of task segments
