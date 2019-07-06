@@ -25,7 +25,8 @@ class WBS(gridlib.Grid):
         self.controller = controller
 
         self.CreateGrid(0, 6)
-        # self.SetTable(table, True)
+
+        self.SetDefaultCellAlignment(wx.ALIGN_CENTER, wx.ALIGN_CENTER)
         self.SetRowLabelSize(30)
         self.SetColLabelSize(40)
         # self.SetMargins(0, 0)
@@ -82,6 +83,8 @@ class WBS(gridlib.Grid):
                 self.SetCellValue(index, Cols.START_DAY, str(task.start_day))
                 self.SetCellValue(index, Cols.DURATION, str(task.get_duration()))
                 self.SetCellValue(index, Cols.FINISH_DAY, str(task.get_finish()))
+
+                self.SetReadOnly(index, Cols.FINISH_DAY, True)
 
                 task_predecessors_temp = task.predecessors
 
