@@ -515,5 +515,7 @@ class Ribbon(RB.RibbonBar):
                           wx.OK | wx.ICON_ERROR)
 
     def on_project_information_clicked(self, event):
+        if self.project is None:
+            return
         dlg = ProjectInformationDialog(self)
         dlg.ShowModal()
