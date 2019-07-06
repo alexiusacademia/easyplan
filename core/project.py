@@ -32,6 +32,7 @@ class Project:
     _time_basis = TimeBasis.DAY
 
     project_name = 'New Project'
+    project_manager = ''
     project_location = ''
     project_amount = ''
     selected_task_index = None
