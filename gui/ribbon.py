@@ -388,6 +388,7 @@ class Ribbon(RB.RibbonBar):
 
     def initialize_project(self, project_dict):
         # Create new instance of project
+        # 05/31/1988
         project = Project()
         if 'project_name' in project_dict:
             project.project_name = project_dict['project_name']
