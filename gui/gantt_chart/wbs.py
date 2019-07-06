@@ -80,6 +80,8 @@ class WBS(gridlib.Grid):
                 if num_rows < index+1:
                     self.AppendRows()
                 self.SetCellValue(index, Cols.TASK_NAME, str(task.task_name))
+                self.SetCellAlignment(index, Cols.TASK_NAME, wx.ALIGN_LEFT, wx.ALIGN_CENTER)
+
                 self.SetCellValue(index, Cols.START_DAY, str(task.start_day))
                 self.SetCellValue(index, Cols.DURATION, str(task.get_duration()))
                 self.SetCellValue(index, Cols.FINISH_DAY, str(task.get_finish()))
