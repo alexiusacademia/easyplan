@@ -51,8 +51,8 @@ class ProjectInformationNB(wx.Notebook):
     project = None
     
     # Entries
-    entry_project_title = ''
-    entry_project_manager = ''
+    entry_project_title = None
+    entry_project_manager = None
     entry_start_date = None
 
     def __init__(self, parent):
@@ -73,9 +73,11 @@ class ProjectInformationNB(wx.Notebook):
 
         label_project_title = wx.StaticText(panel, label='Project Title', name='project_title')
         self.entry_project_title = wx.TextCtrl(panel)
+        self.entry_project_title.SetValue(self.project.project_name)
 
         label_project_manager = wx.StaticText(panel, label='Project Manager', name='project_manager')
         self.entry_project_manager = wx.TextCtrl(panel)
+        self.entry_project_manager.SetValue(self.project.project_manager)
 
         label_start_date = wx.StaticText(panel, label='Start Date')
         self.entry_start_date = DatePickerCtrl(panel, -1, style=wx.adv.DP_DROPDOWN)
