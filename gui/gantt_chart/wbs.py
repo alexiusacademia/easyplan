@@ -86,7 +86,13 @@ class WBS(gridlib.Grid):
 
                 self.SetCellValue(index, Cols.START_DAY, str(task.start_day))
                 self.SetCellValue(index, Cols.DURATION, str(task.get_duration()))
-                self.SetCellValue(index, Cols.FINISH_DAY, str(task.get_finish()))
+
+                date_finish = wx.DateTime(self.project.start_date)
+                span = wx.DateSpan(0, 0, 0, int(task.get_virtual_duration()) - 1)
+                date_finish.Add(span)
+                date_finish_string = date_finish.Format('%m/%d/%G')
+
+                self.SetCellValue(index, Cols.FINISH_DAY, date_finish_string)
 
                 self.SetReadOnly(index, Cols.FINISH_DAY, True)
 
