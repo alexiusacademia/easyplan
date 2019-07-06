@@ -37,7 +37,7 @@ class Project:
     selected_task_index = None
     selected_task = None
     selected_task_segment = None
-    start_date = datetime.date.today()
+    start_date = None
 
     # Gantt Chart
     # -------------------------
