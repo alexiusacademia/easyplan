@@ -23,9 +23,23 @@ class ProjectInformationDialog(wx.Dialog):
     def init_ui(self):
         nb = ProjectInformationNB(self)
 
+        # Buttons
+        btn_ok = wx.Button(self, wx.ID_OK)
+        btn_cancel = wx.Button(self, wx.ID_CANCEL)
+
         sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer_dlg_buttons = wx.BoxSizer(wx.HORIZONTAL)
 
         sizer.Add(nb)
+        sizer.AddSpacer(10)
+        sizer.Add(sizer_dlg_buttons, flag=wx.EXPAND | wx.LEFT | wx.RIGHT)
+        sizer.AddSpacer(10)
+
+        sizer_dlg_buttons.AddStretchSpacer()
+        sizer_dlg_buttons.Add(btn_ok, 1, wx.RIGHT)
+        sizer_dlg_buttons.AddSpacer(LABEL_INPUT_SPACER)
+        sizer_dlg_buttons.Add(btn_cancel, 1, wx.LEFT)
+        sizer_dlg_buttons.AddStretchSpacer()
 
         self.SetSizerAndFit(sizer)
 
@@ -120,6 +134,8 @@ class ProjectInformationNB(wx.Notebook):
 
         sizer_minor_details_main.AddSpacer(INPUT_GROUP_PADDING)
         sizer_minor_details_main.Add(sizer_left_main, 1)
+
+        sizer_main.AddSpacer(INPUT_ROW_SPACER)
 
         panel.SetSizerAndFit(sizer_main)
 
