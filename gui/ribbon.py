@@ -535,4 +535,12 @@ class Ribbon(RB.RibbonBar):
         if self.project is None:
             return
         dlg = ProjectInformationDialog(self)
-        dlg.ShowModal()
+        if dlg.ShowModal() == wx.ID_OK:
+            project_name = dlg.notebook.entry_project_title.GetValue()
+            project_manager = dlg.notebook.entry_project_manager.GetValue()
+            start_date = dlg.notebook.entry_start_date.GetValue()
+
+            self.project.project_name = project_name
+
+            dlg.Destroy()
+

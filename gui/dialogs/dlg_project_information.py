@@ -11,6 +11,7 @@ LABEL_INPUT_SPACER = 20
 class ProjectInformationDialog(wx.Dialog):
 
     project = None
+    notebook = None
 
     def __init__(self, parent):
         wx.Dialog.__init__(self, parent)
@@ -21,7 +22,7 @@ class ProjectInformationDialog(wx.Dialog):
         self.init_ui()
 
     def init_ui(self):
-        nb = ProjectInformationNB(self)
+        self.notebook = ProjectInformationNB(self)
 
         # Buttons
         btn_ok = wx.Button(self, wx.ID_OK)
@@ -30,7 +31,7 @@ class ProjectInformationDialog(wx.Dialog):
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer_dlg_buttons = wx.BoxSizer(wx.HORIZONTAL)
 
-        sizer.Add(nb)
+        sizer.Add(self.notebook)
         sizer.AddSpacer(10)
         sizer.Add(sizer_dlg_buttons, flag=wx.EXPAND | wx.LEFT | wx.RIGHT)
         sizer.AddSpacer(10)
@@ -48,6 +49,11 @@ class ProjectInformationNB(wx.Notebook):
 
     start_date = None
     project = None
+    
+    # Entries
+    entry_project_title = ''
+    entry_project_manager = ''
+    entry_start_date = None
 
     def __init__(self, parent):
         wx.Notebook.__init__(self, parent)
@@ -66,17 +72,17 @@ class ProjectInformationNB(wx.Notebook):
         panel = wx.Panel(self)
 
         label_project_title = wx.StaticText(panel, label='Project Title', name='project_title')
-        entry_project_title = wx.TextCtrl(panel)
+        self.entry_project_title = wx.TextCtrl(panel)
 
         label_project_manager = wx.StaticText(panel, label='Project Manager', name='project_manager')
-        entry_project_manager = wx.TextCtrl(panel)
+        self.entry_project_manager = wx.TextCtrl(panel)
 
         label_start_date = wx.StaticText(panel, label='Start Date')
-        entry_start_date = DatePickerCtrl(panel, -1, style=wx.adv.DP_DROPDOWN)
+        self.entry_start_date = DatePickerCtrl(panel, -1, style=wx.adv.DP_DROPDOWN)
         if self.start_date is None:
-            entry_start_date.SetValue(wx.DateTime.Now())
+            self.entry_start_date.SetValue(wx.DateTime.Now())
         else:
-            entry_start_date.SetValue(self.start_date)
+            self.entry_start_date.SetValue(self.start_date)
 
         label_finish_date = wx.StaticText(panel, label='Finish Date')
         entry_finish_date = DatePickerCtrl(panel, -1, style=wx.adv.DP_DROPDOWN)
@@ -106,7 +112,7 @@ class ProjectInformationNB(wx.Notebook):
         sizer_project_title.AddSpacer(INPUT_GROUP_PADDING)
         sizer_project_title.Add(label_project_title, 1)
         sizer_project_title.AddSpacer(46)
-        sizer_project_title.Add(entry_project_title, 5)
+        sizer_project_title.Add(self.entry_project_title, 5)
         sizer_project_title.AddSpacer(INPUT_GROUP_PADDING)
 
         sizer_main.AddSpacer(INPUT_ROW_SPACER)
@@ -115,7 +121,7 @@ class ProjectInformationNB(wx.Notebook):
         sizer_project_manager.AddSpacer(INPUT_GROUP_PADDING)
         sizer_project_manager.Add(label_project_manager, 1)
         sizer_project_manager.AddSpacer(20)
-        sizer_project_manager.Add(entry_project_manager, 2)
+        sizer_project_manager.Add(self.entry_project_manager, 2)
         sizer_project_manager.AddSpacer(INPUT_GROUP_PADDING)
 
         sizer_main.AddSpacer(INPUT_ROW_SPACER)
@@ -126,7 +132,7 @@ class ProjectInformationNB(wx.Notebook):
 
         sizer_start_date.Add(label_start_date, .5)
         sizer_start_date.AddSpacer(59)
-        sizer_start_date.Add(entry_start_date, 1)
+        sizer_start_date.Add(self.entry_start_date, 1)
 
         sizer_finish_date.Add(label_finish_date, .5)
         sizer_finish_date.AddSpacer(53)
@@ -140,4 +146,3 @@ class ProjectInformationNB(wx.Notebook):
         panel.SetSizerAndFit(sizer_main)
 
         return panel
-
