@@ -401,7 +401,7 @@ class Ribbon(RB.RibbonBar):
             start_date = wx.DateTime(sd[0], sd[1], sd[2])
             project.start_date = start_date
         else:
-            project.start_date = wx.DateTime(25, 5, 2018)
+            project.start_date = wx.DateTime(31, 5, 1988)
 
         self.parent.project = project
 

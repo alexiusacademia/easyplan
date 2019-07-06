@@ -73,7 +73,6 @@ class ProjectInformationNB(wx.Notebook):
         entry_finish_date.SetValue(date_finish)
         entry_finish_date.Disable()
 
-
         # --------------------
         # Sizers
         # --------------------
