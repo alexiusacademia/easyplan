@@ -541,6 +541,8 @@ class Ribbon(RB.RibbonBar):
             start_date = dlg.notebook.entry_start_date.GetValue()
 
             self.project.project_name = project_name
+            self.project.project_manager = project_manager
+            self.project.start_date = start_date
 
             dlg.Destroy()
 
