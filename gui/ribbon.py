@@ -404,6 +404,12 @@ class Ribbon(RB.RibbonBar):
         else:
             project.start_date = wx.DateTime().Now()
 
+        if 'project_name' in project_dict:
+            project.project_name = project_dict['project_name']
+
+        if 'project_manager' in project_dict:
+            project.project_manager = project_dict['project_manager']
+
         self.parent.project = project
 
         self.project = project
@@ -426,7 +432,9 @@ class Ribbon(RB.RibbonBar):
         p = {'path': self.parent.project_file,
              'tasks': self.project.tasks,
              'interval_major_grid': self.project.interval_major_axis,
-             'start_date': start_date}
+             'start_date': start_date,
+             'project_name': self.project.project_name,
+             'project_manager': self.project.project_manager}
 
         if self.parent.project_file != '':
             path = self.parent.project_file
