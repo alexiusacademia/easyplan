@@ -16,14 +16,18 @@ class Task:
     task_id = 0
     task_segments = []
     start_day = 1
+    start_date = None
     predecessors = []
     last_unmerged_segments = []
 
-    def __init__(self):
+    def __init__(self, project=None):
         self.task_name = 'Unnamed Task'
         self.task_id = id_generator()
         ts1 = TaskSegment(self.start_day, 1)
         self.task_segments = [ts1]
+
+        if project is not None:
+            self.start_date = project.start_date
 
     def rename(self, new_name):
         self.task_name = new_name
