@@ -38,51 +38,51 @@ class ProjectInformationNB(wx.Notebook):
         self.start_date = parent.start_date
 
     def general_panel(self):
+        # Controls
         panel = wx.Panel(self)
-
-        main_sizer = wx.BoxSizer(wx.VERTICAL)
-
-        project_title_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        main_sizer.Add(project_title_sizer)
 
         label_project_title = wx.StaticText(panel, label='Project Title:', name='project_title')
         entry_project_title = wx.TextCtrl(panel)
 
-        project_title_sizer.AddSpacer(5)
-        project_title_sizer.Add(label_project_title, 1)
-        project_title_sizer.AddSpacer(46)
-        project_title_sizer.Add(entry_project_title, 5)
-        project_title_sizer.AddSpacer(5)
-
-        project_manager_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        main_sizer.AddSpacer(INPUT_ROW_SPACER)
-        main_sizer.Add(project_manager_sizer)
-
         label_project_manager = wx.StaticText(panel, label='Project Manager:', name='project_manager')
         entry_project_manager = wx.TextCtrl(panel)
 
-        project_manager_sizer.AddSpacer(5)
-        project_manager_sizer.Add(label_project_manager, 1)
-        project_manager_sizer.AddSpacer(20)
-        project_manager_sizer.Add(entry_project_manager, 2)
-        project_manager_sizer.AddSpacer(5)
+        label_start_date = wx.StaticText(panel, label='Project Start Date')
+        entry_start_date = DatePickerCtrl(panel, -1, style=wx.adv.DP_DROPDOWN)
 
-        minor_details_main_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        main_sizer.AddSpacer(INPUT_ROW_SPACER)
-        main_sizer.Add(minor_details_main_sizer, flag=wx.EXPAND | wx.TOP | wx.RIGHT | wx.BOTTOM | wx.LEFT)
-
-        left_minor_panel = wx.Panel(panel)
-        minor_details_main_sizer.AddSpacer(INPUT_GROUP_PADDING)
-        minor_details_main_sizer.Add(left_minor_panel, 1)
-
-        right_minor_panel = wx.Panel(panel)
-        minor_details_main_sizer.Add(right_minor_panel, 1)
-        minor_details_main_sizer.AddSpacer(INPUT_GROUP_PADDING)
-
+        # Sizers
+        sizer_main = wx.BoxSizer(wx.VERTICAL)
+        sizer_project_title = wx.BoxSizer(wx.HORIZONTAL)
+        sizer_project_manager = wx.BoxSizer(wx.HORIZONTAL)
+        sizer_minor_details_main = wx.BoxSizer(wx.HORIZONTAL)
+        sizer_left_main = wx.BoxSizer(wx.VERTICAL)
         sizer_start_date = wx.BoxSizer(wx.HORIZONTAL)
-        label_start_date = wx.StaticText(left_minor_panel, label='Start Date')
+
+        # Populating each sizer
+        sizer_main.Add(sizer_project_title)
+
+        sizer_project_title.AddSpacer(5)
+        sizer_project_title.Add(label_project_title, 1)
+        sizer_project_title.AddSpacer(46)
+        sizer_project_title.Add(entry_project_title, 5)
+        sizer_project_title.AddSpacer(5)
+
+        sizer_main.AddSpacer(INPUT_ROW_SPACER)
+        sizer_main.Add(sizer_project_manager)
+
+        sizer_project_manager.AddSpacer(5)
+        sizer_project_manager.Add(label_project_manager, 1)
+        sizer_project_manager.AddSpacer(20)
+        sizer_project_manager.Add(entry_project_manager, 2)
+        sizer_project_manager.AddSpacer(5)
+
+        sizer_main.AddSpacer(INPUT_ROW_SPACER)
+        sizer_main.Add(sizer_minor_details_main, flag=wx.EXPAND | wx.TOP | wx.RIGHT | wx.BOTTOM | wx.LEFT)
+
+        sizer_left_main.Add(sizer_start_date)
+
         sizer_start_date.Add(label_start_date, 1)
-        entry_start_date = DatePickerCtrl(right_minor_panel, -1, style=wx.adv.DP_DROPDOWN)
+
         if self.start_date is None:
             entry_start_date.SetValue(wx.DateTime.Now())
         else:
@@ -90,7 +90,10 @@ class ProjectInformationNB(wx.Notebook):
         sizer_start_date.AddSpacer(LABEL_INPUT_SPACER)
         sizer_start_date.Add(entry_start_date, 1)
 
-        panel.SetSizerAndFit(main_sizer)
+        sizer_minor_details_main.AddSpacer(INPUT_GROUP_PADDING)
+        sizer_minor_details_main.Add(sizer_left_main, 1)
+
+        panel.SetSizerAndFit(sizer_main)
 
         return panel
 
