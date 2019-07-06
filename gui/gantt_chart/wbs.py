@@ -242,6 +242,7 @@ class WBS(gridlib.Grid):
         task: Task = self.project.tasks[index]
 
         self.SetCellValue((index, Cols.FINISH_DAY), get_finish_short_date_str(task))
+        self.SetCellValue((index, Cols.START_DATE), get_start_short_date_str(task))
 
     def on_duration_updated(self):
         task: Task = self.project.selected_task
