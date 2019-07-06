@@ -51,3 +51,5 @@ Yet another project scheduling and management software.
   
  ### Screenshot (06/28/2019)
 ![Screenshot 1](readme_files/ss1.png)
+ ### Screenshot (07/06/2019)
+![Screenshot 1](readme_files/ss2.png)
