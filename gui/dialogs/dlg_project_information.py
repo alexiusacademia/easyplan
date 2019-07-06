@@ -68,7 +68,7 @@ class ProjectInformationNB(wx.Notebook):
         entry_finish_date = DatePickerCtrl(panel, -1, style=wx.adv.DP_DROPDOWN)
 
         duration = self.project.get_project_duration()
-        date_span = wx.DateSpan(0, 0, 0, int(duration))
+        date_span = wx.DateSpan(0, 0, 0, int(duration) - 1)
         date_finish = self.project.start_date.Add(date_span)
         entry_finish_date.SetValue(date_finish)
         entry_finish_date.Disable()
