@@ -388,6 +388,7 @@ class Ribbon(RB.RibbonBar):
 
     def initialize_project(self, project_dict):
         # Create new instance of project
+        # 05/31/1988
         project = Project()
         if 'project_name' in project_dict:
             project.project_name = project_dict['project_name']
@@ -395,6 +396,19 @@ class Ribbon(RB.RibbonBar):
 
         if 'interval_major_grid' in project_dict:
             project.interval_major_axis = project_dict['interval_major_grid']
+
+        if 'start_date' in project_dict:
+            sd = project_dict['start_date']
+            start_date = wx.DateTime(sd[0], sd[1], sd[2])
+            project.start_date = start_date
+        else:
+            project.start_date = wx.DateTime().Now()
+
+        if 'project_name' in project_dict:
+            project.project_name = project_dict['project_name']
+
+        if 'project_manager' in project_dict:
+            project.project_manager = project_dict['project_manager']
 
         self.parent.project = project
 
@@ -407,9 +421,20 @@ class Ribbon(RB.RibbonBar):
         self.parent.right_pane.redraw()
 
     def on_save_project(self, event):
+        # Convert the date time to tuple
+        sd: wx.DateTime = self.project.start_date
+        day = sd.GetDay()
+        month = sd.GetMonth()
+        year = sd.GetYear()
+
+        start_date = day, month, year
+
         p = {'path': self.parent.project_file,
              'tasks': self.project.tasks,
-             'interval_major_grid': self.project.interval_major_axis}
+             'interval_major_grid': self.project.interval_major_axis,
+             'start_date': start_date,
+             'project_name': self.project.project_name,
+             'project_manager': self.project.project_manager}
 
         if self.parent.project_file != '':
             path = self.parent.project_file
@@ -515,5 +540,17 @@ class Ribbon(RB.RibbonBar):
                           wx.OK | wx.ICON_ERROR)
 
     def on_project_information_clicked(self, event):
+        if self.project is None:
+            return
         dlg = ProjectInformationDialog(self)
-        dlg.ShowModal()
+        if dlg.ShowModal() == wx.ID_OK:
+            project_name = dlg.notebook.entry_project_title.GetValue()
+            project_manager = dlg.notebook.entry_project_manager.GetValue()
+            start_date = dlg.notebook.entry_start_date.GetValue()
+
+            self.project.project_name = project_name
+            self.project.project_manager = project_manager
+            self.project.start_date = start_date
+
+            dlg.Destroy()
+
