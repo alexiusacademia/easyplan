@@ -14,6 +14,9 @@ class GanttChart(ScrolledPanel):
 
     parent = None
 
+    chart_width = 0
+    number_major_vertical_grid = 0
+
     def __init__(self, parent, project, wbs):
         # wx.Window.__init__(self, parent)
         ScrolledPanel.__init__(self, parent)
@@ -40,6 +43,7 @@ class GanttChart(ScrolledPanel):
             self.draw_hor_grids(self.GetSize()[0], len(self.project.tasks), WBS_ROW_HEIGHT)
             self.draw_vertical_major_grid_lines()
             self.draw_predecessor_lines()
+            # self.draw_timeline()
 
     def redraw(self):
         """
@@ -49,7 +53,7 @@ class GanttChart(ScrolledPanel):
         """
         self.draw_task_bars()
         self.draw_predecessor_lines()
-
+        self.draw_timeline()
         canvas_width, canvas_height = self.GetSize()
         gantt_width = self.project.get_project_duration() * BAR_SCALE
         gantt_height = WBS_HEADER_HEIGHT + len(self.project.tasks) * BAR_HEIGHT
@@ -169,11 +173,12 @@ class GanttChart(ScrolledPanel):
     def draw_vertical_major_grid_lines(self):
         major_interval = self.project.interval_major_axis
         gantt_width, gantt_height = self.GetSize()
-        number_of_lines = int(gantt_width / BAR_SCALE / major_interval)
 
-        chart_width = self.project.get_project_duration() * BAR_SCALE
-        if chart_width > gantt_width:
-            number_of_lines = int(chart_width / (BAR_SCALE * major_interval))
+        self.number_major_vertical_grid = number_of_lines = int(gantt_width / BAR_SCALE / major_interval)
+
+        self.chart_width = self.project.get_project_duration() * BAR_SCALE
+        if self.chart_width > gantt_width:
+            number_of_lines = int(self.chart_width / (BAR_SCALE * major_interval))
 
         dc = wx.ClientDC(self)
         pen = wx.Pen(wx.LIGHT_GREY, 1)
@@ -185,3 +190,16 @@ class GanttChart(ScrolledPanel):
 
     def on_project_updated(self):
         self.redraw()
+
+    def draw_timeline(self):
+        span_week = wx.DateSpan(0, 0, 1)
+        date_display: wx.DateTime = self.project.start_date
+
+        y_pos = WBS_HEADER_HEIGHT - 20
+
+        for i in range(self.number_major_vertical_grid):
+            date_display.Add(span_week)
+            str_date = date_display.Format('%m/%d/%g')
+            print(str_date)
+            #st = wx.StaticText(self, label=str_date, pos=((i * 7 * BAR_SCALE), WBS_HEADER_HEIGHT))
+            st = wx.StaticText(self, label=str_date, pos=((i * 7 * BAR_SCALE), y_pos))
