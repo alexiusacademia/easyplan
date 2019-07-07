@@ -198,8 +198,6 @@ class GanttChart(ScrolledPanel):
         y_pos = WBS_HEADER_HEIGHT - 20
 
         for i in range(self.number_major_vertical_grid):
-            date_display.Add(span_week)
             str_date = date_display.Format('%m/%d/%g')
-            print(str_date)
-            #st = wx.StaticText(self, label=str_date, pos=((i * 7 * BAR_SCALE), WBS_HEADER_HEIGHT))
             st = wx.StaticText(self, label=str_date, pos=((i * 7 * BAR_SCALE), y_pos))
+            date_display.Add(span_week)
