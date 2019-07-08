@@ -3,6 +3,7 @@ import wx
 import wx.ribbon
 from wx.ribbon import RibbonButtonBar
 import wx.lib.agw.ribbon as RB
+from pubsub import pub
 
 import os
 import pickle
@@ -383,6 +384,8 @@ class Ribbon(RB.RibbonBar):
                     self.initialize_project(project_dict)
                     self.parent.status_bar.SetStatusText(STATUS_PROJECT_OPENED)
                     self.parent.status_bar.SetStatusText(pathname, 1)
+
+                    pub.sendMessage(EVENT_PROJECT_OPENED)
             except IOError:
                 wx.LogError('Cannot open current file')
 
