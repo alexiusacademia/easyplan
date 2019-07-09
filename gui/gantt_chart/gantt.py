@@ -46,7 +46,7 @@ class GanttChart(ScrolledPanel):
             self.draw_hor_grids(self.GetSize()[0], len(self.project.tasks), WBS_ROW_HEIGHT)
             self.draw_vertical_major_grid_lines()
             self.draw_predecessor_lines()
-            # self.draw_timeline()
+            self.draw_timeline()
 
     def redraw(self):
         """
@@ -56,7 +56,7 @@ class GanttChart(ScrolledPanel):
         """
         self.draw_task_bars()
         self.draw_predecessor_lines()
-        self.draw_timeline()
+
         canvas_width, canvas_height = self.GetSize()
         gantt_width = self.project.get_project_duration() * BAR_SCALE
         gantt_height = WBS_HEADER_HEIGHT + len(self.project.tasks) * BAR_HEIGHT
@@ -64,11 +64,6 @@ class GanttChart(ScrolledPanel):
         pixel_per_unit = 20
         no_units_x = int(gantt_width / pixel_per_unit)
         no_units_y = int(gantt_height / pixel_per_unit)
-        '''
-        self.SetScrollbars(pixel_per_unit,
-                           pixel_per_unit,
-                           no_units_x,
-                           no_units_y)'''
 
     def on_task_start_updated(self, index, start):
         y = index * WBS_ROW_HEIGHT + WBS_HEADER_HEIGHT
@@ -199,6 +194,7 @@ class GanttChart(ScrolledPanel):
             if isinstance(tld, wx.StaticText):
                 tld.Destroy()
         self.timeline_dates.clear()
+        print('Drawing timeline...')
 
         span_week = wx.DateSpan(0, 0, 1)
         date_display: wx.DateTime = self.project.start_date
