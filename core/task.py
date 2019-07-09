@@ -28,8 +28,8 @@ class Task:
         self.task_segments = [ts1]
 
         if project is not None:
-            ymd = map(int, project.start_date.FormatISODate().split('-'))
-            self.start_date = datetime.date(*ymd)
+            # Work only when project object is initialized.
+            self.start_date = project.start_date
 
     def rename(self, new_name):
         self.task_name = new_name
