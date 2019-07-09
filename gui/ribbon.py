@@ -407,6 +407,7 @@ class Ribbon(RB.RibbonBar):
             project.start_date = start_date
         else:
             project.start_date = datetime.datetime.today() #wx.DateTime().Now()
+            print(project.start_date)
 
         if 'project_name' in project_dict:
             project.project_name = project_dict['project_name']
@@ -426,12 +427,7 @@ class Ribbon(RB.RibbonBar):
 
     def on_save_project(self, event):
         # Convert the date time to tuple
-        sd: wx.DateTime = self.project.start_date
-        day = sd.GetDay()
-        month = sd.GetMonth()
-        year = sd.GetYear()
-
-        start_date = day, month, year
+        start_date = self.project.start_date
 
         p = {'path': self.parent.project_file,
              'tasks': self.project.tasks,
