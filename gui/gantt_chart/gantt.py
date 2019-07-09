@@ -4,6 +4,7 @@ from pubsub import pub
 
 from .bar import BarSegment
 from constants import *
+from helpers.convert import *
 
 
 class GanttChart(ScrolledPanel):
@@ -192,8 +193,8 @@ class GanttChart(ScrolledPanel):
 
         span_week = wx.DateSpan(0, 0, 1)
         start = self.project.start_date
-        print(type(start))
-        date_display: wx.DateTime = self.project.start_date
+
+        date_display: wx.DateTime = py_date_to_wx_datetime(start)
 
         y_pos = WBS_HEADER_HEIGHT - 20
 
