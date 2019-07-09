@@ -44,6 +44,12 @@ class GanttChart(ScrolledPanel):
     def on_paint(self, event):
         if self.project is not None:
             self.ClearBackground()
+
+            timeline_mask = wx.Panel(self)
+            timeline_mask.SetBackgroundColour(wx.Colour(128, 214, 255))
+            timeline_mask.SetPosition((0, 0))
+            timeline_mask.SetSize(self.GetSize()[0], WBS_HEADER_HEIGHT)
+
             self.draw_hor_grids(self.GetSize()[0], len(self.project.tasks), WBS_ROW_HEIGHT)
             self.draw_vertical_major_grid_lines()
             self.draw_predecessor_lines()
@@ -184,8 +190,6 @@ class GanttChart(ScrolledPanel):
         self.redraw()
 
     def draw_timeline(self):
-        import copy
-
         for tld in self.timeline_dates:
             if isinstance(tld, wx.StaticText):
                 tld.Destroy()
