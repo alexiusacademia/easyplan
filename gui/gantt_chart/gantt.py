@@ -4,6 +4,7 @@ from pubsub import pub
 
 from .bar import BarSegment
 from constants import *
+from helpers.convert import *
 
 
 class GanttChart(ScrolledPanel):
@@ -16,6 +17,8 @@ class GanttChart(ScrolledPanel):
 
     chart_width = 0
     number_major_vertical_grid = 0
+
+    timeline_dates = []
 
     def __init__(self, parent, project, wbs):
         # wx.Window.__init__(self, parent)
@@ -33,8 +36,9 @@ class GanttChart(ScrolledPanel):
         pub.subscribe(self.on_task_start_updated, EVENT_TASK_START_UPDATED)
         pub.subscribe(self.redraw, EVENT_TASK_DURATION_UPDATED)
         pub.subscribe(self.redraw, EVENT_TASK_PREDECESSORS_UPDATED)
+        pub.subscribe(self.redraw, EVENT_PROJECT_OPENED)
 
-        self.SetupScrolling()
+        self.SetupScrolling(scrollIntoView=False)
         # self.SetScrollbars(1, 1, 1000, 1000, 0, 0)
 
     def on_paint(self, event):
@@ -43,7 +47,7 @@ class GanttChart(ScrolledPanel):
             self.draw_hor_grids(self.GetSize()[0], len(self.project.tasks), WBS_ROW_HEIGHT)
             self.draw_vertical_major_grid_lines()
             self.draw_predecessor_lines()
-            # self.draw_timeline()
+            self.redraw()
 
     def redraw(self):
         """
@@ -54,18 +58,6 @@ class GanttChart(ScrolledPanel):
         self.draw_task_bars()
         self.draw_predecessor_lines()
         self.draw_timeline()
-        canvas_width, canvas_height = self.GetSize()
-        gantt_width = self.project.get_project_duration() * BAR_SCALE
-        gantt_height = WBS_HEADER_HEIGHT + len(self.project.tasks) * BAR_HEIGHT
-
-        pixel_per_unit = 20
-        no_units_x = int(gantt_width / pixel_per_unit)
-        no_units_y = int(gantt_height / pixel_per_unit)
-        '''
-        self.SetScrollbars(pixel_per_unit,
-                           pixel_per_unit,
-                           no_units_x,
-                           no_units_y)'''
 
     def on_task_start_updated(self, index, start):
         y = index * WBS_ROW_HEIGHT + WBS_HEADER_HEIGHT
@@ -192,12 +184,22 @@ class GanttChart(ScrolledPanel):
         self.redraw()
 
     def draw_timeline(self):
+        import copy
+
+        for tld in self.timeline_dates:
+            if isinstance(tld, wx.StaticText):
+                tld.Destroy()
+        self.timeline_dates.clear()
+
         span_week = wx.DateSpan(0, 0, 1)
-        date_display: wx.DateTime = self.project.start_date
+        start = self.project.start_date
+
+        date_display: wx.DateTime = py_date_to_wx_datetime(start)
 
         y_pos = WBS_HEADER_HEIGHT - 20
 
         for i in range(self.number_major_vertical_grid):
             str_date = date_display.Format('%m/%d/%g')
             st = wx.StaticText(self, label=str_date, pos=((i * 7 * BAR_SCALE), y_pos))
+            self.timeline_dates.append(st)
             date_display.Add(span_week)

@@ -3,6 +3,7 @@ import wx
 import wx.ribbon
 from wx.ribbon import RibbonButtonBar
 import wx.lib.agw.ribbon as RB
+from pubsub import pub
 
 import os
 import pickle
@@ -24,6 +25,7 @@ from .commands.move_task_up import MoveTaskUpCommand
 from .commands.move_task_down import MoveTaskDownCommand
 from .commands.merge_task_segments import MergeTaskSegments
 from gui.accelerators import *
+from helpers.convert import *
 
 
 class Ribbon(RB.RibbonBar):
@@ -383,10 +385,13 @@ class Ribbon(RB.RibbonBar):
                     self.initialize_project(project_dict)
                     self.parent.status_bar.SetStatusText(STATUS_PROJECT_OPENED)
                     self.parent.status_bar.SetStatusText(pathname, 1)
+
+                    pub.sendMessage(EVENT_PROJECT_OPENED)
             except IOError:
                 wx.LogError('Cannot open current file')
 
     def initialize_project(self, project_dict):
+        import datetime
         # Create new instance of project
         # 05/31/1988
         project = Project()
@@ -399,10 +404,10 @@ class Ribbon(RB.RibbonBar):
 
         if 'start_date' in project_dict:
             sd = project_dict['start_date']
-            start_date = wx.DateTime(sd[0], sd[1], sd[2])
-            project.start_date = start_date
+            project.start_date = sd
         else:
-            project.start_date = wx.DateTime().Now()
+            project.start_date = datetime.datetime.today() #wx.DateTime().Now()
+            print(project.start_date)
 
         if 'project_name' in project_dict:
             project.project_name = project_dict['project_name']
@@ -422,12 +427,7 @@ class Ribbon(RB.RibbonBar):
 
     def on_save_project(self, event):
         # Convert the date time to tuple
-        sd: wx.DateTime = self.project.start_date
-        day = sd.GetDay()
-        month = sd.GetMonth()
-        year = sd.GetYear()
-
-        start_date = day, month, year
+        start_date = self.project.start_date
 
         p = {'path': self.parent.project_file,
              'tasks': self.project.tasks,

@@ -16,6 +16,7 @@ ID_OK = 1
 
 # Event Messages
 EVENT_PROJECT_UPDATED = 'project_updated'
+EVENT_PROJECT_OPENED = 'project_opened'
 
 EVENT_TASK_START_UPDATED = 'task_start_updated'
 EVENT_TASK_DURATION_UPDATED = 'task_duration_updated'
