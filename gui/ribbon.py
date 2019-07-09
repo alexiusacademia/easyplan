@@ -548,6 +548,8 @@ class Ribbon(RB.RibbonBar):
             project_manager = dlg.notebook.entry_project_manager.GetValue()
             start_date = dlg.notebook.entry_start_date.GetValue()
 
+            start_date = wx_date_to_py_date(start_date)
+
             self.project.project_name = project_name
             self.project.project_manager = project_manager
             self.project.start_date = start_date
