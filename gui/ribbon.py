@@ -390,6 +390,7 @@ class Ribbon(RB.RibbonBar):
                 wx.LogError('Cannot open current file')
 
     def initialize_project(self, project_dict):
+        import datetime
         # Create new instance of project
         # 05/31/1988
         project = Project()
@@ -405,7 +406,7 @@ class Ribbon(RB.RibbonBar):
             start_date = wx.DateTime(sd[0], sd[1], sd[2])
             project.start_date = start_date
         else:
-            project.start_date = wx.DateTime().Now()
+            project.start_date = datetime.datetime.today() #wx.DateTime().Now()
 
         if 'project_name' in project_dict:
             project.project_name = project_dict['project_name']

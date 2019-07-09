@@ -1,7 +1,9 @@
 import wx
 from wx.adv import DatePickerCtrl
+import copy
 
 from core.project import Project
+from helpers.convert import *
 
 INPUT_ROW_SPACER = 10
 INPUT_GROUP_PADDING = 20
@@ -91,7 +93,11 @@ class ProjectInformationNB(wx.Notebook):
 
         duration = self.project.get_project_duration()
         date_span = wx.DateSpan(0, 0, 0, int(duration) - 1)
-        date_finish = self.project.start_date.Add(date_span)
+
+        date_finish = copy.copy(self.project.start_date)
+        date_finish = py_date_to_wx_datetime(date_finish)
+
+        date_finish.Add(date_span)
         entry_finish_date.SetValue(date_finish)
         entry_finish_date.Disable()
 
