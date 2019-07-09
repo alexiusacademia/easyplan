@@ -25,6 +25,7 @@ from .commands.move_task_up import MoveTaskUpCommand
 from .commands.move_task_down import MoveTaskDownCommand
 from .commands.merge_task_segments import MergeTaskSegments
 from gui.accelerators import *
+from helpers.convert import *
 
 
 class Ribbon(RB.RibbonBar):
@@ -403,8 +404,7 @@ class Ribbon(RB.RibbonBar):
 
         if 'start_date' in project_dict:
             sd = project_dict['start_date']
-            start_date = wx.DateTime(sd[0], sd[1], sd[2])
-            project.start_date = start_date
+            project.start_date = sd
         else:
             project.start_date = datetime.datetime.today() #wx.DateTime().Now()
             print(project.start_date)
