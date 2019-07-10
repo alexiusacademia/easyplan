@@ -36,7 +36,7 @@ class GanttChart(ScrolledPanel):
         pub.subscribe(self.on_task_start_updated, EVENT_TASK_START_UPDATED)
         pub.subscribe(self.redraw, EVENT_TASK_DURATION_UPDATED)
         pub.subscribe(self.redraw, EVENT_TASK_PREDECESSORS_UPDATED)
-        pub.subscribe(self.redraw, EVENT_PROJECT_OPENED)
+        pub.subscribe(self.project_opened(), EVENT_PROJECT_OPENED)
 
         self.SetupScrolling(scrollIntoView=False)
         # self.SetScrollbars(1, 1, 1000, 1000, 0, 0)
@@ -53,7 +53,10 @@ class GanttChart(ScrolledPanel):
             self.draw_hor_grids(self.GetSize()[0], len(self.project.tasks), WBS_ROW_HEIGHT)
             self.draw_vertical_major_grid_lines()
             self.draw_predecessor_lines()
-            self.redraw()
+
+    def project_opened(self):
+        self.redraw()
+        self.draw_timeline()
 
     def redraw(self):
         """
@@ -63,7 +66,7 @@ class GanttChart(ScrolledPanel):
         """
         self.draw_task_bars()
         self.draw_predecessor_lines()
-        self.draw_timeline()
+        # self.draw_timeline()
 
     def on_task_start_updated(self, index, start):
         y = index * WBS_ROW_HEIGHT + WBS_HEADER_HEIGHT
