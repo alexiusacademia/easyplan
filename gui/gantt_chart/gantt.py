@@ -81,6 +81,9 @@ class GanttChart(ScrolledPanel):
         pen = wx.Pen(wx.BLACK, 1)
         dc.SetPen(pen)
 
+        if self.project is None:
+            return
+
         tasks = self.project.tasks
         for index, task in enumerate(tasks):
             # Get the predecessors of the task
@@ -131,6 +134,9 @@ class GanttChart(ScrolledPanel):
         :return:
         """
         self.delete_bars()
+
+        if self.project is None:
+            return
 
         tasks = self.project.tasks
 
@@ -199,6 +205,10 @@ class GanttChart(ScrolledPanel):
         self.timeline_dates.clear()
 
         span_week = wx.DateSpan(0, 0, 1)
+
+        if self.project is None:
+            return
+
         start = self.project.start_date
 
         date_display: wx.DateTime = py_date_to_wx_datetime(start)
