@@ -36,7 +36,7 @@ class GanttChart(ScrolledPanel):
         pub.subscribe(self.on_task_start_updated, EVENT_TASK_START_UPDATED)
         pub.subscribe(self.redraw, EVENT_TASK_DURATION_UPDATED)
         pub.subscribe(self.redraw, EVENT_TASK_PREDECESSORS_UPDATED)
-        pub.subscribe(self.project_opened(), EVENT_PROJECT_OPENED)
+        pub.subscribe(self.project_opened, EVENT_PROJECT_OPENED)
 
         self.SetupScrolling(scrollIntoView=False)
         # self.SetScrollbars(1, 1, 1000, 1000, 0, 0)
@@ -55,6 +55,7 @@ class GanttChart(ScrolledPanel):
             self.draw_predecessor_lines()
 
     def project_opened(self):
+        self.draw_vertical_major_grid_lines()
         self.redraw()
         self.draw_timeline()
 
@@ -214,7 +215,6 @@ class GanttChart(ScrolledPanel):
         date_display: wx.DateTime = py_date_to_wx_datetime(start)
 
         y_pos = WBS_HEADER_HEIGHT - 20
-
         for i in range(self.number_major_vertical_grid):
             str_date = date_display.Format('%m/%d/%g')
             st = wx.StaticText(self, label=str_date, pos=((i * 7 * BAR_SCALE), y_pos))
