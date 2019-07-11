@@ -5,6 +5,7 @@ import datetime
 
 from constants import *
 from core.task import Task
+from helpers.convert import *
 
 
 class Cols(enumerate):
@@ -25,13 +26,6 @@ class ColNames(enumerate):
     FINISH_DATE = 'Finish Date'
     PREDECESSORS = 'Predecessors'
     RESOURCES = 'Resources'
-
-
-def py_date_to_wx_datetime(date):
-    assert isinstance(date, (datetime.datetime, datetime.date))
-    tt = date.timetuple()
-    dmy = (tt[2], tt[1]-1, tt[0])
-    return wx.DateTime.FromDMY(*dmy)
 
 
 def get_finish_short_date_str(task: Task):
@@ -117,8 +111,10 @@ class WBS(gridlib.Grid):
             for task in self.project.tasks:
                 if num_rows < index+1:
                     self.AppendRows()
-                self.SetCellValue(index, Cols.TASK_NAME, str(task.task_name))
 
+                self.SetCellAlignment(index, Cols.TASK_NAME, wx.ALIGN_LEFT, wx.ALIGN_CENTER)
+
+                self.SetCellValue(index, Cols.TASK_NAME, str(task.task_name))
                 self.SetCellValue(index, Cols.START_DAY, str(task.start_day))
                 self.SetCellValue(index, Cols.START_DATE, get_start_short_date_str(task))
                 self.SetCellValue(index, Cols.DURATION, str(task.get_duration()))

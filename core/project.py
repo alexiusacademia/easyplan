@@ -164,3 +164,5 @@ class Project:
                 finish = task.get_finish()
 
         return finish - start + 1
+
+    # TODO Add message sending when project start date is updated.
